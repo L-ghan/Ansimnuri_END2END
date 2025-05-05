@@ -13,7 +13,7 @@ public class NoticeServiceImpl implements NoticeService {
     private final NoticeDAO noticeDAO;
 
     @Override
-    public List<NoticeDTO> selectAll() {
+    public List<NoticeDTO> selectAll(int page) {
         return noticeDAO.selectAll();
     }
 

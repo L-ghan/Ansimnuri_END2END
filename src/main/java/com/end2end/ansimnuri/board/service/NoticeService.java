@@ -5,7 +5,7 @@ import com.end2end.ansimnuri.board.dto.NoticeDTO;
 import java.util.List;
 
 public interface NoticeService {
-    List<NoticeDTO> selectAll();
+    List<NoticeDTO> selectAll(int page);
     NoticeDTO selectById(long id);
     void insert(NoticeDTO noticeDTO);
     void update(NoticeDTO noticeDTO);
