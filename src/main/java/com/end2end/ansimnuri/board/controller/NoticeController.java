@@ -47,6 +47,7 @@ public class NoticeController {
     })
     @PostMapping()
     public ResponseEntity<Void> insert(@RequestBody NoticeDTO noticeDTO) {
+        noticeService.insert(noticeDTO);
         return ResponseEntity.ok().build();
     }
 
@@ -58,6 +59,7 @@ public class NoticeController {
     })
     @PutMapping()
     public ResponseEntity<Void> update(@RequestBody NoticeDTO noticeDTO) {
+        noticeService.update(noticeDTO);
         return ResponseEntity.ok().build();
     }
 
@@ -71,6 +73,7 @@ public class NoticeController {
     public ResponseEntity<Void> delete(
             @Parameter(description = "공지사항 id")
             @PathVariable Long id) {
+        noticeService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 }
