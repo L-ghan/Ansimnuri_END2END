@@ -1,4 +1,4 @@
-package com.end2end.ansimnuri.filter;
+package com.end2end.ansimnuri.util.filter;
 
 import com.end2end.ansimnuri.util.JWTUtil;
 import jakarta.servlet.FilterChain;

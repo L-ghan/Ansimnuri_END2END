@@ -1,4 +1,4 @@
-package com.end2end.ansimnuri.config;
+package com.end2end.ansimnuri.util.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
