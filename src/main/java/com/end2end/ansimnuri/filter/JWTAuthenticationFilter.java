@@ -1,6 +1,6 @@
 package com.end2end.ansimnuri.filter;
 
-import com.end2end.ansimnuri.JWTUtil;
+import com.end2end.ansimnuri.util.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
