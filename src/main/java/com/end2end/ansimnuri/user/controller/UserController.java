@@ -1,4 +1,4 @@
-package com.end2end.ansimnuri;
+package com.end2end.ansimnuri.user.controller;
 
 import com.end2end.ansimnuri.user.service.UserService;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.end2end.ansimnuri;
+package com.end2end.ansimnuri.board.service;
 
 import com.end2end.ansimnuri.board.dao.NoticeDAO;
 import lombok.RequiredArgsConstructor;

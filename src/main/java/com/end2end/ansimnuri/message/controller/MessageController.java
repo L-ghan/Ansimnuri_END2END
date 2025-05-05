@@ -1,8 +1,6 @@
-package com.end2end.ansimnuri;
+package com.end2end.ansimnuri.message.controller;
 
-import com.end2end.ansimnuri.message.service.MessageBlockService;
-import com.end2end.ansimnuri.message.service.MessageRoomService;
-import com.end2end.ansimnuri.message.service.MessageService;
+import com.end2end.ansimnuri.message.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

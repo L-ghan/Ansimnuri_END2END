@@ -1,4 +1,4 @@
-package com.end2end.ansimnuri;
+package com.end2end.ansimnuri.config;
 
 import jakarta.websocket.server.ServerEndpointConfig;
 import org.springframework.context.annotation.Configuration;

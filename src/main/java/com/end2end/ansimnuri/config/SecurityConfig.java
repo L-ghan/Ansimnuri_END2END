@@ -1,4 +1,4 @@
-package com.end2end.ansimnuri;
+package com.end2end.ansimnuri.config;
 
 import com.end2end.ansimnuri.filter.JWTAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +30,12 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable);
+
+        http
+                .authorizeHttpRequests(auth -> {
+                    auth
+                            .anyRequest().permitAll();
+                });
 
         return http.build();
     }

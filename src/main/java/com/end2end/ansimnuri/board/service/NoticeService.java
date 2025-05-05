@@ -1,4 +1,4 @@
-package com.end2end.ansimnuri;
+package com.end2end.ansimnuri.board.service;
 
 public interface NoticeService {
 }

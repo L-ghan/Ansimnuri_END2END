@@ -1,4 +1,4 @@
-package com.end2end.ansimnuri;
+package com.end2end.ansimnuri.board.dao;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;

@@ -1,4 +1,4 @@
-package com.end2end.ansimnuri;
+package com.end2end.ansimnuri.message.service;
 
 import com.end2end.ansimnuri.message.dao.MessageRoomDAO;
 import lombok.RequiredArgsConstructor;

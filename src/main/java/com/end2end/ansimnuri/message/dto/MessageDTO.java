@@ -1,4 +1,4 @@
-package com.end2end.ansimnuri;
+package com.end2end.ansimnuri.message.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

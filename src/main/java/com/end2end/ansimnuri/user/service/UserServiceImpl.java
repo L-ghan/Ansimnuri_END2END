@@ -1,4 +1,4 @@
-package com.end2end.ansimnuri;
+package com.end2end.ansimnuri.user.service;
 
 import com.end2end.ansimnuri.user.dao.UserDAO;
 import lombok.RequiredArgsConstructor;

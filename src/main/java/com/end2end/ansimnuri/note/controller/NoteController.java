@@ -1,8 +1,6 @@
-package com.end2end.ansimnuri;
+package com.end2end.ansimnuri.note.controller;
 
-import com.end2end.ansimnuri.note.service.NoteRecService;
-import com.end2end.ansimnuri.note.service.NoteReplyService;
-import com.end2end.ansimnuri.note.service.NoteService;
+import com.end2end.ansimnuri.note.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

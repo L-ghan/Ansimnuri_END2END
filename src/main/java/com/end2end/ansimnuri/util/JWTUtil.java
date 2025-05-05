@@ -1,4 +1,4 @@
-package com.end2end.ansimnuri;
+package com.end2end.ansimnuri.util;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
