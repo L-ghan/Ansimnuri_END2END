@@ -4,13 +4,12 @@ import com.end2end.ansimnuri.board.dto.NoticeDTO;
 import com.end2end.ansimnuri.board.service.NoticeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,10 +27,34 @@ public class NoticeController {
     }
 
     @Operation(summary = "공지사항 조회 api", description = "해당 ID에 맞는 공지사항 내용을 가져온다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정상 작동입니다."),
+            @ApiResponse(responseCode = "400", description = "해당 id의 공지사항이 존재하지 않습니다.")
+    })
     @GetMapping("/{id}")
-    public NoticeDTO selectById(
+    public ResponseEntity<NoticeDTO> selectById(
             @Parameter(description = "공지사항 id")
             @PathVariable Long id) {
-        return null;
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "공지사항 등록 api", description = "공지사항을 등록한다.")
+    @PostMapping()
+    public ResponseEntity<Void> insert(@RequestBody NoticeDTO noticeDTO) {
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "공지사항 수정 api", description = "공지사항을 수정한다.")
+    @PutMapping()
+    public ResponseEntity<Void> update(@RequestBody NoticeDTO noticeDTO) {
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "공지사항 삭제 api", description = "해당 ID에 맞는 공지사항을 삭제한다.")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(
+            @Parameter(description = "공지사항 id")
+            @PathVariable Long id) {
+        return ResponseEntity.ok().build();
     }
 }
