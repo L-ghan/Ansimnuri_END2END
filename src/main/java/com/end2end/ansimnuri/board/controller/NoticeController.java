@@ -30,7 +30,7 @@ public class NoticeController {
     @Operation(summary = "공지사항 조회 api", description = "해당 ID에 맞는 공지사항 내용을 가져온다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "정상 작동입니다."),
-            @ApiResponse(responseCode = "400", description = "해당 id의 공지사항이 존재하지 않습니다.")
+            @ApiResponse(responseCode = "400", description = "해당 id의 공지사항이 존재하지 않습니다.")  // TODO: 에러 응답을 보여줄 것
     })
     @GetMapping("/{id}")
     public ResponseEntity<NoticeDTO> selectById(
@@ -64,7 +64,7 @@ public class NoticeController {
     @Operation(summary = "공지사항 삭제 api", description = "해당 ID에 맞는 공지사항을 삭제한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "정상 작동입니다."),
-            @ApiResponse(responseCode = "400", description = "해당 id의 공지사항이 존재하지 않습니다."),
+            @ApiResponse(responseCode = "400", description = "해당 id의 공지사항이 존재하지 않습니다."),  // TODO: 에러 응답을 보여줄 것
             @ApiResponse(responseCode = "403", description = "해당 요청을 사용할 권한이 없습니다.")
     })
     @DeleteMapping("/{id}")
