@@ -20,7 +20,7 @@ import java.util.List;
 public class NoticeController {
     private final NoticeService noticeService;
 
-    @Operation(summary = "전체 공지사항 조회 api", description = "모든 공지사항 내용을 가져온다.")
+    @Operation(summary = "전체 공지사항 조회 api", description = "해당 페이지에 해당하는 공지사항 내용을 가져온다.")
     @ApiResponse(responseCode = "200", description = "정상 작동입니다.")
     @GetMapping()
     public ResponseEntity<List<NoticeDTO>> selectAll(
