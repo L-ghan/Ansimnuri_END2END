@@ -3,4 +3,21 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="qna">
+    <select id="selectAll" resultType="com.end2end.ansimnuri.board.dto.QnaDTO">
+        SELECT *
+        FROM (
+            SELECT QNA.*, ROW_NUMBER() OVER (ORDER BY id) AS rnum
+            FROM QNA)
+        WHERE rnum BETWEEN ${start} AND ${end}
+    </select>
+
+    <select id="countAll">
+        SELECT COUNT(*) FROM QNA
+    </select>
+
+    <select id="selectById" resultType="com.end2end.ansimnuri.board.dto.QnaDTO">
+        SELECT *
+        FROM QNA
+        WHERE id = ${id}
+    </select>
 </mapper>

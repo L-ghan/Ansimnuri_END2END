@@ -27,6 +27,10 @@ public class NoticeDAO {
         return Optional.ofNullable(NoticeDTO.builder().build());
     }
 
+    public int countAll() {
+        return mybatis.selectOne("notice.countAll");
+    }
+
     public void insert( NoticeDTO noticeDTO) {
         mybatis.insert("notice.insert", noticeDTO);
     }

@@ -11,6 +11,10 @@
         WHERE rnum BETWEEN ${start} AND ${end}
     </select>
 
+    <select id="countAll">
+        SELECT COUNT(*) FROM NOTICE
+    </select>
+
     <select id="selectById" resultType="com.end2end.ansimnuri.board.dto.NoticeDTO">
         SELECT *
         FROM NOTICE
