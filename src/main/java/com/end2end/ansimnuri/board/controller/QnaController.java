@@ -24,6 +24,12 @@ public class QnaController {
         return null;
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<QnaDTO>> selectByUserId(
+            @PathVariable long userId, @RequestParam(defaultValue = "1") int page) {
+        return null;
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<QnaDTO> selectById(@PathVariable long id) {
         return null;
