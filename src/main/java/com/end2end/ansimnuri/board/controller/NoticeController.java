@@ -38,7 +38,7 @@ public class NoticeController {
     public ResponseEntity<NoticeDTO> selectById(
             @Parameter(description = "공지사항 id")
             @PathVariable Long id) {
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(noticeService.selectById(id));
     }
 
     @Operation(summary = "공지사항 등록 api", description = "공지사항을 등록한다.")
@@ -47,7 +47,7 @@ public class NoticeController {
             @ApiResponse(responseCode = "400", description = "잘못된 입력값을 넣었습니다."),
             @ApiResponse(responseCode = "403", description = "해당 요청을 사용할 권한이 없습니다.")
     })
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Void> insert(@RequestBody NoticeDTO noticeDTO) {
         noticeService.insert(noticeDTO);
         return ResponseEntity.ok().build();

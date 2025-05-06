@@ -5,7 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -13,11 +15,27 @@ import java.util.Optional;
 public class NoticeDAO {
     private final SqlSession mybatis;
 
-    public List<NoticeDTO> selectAll() {
-        return null;
+    public List<NoticeDTO> selectAll(int start, int end) {
+        Map<String, Integer> pram = new HashMap<>();
+        pram.put("start", start);
+        pram.put("end", end);
+
+        return mybatis.selectList("notice.selectAll", pram);
     }
 
     public Optional<NoticeDTO> selectById(long id) {
         return Optional.ofNullable(NoticeDTO.builder().build());
+    }
+
+    public void insert( NoticeDTO noticeDTO) {
+        mybatis.insert("notice.insert", noticeDTO);
+    }
+
+    public void update( NoticeDTO noticeDTO) {
+        mybatis.update("notice.update", noticeDTO);
+    }
+
+    public void deleteById(long id) {
+        mybatis.delete("notice.deleteById", id);
     }
 }
