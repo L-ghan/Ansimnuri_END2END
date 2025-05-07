@@ -43,8 +43,9 @@ public class NoticeController {
             @ApiResponse(responseCode = "200", description = "정상 작동입니다."),
             @ApiResponse(responseCode = "400", description = "잘못된 페이지 번호입니다.")
     })
-    @GetMapping("/search")
-    public ResponseEntity<List<NoticeDTO>> selectByTitleLike(String searchKey, int page) {
+    @GetMapping("/search/{searchKey}")
+    public ResponseEntity<List<NoticeDTO>> selectByTitleLike(
+            @PathVariable String searchKey, @RequestParam(defaultValue = "1") int page) {
         return ResponseEntity.ok(noticeService.selectByTitleLike(searchKey, page));
     }
 
