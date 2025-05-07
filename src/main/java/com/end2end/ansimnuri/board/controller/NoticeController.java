@@ -22,7 +22,7 @@ public class NoticeController {
 
     @Operation(summary = "전체 공지사항 조회 api", description = "해당 페이지에 해당하는 공지사항 내용을 가져온다.")
     @ApiResponse(responseCode = "200", description = "정상 작동입니다.")
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<NoticeDTO>> selectAll(
             @Parameter(description = "페이지")
             @RequestParam(defaultValue = "1") int page) {
@@ -32,7 +32,7 @@ public class NoticeController {
     @Operation(summary = "공지사항 조회 api", description = "해당 ID에 맞는 공지사항 내용을 가져온다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "정상 작동입니다."),
-            @ApiResponse(responseCode = "400", description = "해당 id의 공지사항이 존재하지 않습니다.")  // TODO: 에러 응답을 보여줄 것
+            @ApiResponse(responseCode = "404", description = "해당 id의 공지사항이 존재하지 않습니다.")  // TODO: 에러 응답을 보여줄 것
     })
     @GetMapping("/{id}")
     public ResponseEntity<NoticeDTO> selectById(
@@ -45,7 +45,7 @@ public class NoticeController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "정상 작동입니다."),
             @ApiResponse(responseCode = "400", description = "잘못된 입력값을 넣었습니다."),
-            @ApiResponse(responseCode = "403", description = "해당 요청을 사용할 권한이 없습니다.")
+            @ApiResponse(responseCode = "403", description = "해당 요청은 관리자만 사용 가능합니다.")
     })
     @PostMapping
     public ResponseEntity<Void> insert(@RequestBody NoticeDTO noticeDTO) {
@@ -57,9 +57,9 @@ public class NoticeController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "정상 작동입니다."),
             @ApiResponse(responseCode = "400", description = "잘못된 입력값을 넣었습니다."),
-            @ApiResponse(responseCode = "403", description = "해당 요청을 사용할 권한이 없습니다.")
+            @ApiResponse(responseCode = "403", description = "해당 요청은 관리자만 사용 가능합니다.")
     })
-    @PutMapping()
+    @PutMapping
     public ResponseEntity<Void> update(@RequestBody NoticeDTO noticeDTO) {
         noticeService.update(noticeDTO);
         return ResponseEntity.ok().build();
@@ -69,7 +69,7 @@ public class NoticeController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "정상 작동입니다."),
             @ApiResponse(responseCode = "400", description = "해당 id의 공지사항이 존재하지 않습니다."),  // TODO: 에러 응답을 보여줄 것
-            @ApiResponse(responseCode = "403", description = "해당 요청을 사용할 권한이 없습니다.")
+            @ApiResponse(responseCode = "403", description = "해당 요청은 관리자만 사용 가능합니다.")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
