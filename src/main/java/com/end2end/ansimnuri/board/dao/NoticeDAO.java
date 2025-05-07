@@ -20,17 +20,17 @@ public class NoticeDAO {
         return mybatis.selectList("notice.selectAll", pram);
     }
 
+    public List<NoticeDTO> selectByTitleLike(String searchKey, int start, int end) {
+        Map<String, Object> param = Map.of("searchKey", searchKey, "start", start, "end", end);
+        return mybatis.selectList("notice.selectByTitleLike", param);
+    }
+
     public Optional<NoticeDTO> selectById(long id) {
         return Optional.ofNullable(mybatis.selectOne("notice.selectById", id));
     }
 
     public int countAll() {
         return mybatis.selectOne("notice.countAll");
-    }
-
-    public List<NoticeDTO> selectByTitleLike(String searchKey, int start, int end) {
-        Map<String, Object> param = Map.of("searchKey", searchKey, "start", start, "end", end);
-        return mybatis.selectList("notice.selectByTitleLike", param);
     }
 
     public int countByTitleLike(String searchKey) {
