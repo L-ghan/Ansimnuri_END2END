@@ -54,7 +54,7 @@ public class Member extends Timestamp {
     private List<Message> messageList;
     @OneToMany(mappedBy = "member", orphanRemoval = true)
     private List<MessageBlock> messageBlockList;
-    @OneToMany(mappedBy = "messageBlock", orphanRemoval = true)
+    @OneToMany(mappedBy = "blockMember", orphanRemoval = true)
     private List<MessageBlock> messageBlockedList;
     @OneToMany(mappedBy = "member")
     private List<Note> noteList;
