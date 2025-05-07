@@ -4,6 +4,7 @@ import com.end2end.ansimnuri.board.dto.NoticeDTO;
 import com.end2end.ansimnuri.board.service.NoticeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "공지사항 API", description = "공지사항 CRUD 관련 API")
+@Tag(name = "공지사항 API", description = "공지사항 관련 기능을 가진 API")
 @RequiredArgsConstructor
 @RequestMapping("/notice")
 @RestController
@@ -27,6 +28,21 @@ public class NoticeController {
             @Parameter(description = "페이지")
             @RequestParam(defaultValue = "1") int page) {
         return ResponseEntity.ok(noticeService.selectAll(page));
+    }
+
+    @Operation(summary = "공지사항 제목 검색 api",
+            description = "해당 검색 내용이 포함된 제목을 가진 공지사항 내용을 가져온다.")
+    @Parameters({
+            @Parameter(name="searchKey", description = "검색 내용"),
+            @Parameter(name = "page", description = "페이지")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정상 작동입니다."),
+            @ApiResponse(responseCode = "404", description = "잘못된 페이지 번호입니다.")
+    })
+    @GetMapping("/search")
+    public ResponseEntity<List<NoticeDTO>> selectByTitle(String searchKey, int page) {
+        return ResponseEntity.ok(noticeService.selectByTitleLike(searchKey, page));
     }
 
     @Operation(summary = "공지사항 조회 api", description = "해당 ID에 맞는 공지사항 내용을 가져온다.")

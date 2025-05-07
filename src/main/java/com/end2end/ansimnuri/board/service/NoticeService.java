@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface NoticeService {
     List<NoticeDTO> selectAll(int page);
+    List<NoticeDTO> selectByTitleLike(String searchKey, int page);
     NoticeDTO selectById(long id);
     void insert(NoticeDTO noticeDTO);
     void update(NoticeDTO noticeDTO);

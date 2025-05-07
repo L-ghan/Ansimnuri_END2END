@@ -15,6 +15,21 @@
         SELECT COUNT(*) FROM NOTICE
     </select>
 
+    <select id="selectByTitleLike" resultType="com.end2end.ansimnuri.board.dto.NoticeDTO">
+        SELECT *
+        FROM (
+            SELECT NOTICE.*, ROW_NUMBER() OVER (ORDER BY id DESC) AS rnum
+            FROM NOTICE
+            WHERE title LIKE '%' || #{searchKey} || '%')
+        WHERE rnum BETWEEN ${start} AND ${end}
+    </select>
+
+    <select id="countByTitleLike" resultType="Integer">
+        SELECT COUNT(*)
+        FROM NOTICE
+        WHERE title LIKE '%' || #{searchKey} || '%')
+    </select>
+
     <select id="selectById" resultType="com.end2end.ansimnuri.board.dto.NoticeDTO">
         SELECT *
         FROM NOTICE

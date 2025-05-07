@@ -16,10 +16,18 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     public List<NoticeDTO> selectAll(int page) {
-        int start = (page - 1) * 10;
+        int start = (page - 1) * RECORD_COUNT_PER_PAGE;
         int end = Math.min(page * RECORD_COUNT_PER_PAGE, noticeDAO.countAll());
 
         return noticeDAO.selectAll(start, end);
+    }
+
+    @Override
+    public List<NoticeDTO> selectByTitleLike(String searchKey, int page) {
+        int start = (page - 1) * RECORD_COUNT_PER_PAGE;
+        int end = Math.min(page * RECORD_COUNT_PER_PAGE, noticeDAO.countByTitleLike(searchKey));
+
+        return noticeDAO.selectByTitleLike(searchKey, start, end);
     }
 
     @Override

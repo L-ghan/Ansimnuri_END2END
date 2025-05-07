@@ -16,10 +16,7 @@ public class NoticeDAO {
     private final SqlSession mybatis;
 
     public List<NoticeDTO> selectAll(int start, int end) {
-        Map<String, Integer> pram = new HashMap<>();
-        pram.put("start", start);
-        pram.put("end", end);
-
+        Map<String, Integer> pram = Map.of("start", start, "end", end);
         return mybatis.selectList("notice.selectAll", pram);
     }
 
@@ -29,6 +26,15 @@ public class NoticeDAO {
 
     public int countAll() {
         return mybatis.selectOne("notice.countAll");
+    }
+
+    public List<NoticeDTO> selectByTitleLike(String searchKey, int start, int end) {
+        Map<String, Object> param = Map.of("searchKey", searchKey, "start", start, "end", end);
+        return mybatis.selectList("notice.selectByTitleLike", param);
+    }
+
+    public int countByTitleLike(String searchKey) {
+        return mybatis.selectOne("notice.countByTitleLike", searchKey);
     }
 
     public void insert( NoticeDTO noticeDTO) {
