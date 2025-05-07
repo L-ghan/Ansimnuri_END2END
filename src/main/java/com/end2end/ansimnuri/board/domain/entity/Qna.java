@@ -1,5 +1,6 @@
 package com.end2end.ansimnuri.board.domain.entity;
 
+import com.end2end.ansimnuri.util.entitly.Timestamp;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,13 +15,15 @@ import lombok.*;
 )
 @Table(name = "QNA")
 @Entity
-public class Qna {
+public class Qna extends Timestamp {
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "qnaSequenceGenerator")
     private Long id;
     @Column(name="TITLE", nullable = false)
     private String title;
     @Column(name="CONTENT", nullable = false)
     private String content;
+    @OneToOne(mappedBy = "qna")
+    private QnaReply qnaReply;
 
     public static Qna of (String title, String content) {
         return Qna.builder()
