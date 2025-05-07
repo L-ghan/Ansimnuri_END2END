@@ -11,7 +11,7 @@
         WHERE rnum BETWEEN ${start} AND ${end}
     </select>
 
-    <select id="countAll">
+    <select id="countAll" resultType="Integer">
         SELECT COUNT(*) FROM NOTICE
     </select>
 

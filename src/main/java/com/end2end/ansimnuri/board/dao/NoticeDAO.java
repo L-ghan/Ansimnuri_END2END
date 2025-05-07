@@ -24,7 +24,7 @@ public class NoticeDAO {
     }
 
     public Optional<NoticeDTO> selectById(long id) {
-        return Optional.ofNullable(NoticeDTO.builder().build());
+        return Optional.ofNullable(mybatis.selectOne("notice.selectById", id));
     }
 
     public int countAll() {

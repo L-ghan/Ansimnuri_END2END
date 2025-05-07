@@ -25,7 +25,7 @@ public class QnaDAO {
     }
 
     public Optional<QnaDTO> selectById(long id) {
-        return Optional.ofNullable(QnaDTO.builder().build());
+        return Optional.ofNullable(mybatis.selectOne("board.qna.selectById", id));
     }
 
     public int countAll() {
