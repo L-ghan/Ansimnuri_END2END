@@ -35,3 +35,6 @@ build/
 src/main/resources/application.properties
 mvnw
 mvnw.cmd
+
+#gcs json key
+src/main/resources/quick-woodland-457602-b7-d74fef88b230.json
