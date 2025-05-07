@@ -1,5 +1,6 @@
 package com.end2end.ansimnuri.board.domain.entity;
 
+import com.end2end.ansimnuri.user.domain.entity.Member;
 import com.end2end.ansimnuri.util.entitly.Timestamp;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,6 +23,10 @@ public class Qna extends Timestamp {
     private String title;
     @Column(name="CONTENT", nullable = false)
     private String content;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MEMBER_ID", nullable = false)
+    public Member member;
+
     @OneToOne(mappedBy = "qna")
     private QnaReply qnaReply;
 
