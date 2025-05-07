@@ -1,6 +1,7 @@
 package com.end2end.ansimnuri.board.service;
 
 import com.end2end.ansimnuri.board.dao.QnaDAO;
+import com.end2end.ansimnuri.board.domain.repository.QnaRepository;
 import com.end2end.ansimnuri.board.dto.QnaDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import static com.end2end.ansimnuri.util.Statics.RECORD_COUNT_PER_PAGE;
 @Service
 public class QnaServiceImpl implements QnaService {
     private final QnaDAO qnaDAO;
+    private final QnaRepository qnaRepository;
 
     @Override
     public List<QnaDTO> selectAll(int page) {

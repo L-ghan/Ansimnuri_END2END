@@ -1,6 +1,7 @@
 package com.end2end.ansimnuri.board.service;
 
 import com.end2end.ansimnuri.board.dao.QnaReplyDAO;
+import com.end2end.ansimnuri.board.domain.repository.QnaReplyRepository;
 import com.end2end.ansimnuri.board.dto.QnaReplyDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class QnaReplyServiceImpl implements QnaReplyService {
     private final QnaReplyDAO qnaReplyDAO;
+    private final QnaReplyRepository qnaReplyRepository;
 
     @Override
     public QnaReplyDTO selectByQnaId(long qnaId) {
