@@ -6,8 +6,13 @@
     <select id="selectAll" resultType="com.end2end.ansimnuri.board.dto.QnaDTO">
         SELECT *
         FROM (
-            SELECT QNA.*, ROW_NUMBER() OVER (ORDER BY id) AS rnum
-            FROM QNA)
+            SELECT A.*, ROW_NUMBER() OVER (ORDER BY id) AS rnum
+            FROM (
+                SELECT *
+                FROM QNA
+                JOIN USER
+                    ON QNA.userId = USER.id ) A
+            )
         WHERE rnum BETWEEN ${start} AND ${end}
     </select>
 
@@ -15,9 +20,44 @@
         SELECT COUNT(*) FROM QNA
     </select>
 
+    <select id="selectByUserId" resultType="com.end2end.ansimnuri.board.dto.QnaDTO">
+        SELECT *
+        FROM (
+            SELECT A.*, ROW_NUMBER() OVER (ORDER BY id) AS rnum
+            FROM (
+                SELECT *
+                FROM QNA
+                JOIN USER
+                    ON QNA.userId = USER.id
+                WHERE userId = ${userId}) A
+        )
+        WHERE rnum BETWEEN ${start} AND ${end}
+    </select>
+
+    <select id="countByUserId">
+        SELECT COUNT(*)
+        FROM QNA
+        WHERE userId = ${userId}
+    </select>
+
     <select id="selectById" resultType="com.end2end.ansimnuri.board.dto.QnaDTO">
         SELECT *
         FROM QNA
-        WHERE id = ${id}
+        JOIN USER
+            ON QNA.userId = USER.id
+        WHERE QNA.id = ${id}
     </select>
+
+    <insert id="insert">
+        INSERT INTO QNA(id, userId, title, content)
+        VALUES (QNA_ID_SEQ.nextval, ${userId}, #{title}, #{content})
+    </insert>
+
+    <update id="update">
+        UPDATE QNA SET title = #{title}, content = #{content} WHERE id = ${id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM QNA WHERE id = ${id}
+    </delete>
 </mapper>

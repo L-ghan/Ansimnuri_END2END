@@ -3,4 +3,21 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="qnaReply">
+    <select id="selectByQnaId" resultType="com.end2end.ansimnuri.board.dto.QnaReplyDTO">
+        SELECT *
+        FROM QNA_REPLY
+        WHERE qnaId = ${qnaId}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO QNA_REPLY(id, qnaId, content) VALUES (QNA_REPLY_ID_SEQ.nextval, ${qnaId}, #{content})
+    </insert>
+
+    <update id="update">
+        UPDATE QNA_REPLY SET content = #{content} WHERE id = ${id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM QNA_REPLY WHERE id = ${id}
+    </delete>
 </mapper>

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.end2end.ansimnuri.util.Statics.RECORD_COUNT_PER_PAGE;
+
 @RequiredArgsConstructor
 @Service
 public class NoticeServiceImpl implements NoticeService {
@@ -15,7 +17,7 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public List<NoticeDTO> selectAll(int page) {
         int start = (page - 1) * 10;
-        int end = page * 10;
+        int end = Math.min(page * RECORD_COUNT_PER_PAGE, noticeDAO.countAll());
 
         return noticeDAO.selectAll(start, end);
     }

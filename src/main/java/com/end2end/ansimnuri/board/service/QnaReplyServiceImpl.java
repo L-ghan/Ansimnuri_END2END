@@ -12,21 +12,21 @@ public class QnaReplyServiceImpl implements QnaReplyService {
 
     @Override
     public QnaReplyDTO selectByQnaId(long qnaId) {
-        return null;
+        return qnaReplyDAO.selectByQnaId(qnaId);
     }
 
     @Override
     public void insert(QnaReplyDTO qnaReplyDTO) {
-
+        qnaReplyDAO.insert(qnaReplyDTO);
     }
 
     @Override
     public void update(QnaReplyDTO qnaReplyDTO) {
-
+        qnaReplyDAO.update(qnaReplyDTO);
     }
 
     @Override
     public void deleteById(long id) {
-
+        qnaReplyDAO.deleteById(id);
     }
 }
