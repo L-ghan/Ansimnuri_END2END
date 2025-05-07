@@ -27,7 +27,7 @@ public class QnaController {
     @Operation(summary = "모든 Q&A 조회 api", description = "해당 페이지의 Q&A 데이터를 조회한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "정상 작동입니다."),
-            @ApiResponse(responseCode = "404", description = "잘못된 페이지 번호입니다.")
+            @ApiResponse(responseCode = "400", description = "잘못된 페이지 번호입니다.")
     })
     @GetMapping
     public ResponseEntity<List<QnaDTO>> selectAll(
@@ -44,8 +44,8 @@ public class QnaController {
     })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "정상 작동입니다."),
-            @ApiResponse(responseCode = "401", description = "해당 서비스는 로그인이 필요한 서비스입니다."),
-            @ApiResponse(responseCode = "404", description = "잘못된 페이지 번호입니다.")
+            @ApiResponse(responseCode = "400", description = "잘못된 페이지 번호입니다."),
+            @ApiResponse(responseCode = "401", description = "해당 서비스는 로그인이 필요한 서비스입니다.")
     })
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<QnaDTO>> selectByUserId(
