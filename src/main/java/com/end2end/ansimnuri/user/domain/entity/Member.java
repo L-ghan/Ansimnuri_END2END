@@ -2,6 +2,10 @@ package com.end2end.ansimnuri.user.domain.entity;
 
 import com.end2end.ansimnuri.board.domain.entity.Qna;
 import com.end2end.ansimnuri.message.domain.entity.Message;
+import com.end2end.ansimnuri.message.domain.entity.MessageBlock;
+import com.end2end.ansimnuri.note.domain.entity.Note;
+import com.end2end.ansimnuri.note.domain.entity.NoteRec;
+import com.end2end.ansimnuri.note.domain.entity.NoteReply;
 import com.end2end.ansimnuri.user.dto.UserDTO;
 import com.end2end.ansimnuri.util.entitly.Timestamp;
 import jakarta.persistence.*;
@@ -48,6 +52,16 @@ public class Member extends Timestamp {
     private List<Complaint> complaintReporteeList;
     @OneToMany(mappedBy = "member", orphanRemoval = true)
     private List<Message> messageList;
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
+    private List<MessageBlock> messageBlockList;
+    @OneToMany(mappedBy = "messageBlock", orphanRemoval = true)
+    private List<MessageBlock> messageBlockedList;
+    @OneToMany(mappedBy = "member")
+    private List<Note> noteList;
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
+    private List<NoteRec> noteRecList;
+    @OneToMany(mappedBy = "member")
+    private List<NoteReply> noteReplyList;
 
     public static Member of (UserDTO userDTO) {
         return Member.builder()
