@@ -3,6 +3,7 @@ package com.end2end.ansimnuri.member.service;
 import com.end2end.ansimnuri.member.dao.MemberDAO;
 import com.end2end.ansimnuri.member.domain.entity.Member;
 import com.end2end.ansimnuri.member.domain.repository.MemberRepository;
+import com.end2end.ansimnuri.member.dto.LoginDTO;
 import com.end2end.ansimnuri.member.dto.MemberDTO;
 import com.end2end.ansimnuri.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public String login(MemberDTO dto){
+    public String login(LoginDTO dto){
         Member member = memberRepository
                 .findByLoginIdAndPassword(dto.getLoginId(), dto.getPassword())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 아이디, 비밀번호입니다."));

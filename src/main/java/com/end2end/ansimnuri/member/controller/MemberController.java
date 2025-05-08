@@ -1,5 +1,6 @@
 package com.end2end.ansimnuri.member.controller;
 
+import com.end2end.ansimnuri.member.dto.LoginDTO;
 import com.end2end.ansimnuri.member.dto.MemberDTO;
 import com.end2end.ansimnuri.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +28,7 @@ public class MemberController {
             @ApiResponse(responseCode = "400", description = "아이디 또는, 비밀번호가 일치하지 않습니다.")
     })
     @GetMapping("/login")
-    public ResponseEntity<String> login(MemberDTO dto) {
+    public ResponseEntity<String> login(LoginDTO dto) {
         return ResponseEntity.ok(memberService.login(dto));
     }
 
