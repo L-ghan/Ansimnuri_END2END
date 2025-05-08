@@ -1,13 +1,16 @@
 package com.end2end.ansimnuri.member.domain.entity;
 
+import com.end2end.ansimnuri.admin.domain.entity.Block;
+import com.end2end.ansimnuri.admin.domain.entity.Complaint;
 import com.end2end.ansimnuri.board.domain.entity.Qna;
 import com.end2end.ansimnuri.message.domain.entity.Message;
 import com.end2end.ansimnuri.message.domain.entity.MessageBlock;
 import com.end2end.ansimnuri.note.domain.entity.Note;
 import com.end2end.ansimnuri.note.domain.entity.NoteRec;
 import com.end2end.ansimnuri.note.domain.entity.NoteReply;
-import com.end2end.ansimnuri.member.dto.UserDTO;
+import com.end2end.ansimnuri.member.dto.MemberDTO;
 import com.end2end.ansimnuri.util.entity.Timestamp;
+import com.end2end.ansimnuri.util.enums.Roles;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -41,6 +44,9 @@ public class Member extends Timestamp {
     private String address;
     @Column(name = "DETAIL_ADDRESS", nullable = false)
     private String detailAddress;
+    @Column(name = "ROLE", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Roles role;
 
     @OneToMany(mappedBy = "member")
     private List<Qna> qnaList;
@@ -63,12 +69,27 @@ public class Member extends Timestamp {
     @OneToMany(mappedBy = "member")
     private List<NoteReply> noteReplyList;
 
-    public static Member of (UserDTO userDTO) {
+    public static Member of (MemberDTO memberDTO) {
         return Member.builder()
-                .id(userDTO.getId())
+                .id(memberDTO.getId())
+                .loginId(memberDTO.getLoginId())
+                .password(memberDTO.getPassword())
+                .nickname(memberDTO.getNickname())
+                .email(memberDTO.getEmail())
+                .postcode(memberDTO.getPostcode())
+                .address(memberDTO.getAddress())
+                .detailAddress(memberDTO.getDetailAddress())
+                .role(Roles.USER)
                 .build();
     }
 
-    public void update(UserDTO userDTO) {
+    public void update(MemberDTO memberDTO) {
+        this.loginId = memberDTO.getLoginId();
+        this.password = memberDTO.getPassword();
+        this.nickname = memberDTO.getNickname();
+        this.email = memberDTO.getEmail();
+        this.postcode = memberDTO.getPostcode();
+        this.address = memberDTO.getAddress();
+        this.detailAddress = memberDTO.getDetailAddress();
     }
 }

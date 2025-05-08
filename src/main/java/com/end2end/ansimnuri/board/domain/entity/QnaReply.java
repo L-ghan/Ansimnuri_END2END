@@ -24,9 +24,10 @@ public class QnaReply extends Timestamp {
     @JoinColumn(name = "QNA_ID", nullable = false)
     private Qna qna;
 
-    public static QnaReply of (String content) {
+    public static QnaReply of (String content, Qna qna) {
         return QnaReply.builder()
                 .content(content)
+                .qna(qna)
                 .build();
     }
 

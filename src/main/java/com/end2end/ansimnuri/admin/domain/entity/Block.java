@@ -1,6 +1,7 @@
-package com.end2end.ansimnuri.member.domain.entity;
+package com.end2end.ansimnuri.admin.domain.entity;
 
 
+import com.end2end.ansimnuri.member.domain.entity.Member;
 import com.end2end.ansimnuri.util.entity.Timestamp;
 import jakarta.persistence.*;
 import lombok.*;

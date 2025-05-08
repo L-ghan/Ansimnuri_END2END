@@ -1,7 +1,7 @@
-package com.end2end.ansimnuri.member.service;
+package com.end2end.ansimnuri.admin.service;
 
-import com.end2end.ansimnuri.member.dao.ComplaintDAO;
-import com.end2end.ansimnuri.member.domain.repository.ComplaintRepository;
+import com.end2end.ansimnuri.admin.dao.ComplaintDAO;
+import com.end2end.ansimnuri.admin.domain.repository.ComplaintRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
