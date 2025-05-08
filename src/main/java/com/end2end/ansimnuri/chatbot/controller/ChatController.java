@@ -2,6 +2,7 @@ package com.end2end.ansimnuri.chatbot.controller;
 
 
 import com.end2end.ansimnuri.chatbot.service.ChatService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,12 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/chat")
+@RestController
 public class ChatController {
-
-    @Autowired
-    private ChatService chatService;
+    private final ChatService chatService;
 
     @PostMapping
     public ResponseEntity<String> askLLM(@RequestBody Map<String, Object> request) {
