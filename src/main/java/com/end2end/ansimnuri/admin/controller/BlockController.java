@@ -7,11 +7,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "관리자 API", description = "관리자가 사용하는 기능을 모아두는 API")
+@Tag(name = "차단 API", description = "신고/차단 관련 기능을 모아두는 API")
 @RequiredArgsConstructor
 @RequestMapping("/api/admin")
 @RestController
-public class AdminController {
+public class BlockController {
     private final BlockService blockService;
     private final ComplaintService complaintService;
 }
