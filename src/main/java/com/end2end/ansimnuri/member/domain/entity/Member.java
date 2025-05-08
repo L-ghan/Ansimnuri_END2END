@@ -77,6 +77,7 @@ public class Member extends Timestamp {
                 .postcode(memberDTO.getPostcode())
                 .address(memberDTO.getAddress())
                 .detailAddress(memberDTO.getDetailAddress())
+                .role(Roles.USER)
                 .build();
     }
 
