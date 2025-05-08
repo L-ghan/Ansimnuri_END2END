@@ -1,17 +1,17 @@
-package com.end2end.ansimnuri.member.controller;
+package com.end2end.ansimnuri.admin.controller;
 
-import com.end2end.ansimnuri.member.service.BlockService;
-import com.end2end.ansimnuri.member.service.ComplaintService;
+import com.end2end.ansimnuri.admin.service.BlockService;
+import com.end2end.ansimnuri.admin.service.ComplaintService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "차단 API", description = "유저 신고 처리 및 유저 차단을 하는 API")
+@Tag(name = "관리자 API", description = "관리자가 사용하는 기능을 모아두는 API")
 @RequiredArgsConstructor
-@RequestMapping("/api/block")
+@RequestMapping("/api/admin")
 @RestController
-public class BlockController {
+public class AdminController {
     private final BlockService blockService;
     private final ComplaintService complaintService;
 }

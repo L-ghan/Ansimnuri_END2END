@@ -1,5 +1,7 @@
 package com.end2end.ansimnuri.member.domain.entity;
 
+import com.end2end.ansimnuri.admin.domain.entity.Block;
+import com.end2end.ansimnuri.admin.domain.entity.Complaint;
 import com.end2end.ansimnuri.board.domain.entity.Qna;
 import com.end2end.ansimnuri.message.domain.entity.Message;
 import com.end2end.ansimnuri.message.domain.entity.MessageBlock;

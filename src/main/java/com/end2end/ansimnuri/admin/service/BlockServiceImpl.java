@@ -1,7 +1,7 @@
-package com.end2end.ansimnuri.member.service;
+package com.end2end.ansimnuri.admin.service;
 
-import com.end2end.ansimnuri.member.dao.BlockDAO;
-import com.end2end.ansimnuri.member.domain.repository.BlockRepository;
+import com.end2end.ansimnuri.admin.dao.BlockDAO;
+import com.end2end.ansimnuri.admin.domain.repository.BlockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
