@@ -1,6 +1,7 @@
 package com.end2end.ansimnuri.member.dto;
 
 import com.end2end.ansimnuri.member.domain.entity.Member;
+import com.end2end.ansimnuri.util.enums.Roles;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +25,7 @@ public class MemberDTO {
     private String postcode;
     private String address;
     private String detailAddress;
+    private Roles role;
     private LocalDateTime regDate;
 
     public static MemberDTO of(Member member) {
@@ -36,6 +38,7 @@ public class MemberDTO {
                 .postcode(member.getPostcode())
                 .address(member.getAddress())
                 .detailAddress(member.getDetailAddress())
+                .role(member.getRole())
                 .regDate(member.getRegDt())
                 .build();
     }

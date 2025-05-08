@@ -8,6 +8,7 @@ import com.end2end.ansimnuri.note.domain.entity.NoteRec;
 import com.end2end.ansimnuri.note.domain.entity.NoteReply;
 import com.end2end.ansimnuri.member.dto.MemberDTO;
 import com.end2end.ansimnuri.util.entity.Timestamp;
+import com.end2end.ansimnuri.util.enums.Roles;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -41,6 +42,9 @@ public class Member extends Timestamp {
     private String address;
     @Column(name = "DETAIL_ADDRESS", nullable = false)
     private String detailAddress;
+    @Column(name = "ROLE", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Roles role;
 
     @OneToMany(mappedBy = "member")
     private List<Qna> qnaList;

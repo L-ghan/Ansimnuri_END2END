@@ -30,7 +30,7 @@ public class MemberServiceImpl implements MemberService {
                 .findByLoginIdAndPassword(dto.getLoginId(), dto.getPassword())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 아이디, 비밀번호입니다."));
         List<String> roles = new ArrayList<>();
-        roles.add("ROLE_USER");
+        roles.add(member.getRole().toString());
 
         return jwtUtil.createToken(member.getLoginId(), roles);
     }
