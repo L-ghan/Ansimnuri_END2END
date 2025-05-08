@@ -72,7 +72,7 @@ public class Member extends Timestamp {
                 .email(memberDTO.getEmail())
                 .postcode(memberDTO.getPostcode())
                 .address(memberDTO.getAddress())
-                .detailAddress(memberDTO.getAddressDetail())
+                .detailAddress(memberDTO.getDetailAddress())
                 .build();
     }
 
@@ -83,6 +83,6 @@ public class Member extends Timestamp {
         this.email = memberDTO.getEmail();
         this.postcode = memberDTO.getPostcode();
         this.address = memberDTO.getAddress();
-        this.detailAddress = memberDTO.getAddressDetail();
+        this.detailAddress = memberDTO.getDetailAddress();
     }
 }
