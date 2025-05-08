@@ -6,7 +6,7 @@ import com.end2end.ansimnuri.message.domain.entity.MessageBlock;
 import com.end2end.ansimnuri.note.domain.entity.Note;
 import com.end2end.ansimnuri.note.domain.entity.NoteRec;
 import com.end2end.ansimnuri.note.domain.entity.NoteReply;
-import com.end2end.ansimnuri.member.dto.UserDTO;
+import com.end2end.ansimnuri.member.dto.MemberDTO;
 import com.end2end.ansimnuri.util.entity.Timestamp;
 import jakarta.persistence.*;
 import lombok.*;
@@ -63,12 +63,11 @@ public class Member extends Timestamp {
     @OneToMany(mappedBy = "member")
     private List<NoteReply> noteReplyList;
 
-    public static Member of (UserDTO userDTO) {
+    public static Member of (MemberDTO memberDTO) {
         return Member.builder()
-                .id(userDTO.getId())
+                .id(memberDTO.getId())
                 .build();
     }
 
-    public void update(UserDTO userDTO) {
-    }
+    public void update(MemberDTO memberDTO) {}
 }
