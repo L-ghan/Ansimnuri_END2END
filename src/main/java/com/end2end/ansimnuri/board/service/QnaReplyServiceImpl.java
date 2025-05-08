@@ -1,6 +1,5 @@
 package com.end2end.ansimnuri.board.service;
 
-import com.end2end.ansimnuri.board.dao.QnaReplyDAO;
 import com.end2end.ansimnuri.board.domain.entity.Qna;
 import com.end2end.ansimnuri.board.domain.entity.QnaReply;
 import com.end2end.ansimnuri.board.domain.repository.QnaReplyRepository;
