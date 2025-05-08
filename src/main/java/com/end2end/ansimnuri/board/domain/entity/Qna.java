@@ -30,8 +30,9 @@ public class Qna extends Timestamp {
     @OneToOne(mappedBy = "qna")
     private QnaReply qnaReply;
 
-    public static Qna of (String title, String content) {
+    public static Qna of (Member member, String title, String content) {
         return Qna.builder()
+                .member(member)
                 .title(title)
                 .content(content)
                 .build();

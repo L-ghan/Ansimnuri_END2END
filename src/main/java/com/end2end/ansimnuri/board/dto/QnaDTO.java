@@ -1,12 +1,14 @@
 package com.end2end.ansimnuri.board.dto;
 
+import com.end2end.ansimnuri.board.domain.entity.Qna;
+import com.end2end.ansimnuri.member.domain.entity.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Schema(description = "Q&A DTO")
 @Data
@@ -25,5 +27,16 @@ public class QnaDTO {
     @Schema(description = "내용", example = "지도에 네비게이션을...")
     private String content;
     @Schema(description = "등록일자", example = "2024-02-20 10:00:00", format = "date-time")
-    private Timestamp regDate;
+    private LocalDateTime regDate;
+
+    public static QnaDTO of(Qna qna) {
+        return QnaDTO.builder()
+                .id(qna.getId())
+                .userId(qna.getMember().getId())
+                .nickname(qna.getMember().getNickname())
+                .title(qna.getTitle())
+                .content(qna.getContent())
+                .regDate(qna.getRegDt())
+                .build();
+    }
 }
