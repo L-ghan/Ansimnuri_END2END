@@ -66,8 +66,23 @@ public class Member extends Timestamp {
     public static Member of (MemberDTO memberDTO) {
         return Member.builder()
                 .id(memberDTO.getId())
+                .loginId(memberDTO.getLoginId())
+                .password(memberDTO.getPassword())
+                .nickname(memberDTO.getNickname())
+                .email(memberDTO.getEmail())
+                .postcode(memberDTO.getPostcode())
+                .address(memberDTO.getAddress())
+                .detailAddress(memberDTO.getAddressDetail())
                 .build();
     }
 
-    public void update(MemberDTO memberDTO) {}
+    public void update(MemberDTO memberDTO) {
+        this.loginId = memberDTO.getLoginId();
+        this.password = memberDTO.getPassword();
+        this.nickname = memberDTO.getNickname();
+        this.email = memberDTO.getEmail();
+        this.postcode = memberDTO.getPostcode();
+        this.address = memberDTO.getAddress();
+        this.detailAddress = memberDTO.getAddressDetail();
+    }
 }
