@@ -1,7 +1,6 @@
 package com.end2end.ansimnuri.member.controller;
 
 import com.end2end.ansimnuri.member.dto.LoginDTO;
-import com.end2end.ansimnuri.member.dto.MemberDTO;
 import com.end2end.ansimnuri.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
