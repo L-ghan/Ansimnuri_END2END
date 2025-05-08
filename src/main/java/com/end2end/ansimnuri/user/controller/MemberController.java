@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "유저 API", description = "유저 CRUD 기능을 가진 API")
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/api/member")
 @RestController
-public class UserController {
+public class MemberController {
     private final UserService userService;
 }

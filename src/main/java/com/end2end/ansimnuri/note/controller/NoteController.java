@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name="쪽지 API", description = "쪽지 CRUD, 쪽지 추천, 쪽지 답글 CRUD 기능을 가진 API")
 @RequiredArgsConstructor
-@RequestMapping("/note")
+@RequestMapping("/api/note")
 @RestController
 public class NoteController {
     private final NoteService noteService;

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "news API", description = "뉴스 데이터 기능을 가진 API")
 @RequiredArgsConstructor
-@RequestMapping("/news")
+@RequestMapping("/api/news")
 @RestController
 public class NewsController {
     private final NewsService newsService;
