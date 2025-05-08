@@ -9,10 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "유저 API", description = "유저 CRUD 기능을 가진 API")
 @RequiredArgsConstructor
@@ -26,8 +23,8 @@ public class MemberController {
             @ApiResponse(responseCode = "200", description = "정상 작동입니다."),
             @ApiResponse(responseCode = "400", description = "아이디 또는, 비밀번호가 일치하지 않습니다.")
     })
-    @GetMapping("/login")
-    public ResponseEntity<String> login(LoginDTO dto) {
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginDTO dto) {
         return ResponseEntity.ok(memberService.login(dto));
     }
 
