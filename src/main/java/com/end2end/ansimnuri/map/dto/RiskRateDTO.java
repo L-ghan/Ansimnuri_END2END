@@ -14,4 +14,7 @@ import lombok.NoArgsConstructor;
 public class RiskRateDTO {
     @Schema(description = "id", example = "1", minimum = "1")
     private long id;
+    private int riskRate;
+    private double latitude;
+    private double longitude;
 }

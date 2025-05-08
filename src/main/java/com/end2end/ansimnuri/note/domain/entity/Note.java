@@ -2,7 +2,7 @@ package com.end2end.ansimnuri.note.domain.entity;
 
 import com.end2end.ansimnuri.note.dto.NoteDTO;
 import com.end2end.ansimnuri.user.domain.entity.Member;
-import com.end2end.ansimnuri.util.entitly.Timestamp;
+import com.end2end.ansimnuri.util.entity.Timestamp;
 import jakarta.persistence.*;
 import lombok.*;
 

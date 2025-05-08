@@ -1,4 +1,4 @@
-package com.end2end.ansimnuri.util.entitly;
+package com.end2end.ansimnuri.util.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
