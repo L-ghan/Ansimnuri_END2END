@@ -48,6 +48,12 @@ public class MemberController {
     }
 
     @PostMapping("/register")
+    @Operation(summary = "회원 가입 API", description = "신규 회원 가입을 한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정상 작동입니다."),
+            @ApiResponse(responseCode = "400", description = "입력값이 잘못되었습니다.")
+    })
+    @PostMapping
     public ResponseEntity<Void> insert(@RequestBody MemberDTO memberDTO) {
         memberService.insert(memberDTO);
         return ResponseEntity.ok().build();
