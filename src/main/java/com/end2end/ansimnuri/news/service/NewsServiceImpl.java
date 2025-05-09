@@ -26,7 +26,7 @@ public class NewsServiceImpl implements NewsService {
     public List<NewsDTO> fetchNews() {
         List<NewsDTO> result = new ArrayList<>();
         try {
-        String url = "https://newsapi.org/v2/everything?q=\"살인\"&apiKey=797268b4da474d1b87a18c286f3169e3";
+        String url = "https://newsapi.org/v2/everything?q=\"살인\"&sortBy=publishedAt&apiKey="+apiKey;
 
         String response = restTemplate.getForObject(url, String.class);
         System.out.println(response);
