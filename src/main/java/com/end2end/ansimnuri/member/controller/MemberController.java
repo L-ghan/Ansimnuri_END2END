@@ -1,6 +1,7 @@
 package com.end2end.ansimnuri.member.controller;
 
 import com.end2end.ansimnuri.member.dto.LoginDTO;
+import com.end2end.ansimnuri.member.dto.MemberDTO;
 import com.end2end.ansimnuri.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -35,5 +36,11 @@ public class MemberController {
             @Parameter(description = "로그인 아이디")
             @PathVariable String loginId) {
         return ResponseEntity.ok(memberService.isIdExist(loginId));
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> insert(@RequestBody MemberDTO memberDTO) {
+        memberService.insert(memberDTO);
+        return ResponseEntity.ok().build();
     }
 }
