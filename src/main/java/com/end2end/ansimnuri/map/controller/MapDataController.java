@@ -1,6 +1,7 @@
 package com.end2end.ansimnuri.map.controller;
 
 import com.end2end.ansimnuri.map.service.RiskRateService;
+import com.end2end.ansimnuri.map.service.SearchHistoryService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,4 +13,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MapDataController {
     private final RiskRateService riskRateService;
+    private final SearchHistoryService searchHistoryService;
 }
