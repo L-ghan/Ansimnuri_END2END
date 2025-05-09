@@ -18,7 +18,7 @@ import java.util.List;
 
 @Tag(name = "Q&A API", description = "고객 질문과 답변을 수행하는 API")
 @RequiredArgsConstructor
-@RequestMapping("/qna")
+@RequestMapping("/api/qna")
 @RestController
 public class QnaController {
     private final QnaService qnaService;

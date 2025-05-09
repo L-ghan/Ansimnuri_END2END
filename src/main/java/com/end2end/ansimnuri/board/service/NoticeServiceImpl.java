@@ -4,6 +4,7 @@ import com.end2end.ansimnuri.board.dao.NoticeDAO;
 import com.end2end.ansimnuri.board.domain.entity.Notice;
 import com.end2end.ansimnuri.board.domain.repository.NoticeRepository;
 import com.end2end.ansimnuri.board.dto.NoticeDTO;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -42,11 +43,13 @@ public class NoticeServiceImpl implements NoticeService {
         return NoticeDTO.of(notice);
     }
 
+    @Transactional
     @Override
     public void insert(NoticeDTO noticeDTO) {
         noticeRepository.save(Notice.of(noticeDTO));
     }
 
+    @Transactional
     @Override
     public void update(NoticeDTO noticeDTO) {
         Notice notice = noticeRepository.findById(noticeDTO.getId())

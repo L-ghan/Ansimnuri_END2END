@@ -1,6 +1,7 @@
 package com.end2end.ansimnuri.map.service;
 
 import com.end2end.ansimnuri.map.dao.RiskRateDAO;
+import com.end2end.ansimnuri.map.domain.repository.RiskRateRepository;
 import com.end2end.ansimnuri.map.dto.RiskRateDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,12 +15,13 @@ import java.util.List;
 @Service
 public class RiskRateServiceImpl implements RiskRateService {
     private final RiskRateDAO riskRateDAO;
+    private final RiskRateRepository riskRateRepository;
 
     @Scheduled(cron = "0 0 0 1 1 *")
     @Transactional
     @Override
     public void insertAll() {
-        riskRateDAO.deleteAll();
+        riskRateRepository.deleteAll();
 
         List<RiskRateDTO> riskRateDTOList = new ArrayList<>();
         riskRateDAO.insrtAll(riskRateDTOList);

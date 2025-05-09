@@ -1,6 +1,6 @@
 package com.end2end.ansimnuri.board.domain.entity;
 
-import com.end2end.ansimnuri.user.domain.entity.Member;
+import com.end2end.ansimnuri.member.domain.entity.Member;
 import com.end2end.ansimnuri.util.entity.Timestamp;
 import jakarta.persistence.*;
 import lombok.*;
@@ -30,8 +30,9 @@ public class Qna extends Timestamp {
     @OneToOne(mappedBy = "qna")
     private QnaReply qnaReply;
 
-    public static Qna of (String title, String content) {
+    public static Qna of (Member member, String title, String content) {
         return Qna.builder()
+                .member(member)
                 .title(title)
                 .content(content)
                 .build();
