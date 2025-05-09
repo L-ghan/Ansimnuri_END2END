@@ -23,9 +23,7 @@ public class NewsServiceImpl implements NewsService {
         List<NewsDTO> result = new ArrayList<>();
         try {
             String url = "https://newsapi.org/v2/everything?q=\"살인\"&apiKey=" + apiKey;
-
             String response = restTemplate.getForObject(url, String.class);
-            System.out.println(response);
 
             JsonNode root = new ObjectMapper().readTree(response);
             JsonNode articles = root.path("articles");
