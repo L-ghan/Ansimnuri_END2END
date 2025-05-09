@@ -15,7 +15,6 @@ public class QnaReplyServiceImpl implements QnaReplyService {
     private final QnaReplyRepository qnaReplyRepository;
     private final QnaRepository qnaRepository;
 
-    @Transactional
     @Override
     public QnaReplyDTO selectByQnaId(long qnaId) {
         return QnaReplyDTO.of(qnaReplyRepository.findByQnaId(qnaId));

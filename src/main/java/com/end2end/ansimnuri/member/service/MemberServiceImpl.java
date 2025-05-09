@@ -22,7 +22,6 @@ public class MemberServiceImpl implements MemberService {
     private final JWTUtil jwtUtil;
     private final PasswordUtil passwordUtil;
 
-    @Transactional
     @Override
     public boolean isIdExist(String loginId) {
         return memberRepository.findByLoginId(loginId).orElse(null) != null;
