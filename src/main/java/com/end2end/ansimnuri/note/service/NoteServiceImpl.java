@@ -4,11 +4,15 @@ import com.end2end.ansimnuri.member.domain.entity.Member;
 import com.end2end.ansimnuri.member.domain.repository.MemberRepository;
 import com.end2end.ansimnuri.note.dao.NoteDAO;
 import com.end2end.ansimnuri.note.domain.entity.Note;
+import com.end2end.ansimnuri.note.domain.entity.NoteRec;
+import com.end2end.ansimnuri.note.domain.repository.NoteRecRepository;
 import com.end2end.ansimnuri.note.domain.repository.NoteRepository;
 import com.end2end.ansimnuri.note.dto.NoteDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -16,6 +20,14 @@ public class NoteServiceImpl implements NoteService {
     private final NoteDAO noteDAO;
     private final NoteRepository noteRepository;
     private final MemberRepository memberRepository;
+    private final NoteRecRepository noteRecRepository;
+
+    @Override
+    public List<NoteDTO> selectAll() {
+        return noteRepository.findAll().stream()
+                .map(note -> NoteDTO.of(note, noteRecRepository.countByNote(note)))
+                .toList();
+    }
 
     @Transactional
     @Override
