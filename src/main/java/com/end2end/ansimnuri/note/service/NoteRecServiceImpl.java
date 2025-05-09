@@ -32,9 +32,14 @@ public class NoteRecServiceImpl implements NoteRecService {
 
     @Transactional
     @Override
-    public void deleteById(long id) {
-        NoteRec noteRec = noteRecRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 id를 가진 추천이 없습니다."));
+    public void delete(NoteRecDTO dto) {
+        Note note = noteRepository.findById(dto.getNoteId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 id에 해당하는 쪽지가 없습니다."));
+        Member member = memberRepository.findById(dto.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 id를 가진 유저가 없습니다."));
+
+        NoteRec noteRec = noteRecRepository.findByNoteAndMember(note, member)
+                .orElseThrow(() -> new IllegalArgumentException("해당 id를 가진 추천 내역이 없습니다."));
         noteRecRepository.delete(noteRec);
     }
 }

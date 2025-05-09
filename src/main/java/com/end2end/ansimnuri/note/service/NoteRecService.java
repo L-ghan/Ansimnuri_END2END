@@ -4,5 +4,5 @@ import com.end2end.ansimnuri.note.dto.NoteRecDTO;
 
 public interface NoteRecService {
     void insert(NoteRecDTO dto);
-    void deleteById(long id);
+    void delete(NoteRecDTO dto);
 }
