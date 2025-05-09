@@ -7,6 +7,7 @@ import com.end2end.ansimnuri.member.dto.LoginDTO;
 import com.end2end.ansimnuri.member.dto.MemberDTO;
 import com.end2end.ansimnuri.util.JWTUtil;
 import com.end2end.ansimnuri.util.PasswordUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,7 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.findByLoginId(loginId).orElse(null) != null;
     }
 
+    @Transactional
     @Override
     public String login(LoginDTO dto) {
         Member member = memberRepository
@@ -41,11 +43,13 @@ public class MemberServiceImpl implements MemberService {
         return jwtUtil.createToken(member.getLoginId(), roles);
     }
 
+    @Transactional
     @Override
     public boolean isNickNameExist(String nickName) {
         return memberRepository.findByNickname(nickName).orElse(null) != null;
     }
 
+    @Transactional
     @Override
     public void insert(MemberDTO memberDTO) {
         String password = passwordUtil.encodePassword(memberDTO.getPassword());
@@ -54,6 +58,7 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(Member.of(memberDTO));
     }
 
+    @Transactional
     @Override
     public void update(MemberDTO memberDTO) {
         Member member = memberRepository.findById(memberDTO.getId())

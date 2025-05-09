@@ -71,7 +71,6 @@ public class Member extends Timestamp {
 
     public static Member of (MemberDTO memberDTO) {
         return Member.builder()
-                .id(memberDTO.getId())
                 .loginId(memberDTO.getLoginId())
                 .password(memberDTO.getPassword())
                 .nickname(memberDTO.getNickname())

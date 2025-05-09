@@ -6,6 +6,7 @@ import com.end2end.ansimnuri.board.domain.repository.QnaRepository;
 import com.end2end.ansimnuri.board.dto.QnaDTO;
 import com.end2end.ansimnuri.member.domain.entity.Member;
 import com.end2end.ansimnuri.member.domain.repository.MemberRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +44,7 @@ public class QnaServiceImpl implements QnaService {
         return QnaDTO.of(qna);
     }
 
+    @Transactional
     @Override
     public void insert(QnaDTO qnaDTO) {
         Member member = memberRepository.findById(qnaDTO.getUserId())
@@ -51,6 +53,7 @@ public class QnaServiceImpl implements QnaService {
         qnaRepository.save(Qna.of(member, qnaDTO.getTitle(), qnaDTO.getContent()));
     }
 
+    @Transactional
     @Override
     public void update(QnaDTO qnaDTO) {
         Qna qna = qnaRepository.findById(qnaDTO.getId())
@@ -59,6 +62,7 @@ public class QnaServiceImpl implements QnaService {
         qna.update(qnaDTO.getTitle(), qnaDTO.getContent());
     }
 
+    @Transactional
     @Override
     public void deleteById(long id) {
         Qna qna = qnaRepository.findById(id)

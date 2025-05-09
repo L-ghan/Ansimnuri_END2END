@@ -37,21 +37,19 @@ public class MemberController {
             @PathVariable String loginId) {
         return ResponseEntity.ok(memberService.isIdExist(loginId));
     }
+
     @Operation(summary = "닉네임 중복 체크 API", description = "닉네임의 중복 여부를 확인해서 boolean값으로 반환한다.")
     @ApiResponse(responseCode = "200", description = "정상 작동입니다.")
     @GetMapping("/checkNickName/{nickName}")
     public ResponseEntity<Boolean> checkNickName(
-            @Parameter(description = "닉네임")
+            @Parameter(description = "로그인 아이디")
             @PathVariable String nickName) {
         return ResponseEntity.ok(memberService.isNickNameExist(nickName));
     }
+
     @PostMapping("/register")
-        public void register(@RequestBody MemberDTO dto) {
-
-          memberService.insert(dto);//닉네임받아옴
-
+    public ResponseEntity<Void> insert(@RequestBody MemberDTO memberDTO) {
+        memberService.insert(memberDTO);
+        return ResponseEntity.ok().build();
     }
-
-
-
 }
