@@ -38,7 +38,8 @@ public class MemberServiceImpl implements MemberService {
         }
 
         List<String> roles = new ArrayList<>();
-        roles.add(member.getRole().toString());
+        roles.add(member.getRole().getRole());
+
 
         return jwtUtil.createToken(member.getLoginId(), roles);
     }

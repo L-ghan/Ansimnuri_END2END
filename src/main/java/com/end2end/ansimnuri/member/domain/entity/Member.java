@@ -3,6 +3,7 @@ package com.end2end.ansimnuri.member.domain.entity;
 import com.end2end.ansimnuri.admin.domain.entity.Block;
 import com.end2end.ansimnuri.admin.domain.entity.Complaint;
 import com.end2end.ansimnuri.board.domain.entity.Qna;
+import com.end2end.ansimnuri.map.domain.entity.SearchHistory;
 import com.end2end.ansimnuri.message.domain.entity.Message;
 import com.end2end.ansimnuri.message.domain.entity.MessageBlock;
 import com.end2end.ansimnuri.note.domain.entity.Note;
@@ -68,6 +69,8 @@ public class Member extends Timestamp {
     private List<NoteRec> noteRecList;
     @OneToMany(mappedBy = "member")
     private List<NoteReply> noteReplyList;
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
+    private List<SearchHistory> searchHistoryList;
 
     public static Member of (MemberDTO memberDTO) {
         return Member.builder()
