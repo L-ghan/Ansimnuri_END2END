@@ -66,7 +66,8 @@ public class QnaServiceImpl implements QnaService {
     @Override
     public void deleteById(long id) {
         Qna qna = qnaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(String.format("%d에 해당하는 ID가 존재하지 않습니다.", id)));
+                .orElseThrow(() -> new IllegalArgumentException(
+                        String.format("%d에 해당하는 ID가 존재하지 않습니다.", id)));
         qnaRepository.delete(qna);
     }
 }

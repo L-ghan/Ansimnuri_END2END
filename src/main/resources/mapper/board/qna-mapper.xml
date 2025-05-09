@@ -8,48 +8,48 @@
         FROM (
             SELECT A.*, ROW_NUMBER() OVER (ORDER BY id) AS rnum
             FROM (
-                SELECT *
+                SELECT qna.*, member.id as userId, member.nickname as nickname
                 FROM QNA
-                JOIN USER
-                    ON QNA.userId = USER.id ) A
+                JOIN MEMBER
+                    ON member_Id = MEMBER.id) A
             )
         WHERE rnum BETWEEN ${start} AND ${end}
     </select>
 
-    <select id="countAll">
-        SELECT COUNT(*) FROM QNA
+    <select id="countAll" resultType="Integer">
+        SELECT NVL(COUNT(*), 0) FROM QNA
     </select>
 
     <select id="selectByUserId" resultType="com.end2end.ansimnuri.board.dto.QnaDTO">
         SELECT *
         FROM (
-            SELECT A.*, ROW_NUMBER() OVER (ORDER BY id) AS rnum
+            SELECT A.*, ROW_NUMBER() OVER (ORDER BY A.id) AS rnum
             FROM (
-                SELECT *
+                SELECT qna.*, member.id as userId, member.nickname as nickname
                 FROM QNA
-                JOIN USER
-                    ON QNA.userId = USER.id
-                WHERE userId = ${userId}) A
+                JOIN MEMBER
+                    ON member_Id = MEMBER.id
+                WHERE member_Id = ${userId}) A
         )
         WHERE rnum BETWEEN ${start} AND ${end}
     </select>
 
-    <select id="countByUserId">
+    <select id="countByUserId" resultType="Integer">
         SELECT COUNT(*)
         FROM QNA
-        WHERE userId = ${userId}
+        WHERE member_Id = ${userId}
     </select>
 
     <select id="selectById" resultType="com.end2end.ansimnuri.board.dto.QnaDTO">
         SELECT *
         FROM QNA
-        JOIN USER
-            ON QNA.userId = USER.id
+        JOIN MEMBER
+            ON QNA.MEMBER_Id = MEMBER.id
         WHERE QNA.id = ${id}
     </select>
 
     <insert id="insert">
-        INSERT INTO QNA(id, userId, title, content)
+        INSERT INTO QNA(id, memberId, title, content)
         VALUES (QNA_ID_SEQ.nextval, ${userId}, #{title}, #{content})
     </insert>
 
