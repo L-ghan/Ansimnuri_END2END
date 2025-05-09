@@ -5,6 +5,7 @@ import com.end2end.ansimnuri.map.domain.repository.SearchHistoryRepository;
 import com.end2end.ansimnuri.map.dto.SearchHistoryDTO;
 import com.end2end.ansimnuri.member.domain.entity.Member;
 import com.end2end.ansimnuri.member.domain.repository.MemberRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,7 @@ public class SearchHistoryServiceImpl implements SearchHistoryService {
                 .toList();
     }
 
+    @Transactional
     @Override
     public void insert(SearchHistoryDTO dto) {
         Member member = memberRepository.findById(dto.getMemberId())

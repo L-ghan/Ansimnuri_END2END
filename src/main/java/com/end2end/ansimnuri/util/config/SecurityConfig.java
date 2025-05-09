@@ -37,6 +37,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     auth
                             .anyRequest().permitAll();
+                })
+                .exceptionHandling(exception -> {
+                    exception.authenticationEntryPoint(authenticationEntryPoint());
+                    exception.accessDeniedHandler(accessDeniedHandler());
                 });
 
         return http.build();
