@@ -20,4 +20,5 @@ public class NewsDTO {
     private String thumbnailImg;
     @Schema(description = "등록 일자", example = "2024-04-30 09:00:00", format = "date-time")
     private String regDate;
+    private String url;
 }
