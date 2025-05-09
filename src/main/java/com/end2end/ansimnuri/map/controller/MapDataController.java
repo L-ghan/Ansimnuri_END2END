@@ -6,13 +6,12 @@ import com.end2end.ansimnuri.map.service.RiskRateService;
 import com.end2end.ansimnuri.map.service.SearchHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,5 +30,18 @@ public class MapDataController {
             @Parameter(description = "유저 id")
             @PathVariable long memberId) {
         return ResponseEntity.ok(searchHistoryService.selectByMemberId(memberId));
+    }
+
+    @Operation(summary = "검색 기록 삭제 api", description = "해당 id의 검색 기록을 삭제한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정상 작동입니다."),
+            @ApiResponse(responseCode = "403", description = "접근 권한이 없습니다.")
+    })
+    @DeleteMapping("/search/history/{id}")
+    public ResponseEntity<Void> deleteById(
+            @Parameter(description = "검색 기록 id")
+            @PathVariable long id) {
+        searchHistoryService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 }

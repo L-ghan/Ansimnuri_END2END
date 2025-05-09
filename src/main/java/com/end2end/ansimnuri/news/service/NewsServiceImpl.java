@@ -37,7 +37,7 @@ public class NewsServiceImpl implements NewsService {
                         .url(article.path("url").asText())
                         .build();
                 result.add(newsDTO);
-                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("news api와의 연동이 오류되었습니다.", e);
