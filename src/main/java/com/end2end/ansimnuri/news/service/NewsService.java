@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface NewsService {
     List<NewsDTO> fetchNews();
+    void insert();
 }
