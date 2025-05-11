@@ -25,7 +25,7 @@ public class NoteServiceImpl implements NoteService {
     @Override
     public List<NoteDTO> selectAll() {
         return noteRepository.findAll().stream()
-                .map(note -> NoteDTO.of(note, noteRecRepository.countByNote(note)))
+                .map(NoteDTO::of)
                 .toList();
     }
 
