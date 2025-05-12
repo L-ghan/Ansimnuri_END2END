@@ -5,14 +5,17 @@ import com.end2end.ansimnuri.member.domain.entity.Member;
 import com.end2end.ansimnuri.member.domain.repository.MemberRepository;
 import com.end2end.ansimnuri.member.dto.LoginDTO;
 import com.end2end.ansimnuri.member.dto.MemberDTO;
+import com.end2end.ansimnuri.member.dto.MemberUpdateDTO;
 import com.end2end.ansimnuri.util.JWTUtil;
 import com.end2end.ansimnuri.util.PasswordUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -66,5 +69,39 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(() -> new IllegalArgumentException(
                         String.format("%d에 해당하는 아이디를 가진 회원이 존재하지 않습니다.", memberDTO.getId())));
         member.update(memberDTO);
+    }
+
+    @Override
+    public MemberDTO selectByLoginId(String loginId) {
+        Member member = memberRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new RuntimeException("해당 유저를 찾을 수 없습니다."));
+
+        return MemberDTO.of(member);
+    }
+
+    public MemberDTO updateMyInformation(String loginId, MemberUpdateDTO dto) {
+        Member member = memberRepository.findByLoginId(loginId)
+
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+
+        if (!member.getNickname().equals(dto.getNickname())) {
+
+            Optional<Member> exists = memberRepository.findByNickname(dto.getNickname());
+            if (exists.isPresent()) {
+                throw new IllegalArgumentException("이미 사용 중인 닉네임입니다.");
+            }
+
+
+        }
+        member.update(
+                MemberDTO.builder().nickname(dto.getNickname()
+                        ).email(member.getEmail())
+                        .postcode(member.getPostcode())
+                        .address(member.getAddress())
+                        .detailAddress(member.getDetailAddress())
+                        .build());
+
+        memberRepository.save(member);
+        return MemberDTO.of(member);
     }
 }

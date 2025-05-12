@@ -23,6 +23,7 @@ public class NoteDTO {
     private double latitude;
     private double longitude;
     private int recCount;
+    private int replyCount;
     private LocalDateTime regDate;
 
     public static NoteDTO of(Note note) {
@@ -34,6 +35,7 @@ public class NoteDTO {
                 .latitude(note.getLatitude())
                 .longitude(note.getLongitude())
                 .recCount(note.getNoteRecList().size())
+                .replyCount(note.getNoteReplyList().size())
                 .regDate(note.getRegDt())
                 .build();
     }
