@@ -29,11 +29,11 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     @Override
-    public String login(LoginDTO dto){
+    public String login(LoginDTO dto) {
         Member member = memberRepository
                 .findByLoginId(dto.getLoginId())
                 .orElseThrow(() -> new IllegalArgumentException("아이디가 일치하지 않습니다."));
-        if(!passwordUtil.matches(dto.getPassword(), member.getPassword())) {
+        if (!passwordUtil.matches(dto.getPassword(), member.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
@@ -46,10 +46,16 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     @Override
+    public boolean isNickNameExist(String nickName) {
+        return memberRepository.findByNickname(nickName).orElse(null) != null;
+    }
+
+    @Transactional
+    @Override
     public void insert(MemberDTO memberDTO) {
         String password = passwordUtil.encodePassword(memberDTO.getPassword());
         memberDTO.setPassword(password);
-
+       //패스워드 암호화 처리
         memberRepository.save(Member.of(memberDTO));
     }
 

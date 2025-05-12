@@ -37,9 +37,18 @@ public class Note extends Timestamp {
     @OneToMany(mappedBy = "note", orphanRemoval = true)
     private List<NoteReply> noteReplyList;
 
-    public static Note of (NoteDTO noteDTO) {
-        return Note.builder().build();
+    public static Note of (NoteDTO noteDTO, Member member) {
+        return Note.builder()
+                .member(member)
+                .content(noteDTO.getContent())
+                .latitude(noteDTO.getLatitude())
+                .longitude(noteDTO.getLongitude())
+                .build();
     }
 
-    public void update(NoteDTO noteDTO) {}
+    public void update(NoteDTO noteDTO) {
+        this.content = noteDTO.getContent();
+        this.latitude = noteDTO.getLatitude();
+        this.longitude = noteDTO.getLongitude();
+    }
 }

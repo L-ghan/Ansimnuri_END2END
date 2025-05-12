@@ -8,4 +8,6 @@ public interface MemberService {
     String login(LoginDTO dto);
     void insert(MemberDTO dto);
     void update(MemberDTO dto);
+    boolean isNickNameExist(String nickName);
+
 }

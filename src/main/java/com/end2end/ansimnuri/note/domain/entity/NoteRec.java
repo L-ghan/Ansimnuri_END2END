@@ -1,6 +1,7 @@
 package com.end2end.ansimnuri.note.domain.entity;
 
 import com.end2end.ansimnuri.member.domain.entity.Member;
+import com.end2end.ansimnuri.note.dto.NoteRecDTO;
 import com.end2end.ansimnuri.util.entity.Timestamp;
 import jakarta.persistence.*;
 import lombok.*;
@@ -26,5 +27,10 @@ public class NoteRec extends Timestamp {
     @JoinColumn(name = "MEMBER_ID", nullable = false)
     private Member member;
 
-    public void update() {}
+    public static NoteRec of(Note note, Member member) {
+        return NoteRec.builder()
+                .note(note)
+                .member(member)
+                .build();
+    }
 }
