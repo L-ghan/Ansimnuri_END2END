@@ -16,7 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class NoteReplyServiceImpl implements NoteReplyService {
-    private final NoteReplyDAO noteReplyDAO;
     private final NoteReplyRepository noteReplyRepository;
     private final NoteRepository noteRepository;
     private final MemberRepository memberRepository;

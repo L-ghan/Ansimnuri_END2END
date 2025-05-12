@@ -25,7 +25,7 @@ public class NoteDTO {
     private int recCount;
     private LocalDateTime regDate;
 
-    public static NoteDTO of(Note note, int recCount) {
+    public static NoteDTO of(Note note) {
         return NoteDTO.builder()
                 .id(note.getId())
                 .userId(note.getMember().getId())
@@ -33,7 +33,7 @@ public class NoteDTO {
                 .content(note.getContent())
                 .latitude(note.getLatitude())
                 .longitude(note.getLongitude())
-                .recCount(recCount)
+                .recCount(note.getNoteRecList().size())
                 .regDate(note.getRegDt())
                 .build();
     }

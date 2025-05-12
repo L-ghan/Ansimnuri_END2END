@@ -17,15 +17,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class NoteServiceImpl implements NoteService {
-    private final NoteDAO noteDAO;
     private final NoteRepository noteRepository;
     private final MemberRepository memberRepository;
-    private final NoteRecRepository noteRecRepository;
 
     @Override
     public List<NoteDTO> selectAll() {
         return noteRepository.findAll().stream()
-                .map(note -> NoteDTO.of(note, noteRecRepository.countByNote(note)))
+                .map(NoteDTO::of)
                 .toList();
     }
 

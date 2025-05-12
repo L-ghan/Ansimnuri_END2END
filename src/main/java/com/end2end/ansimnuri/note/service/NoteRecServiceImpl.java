@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class NoteRecServiceImpl implements NoteRecService {
-    private final NoteService noteService;
     private final NoteRecRepository noteRecRepository;
     private final MemberRepository memberRepository;
     private final NoteRepository noteRepository;

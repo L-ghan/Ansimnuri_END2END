@@ -1,5 +1,6 @@
 package com.end2end.ansimnuri.map.controller;
 
+import com.end2end.ansimnuri.map.dto.PoliceDTO;
 import com.end2end.ansimnuri.map.dto.SearchHistoryDTO;
 import com.end2end.ansimnuri.map.service.PoliceService;
 import com.end2end.ansimnuri.map.service.RiskRateService;
@@ -43,5 +44,33 @@ public class MapDataController {
             @PathVariable long id) {
         searchHistoryService.deleteById(id);
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "모든 경찰서 조회 API", description = "서울시의 모든 경찰서를 조회한다.")
+    @ApiResponse(responseCode = "200", description = "정상 작동입니다.")
+    @GetMapping("/police")
+    public ResponseEntity<List<PoliceDTO>> selectAllPolice() {
+        return ResponseEntity.ok(policeService.selectAll());
+    }
+
+    @Operation(summary = "경찰서 주소 검색 API", description = "해당 내용을 포함한 주소를 가진 모든 경찰서를 조회한다.")
+    @ApiResponse(responseCode = "200", description = "정상 작동입니다.")
+    @GetMapping("/police/address/{searchKey}")
+    public ResponseEntity<List<PoliceDTO>> selectByTAddressLike(
+            @Parameter(description = "검색 내용")
+            @PathVariable String searchKey) {
+        return ResponseEntity.ok(policeService.selectByAddressLike(searchKey));
+    }
+
+    @Operation(summary = "겅찰서 상세 조회 API", description = "해당 id를 가진 경찰서를 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정상 작동입니다."),
+            @ApiResponse(responseCode = "400", description = "해당 id를 가진 경찰서는 존재하지 않습니다.")
+    })
+    @GetMapping("/police/{id}")
+    public PoliceDTO selectById(
+            @Parameter(description = "경찰서 id")
+            @PathVariable long id) {
+        return policeService.selectById(id);
     }
 }
