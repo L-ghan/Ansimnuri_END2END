@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface PoliceRepository extends JpaRepository<Police, Long> {
     List<Police> findByAddressContaining(String searchKey);
+    List<Police> findByType(String type);
 }

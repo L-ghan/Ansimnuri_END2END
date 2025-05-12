@@ -28,10 +28,10 @@ public class NoteReplyServiceImpl implements NoteReplyService {
     }
 
     @Override
-    public void insert(NoteReplyDTO dto) {
+    public void insert(NoteReplyDTO dto, String loginId) {
         Note note = noteRepository.findById(dto.getNoteId())
                         .orElseThrow(() -> new IllegalArgumentException("해당 id의 쪽지가 존재하지 않습니다."));
-        Member member = memberRepository.findById(dto.getUserId())
+        Member member = memberRepository.findByLoginId(loginId)
                         .orElseThrow(() -> new IllegalArgumentException("해당 id의 유저가 없습니다."));
 
         noteReplyRepository.save(NoteReply.of(dto, note, member));
