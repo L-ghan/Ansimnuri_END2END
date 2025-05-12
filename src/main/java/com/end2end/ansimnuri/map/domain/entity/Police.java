@@ -1,14 +1,13 @@
 package com.end2end.ansimnuri.map.domain.entity;
 
+import com.end2end.ansimnuri.map.dto.PoliceDTO;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
+@Builder
 @SequenceGenerator(
         name = "policeSequenceGenerator",
         sequenceName = "POLICE_ID_SEQ",
@@ -27,4 +26,13 @@ public class Police {
     private Double latitude;
     @Column(name = "LONGITUDE", nullable = false)
     private Double longitude;
+
+    public static Police of(PoliceDTO dto) {
+        return Police.builder()
+                .name(dto.getName())
+                .address(dto.getAddress())
+                .latitude(dto.getLatitude())
+                .longitude(dto.getLongitude())
+                .build();
+    }
 }

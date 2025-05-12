@@ -44,4 +44,10 @@ public class MapDataController {
         searchHistoryService.deleteById(id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/police")
+    public ResponseEntity<Void> test() {
+        policeService.insert();
+        return ResponseEntity.ok().build();
+    }
 }
