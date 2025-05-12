@@ -26,6 +26,8 @@ public class Police {
     private Double latitude;
     @Column(name = "LONGITUDE", nullable = false)
     private Double longitude;
+    @Column(name = "TYPE", nullable = false)
+    private String type;
 
     public static Police of(PoliceDTO dto) {
         return Police.builder()
@@ -33,6 +35,7 @@ public class Police {
                 .address(dto.getAddress())
                 .latitude(dto.getLatitude())
                 .longitude(dto.getLongitude())
+                .type(dto.getType())
                 .build();
     }
 }

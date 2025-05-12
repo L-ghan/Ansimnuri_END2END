@@ -16,6 +16,7 @@ public class PoliceDTO {
     private String address;
     private double latitude;
     private double longitude;
+    private String type;
 
     public static PoliceDTO of(Police police) {
         return PoliceDTO.builder()
@@ -24,6 +25,7 @@ public class PoliceDTO {
                 .address(police.getAddress())
                 .latitude(police.getLatitude())
                 .longitude(police.getLongitude())
+                .type(police.getType())
                 .build();
     }
 }
