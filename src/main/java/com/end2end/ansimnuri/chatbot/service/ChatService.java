@@ -42,36 +42,51 @@ public class ChatService {
                 entity,
                 String.class
         );
-        return response.getBody(); // 응답 JSON 문자열
+        return response.getBody();
     }
 
-    // 1. 사용자 위치로 경찰서 찾기 (메인 메서드)
     public PoliceDto findPoliceByLocation(String keyword) {
+        System.out.println("🔍 입력 키워드: " + keyword);
+
         double[] coords = getCoordinatesFromKakao(keyword);
-        if (coords == null) return null;
+        if (coords == null) {
+            System.out.println("❌ Kakao에서 좌표 못 받아옴");
+            return null;
+        }
 
         double userLat = coords[0];
         double userLng = coords[1];
+        System.out.println("📍 변환된 좌표: " + userLat + ", " + userLng);
 
-        List<PoliceDto> allStations = chatDao.findAllPolice();
+        List<PoliceDto> allStations = chatDao.findPoliceByLocation();
+        System.out.println("📌 전체 경찰서 수: " + allStations.size());
 
         PoliceDto nearest = null;
-        double minDistance = Double.MAX_VALUE;
+        double minDist = Double.MAX_VALUE;
 
-        for (PoliceDto station : allStations) {
-            if (station.getLatitude() == null || station.getLongitude() == null) continue;
-
-            double dist = haversine(userLat, userLng, station.getLatitude(), station.getLongitude());
-            if (dist < minDistance) {
-                minDistance = dist;
-                nearest = station;
+        for (PoliceDto p : allStations) {
+            if (p.getLatitude() == null || p.getLongitude() == null) {
+                System.out.println("⚠️ " + p.getName() + " → 좌표 없음");
+                continue;
             }
+            double dist = haversine(userLat, userLng, p.getLatitude(), p.getLongitude());
+            System.out.println("📏 거리: " + dist + "km → " + p.getName());
+
+            if (dist < minDist) {
+                minDist = dist;
+                nearest = p;
+            }
+        }
+
+        if (nearest == null) {
+            System.out.println("❌ 근접 경찰서 없음");
+        } else {
+            System.out.println("✅ 가장 가까운 경찰서: " + nearest.getName());
         }
 
         return nearest;
     }
 
-    // 2. Kakao API 좌표 변환
     private double[] getCoordinatesFromKakao(String query) {
         try {
             RestTemplate restTemplate = new RestTemplate();
@@ -91,13 +106,13 @@ public class ChatService {
             return new double[]{lat, lng};
 
         } catch (Exception e) {
+            System.out.println("❌ Kakao API 오류: " + e.getMessage());
             return null;
         }
     }
 
-    // 3. 거리 계산 메서드 (Haversine 공식)
     private double haversine(double lat1, double lon1, double lat2, double lon2) {
-        final int R = 6371; // 지구 반지름 (km)
+        final int R = 6371;
         double dLat = Math.toRadians(lat2 - lat1);
         double dLon = Math.toRadians(lon2 - lon1);
         double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +

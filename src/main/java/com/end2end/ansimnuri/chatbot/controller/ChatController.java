@@ -14,14 +14,12 @@ import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
-@RequestMapping("/chat")
+@RequestMapping("/chatBot")
 @RestController
 public class ChatController {
 
     @Autowired
     private ChatService chatServ;
-    @Autowired
-    private PoliceService policeServ;
 
     @PostMapping("/api")
     public ResponseEntity<String> askLLM(@RequestBody Map<String, Object> request) {
@@ -32,8 +30,8 @@ public class ChatController {
     }
 
     @GetMapping("/police")
-    public ResponseEntity<Map<String, String>> getPoliceInfo(@RequestParam String location) {
-        PoliceDto dto = chatServ.findPoliceByLocation(location);
+    public ResponseEntity<Map<String, String>> findPoliceByLocation(@RequestParam String keyword) {
+        PoliceDto dto = chatServ.findPoliceByLocation(keyword);
 
         if (dto == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
@@ -47,5 +45,6 @@ public class ChatController {
                 "address", dto.getAddress()
         ));
     }
+
 }
 
