@@ -5,6 +5,7 @@ import com.end2end.ansimnuri.news.domain.repository.NewsRepository;
 import com.end2end.ansimnuri.news.dto.NewsDTO;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -13,6 +14,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +56,7 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Scheduled(cron = "0 0 0 * * *")
+    @Transactional
     @Override
     public void insert() {
         List<NewsDTO> result = new ArrayList<>();
@@ -69,13 +74,18 @@ public class NewsServiceImpl implements NewsService {
                 if (newsRepository.existsByUrl(checkUrl)) {
                     continue;
                 }
+
+                String publishedAt = article.path("publishedAt").asText();
+                OffsetDateTime offsetDateTime = OffsetDateTime.parse(publishedAt); // Z는 ISO 형식이라 자동 인식
+                LocalDateTime regDate = offsetDateTime.toLocalDateTime(); // 시간대 제거
+
                 System.out.println(article);
                 News news = News.builder()
                         .title(article.path("title").asText())
                         .content(article.path("content").asText())
                         .thumbnailImg(article.path("urlToImage").asText())
                         .url(checkUrl)
-                        .regDate(Timestamp.valueOf(article.path("regdate").asText()))
+                        .regDate(regDate)
                         .build();
                 newsList.add(news);
             }
