@@ -66,7 +66,7 @@ public class MemberController {
     public ResponseEntity<MemberDTO> getMyInfo(Authentication authentication) {
        System.out.println("authentication: " + authentication);
         String loginId = authentication.getName();
-        MemberDTO memberDTO = memberService.getMyInformation(loginId);
+        MemberDTO memberDTO = memberService.selectByLoginId(loginId);
         return ResponseEntity.ok(memberDTO);
     }
 

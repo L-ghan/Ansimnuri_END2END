@@ -72,7 +72,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberDTO getMyInformation(String loginId) {
+    public MemberDTO selectByLoginId(String loginId) {
         Member member = memberRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new RuntimeException("해당 유저를 찾을 수 없습니다."));
 

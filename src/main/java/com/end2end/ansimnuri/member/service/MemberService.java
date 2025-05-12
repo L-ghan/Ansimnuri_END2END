@@ -10,6 +10,6 @@ public interface MemberService {
     void insert(MemberDTO dto);
     void update(MemberDTO dto);
     boolean isNickNameExist(String nickName);
-    MemberDTO getMyInformation(String loginId);
+    MemberDTO selectByLoginId(String loginId);
     MemberDTO updateMyInformation(String loginId, MemberUpdateDTO dto);
 }
