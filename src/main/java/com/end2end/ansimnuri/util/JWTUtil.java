@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
-
+import jakarta.servlet.http.HttpServletRequest;
 @Component
 public class JWTUtil {
     @Value("${jwt.secret}")
@@ -49,5 +49,18 @@ public class JWTUtil {
         DecodedJWT jwt = JWT.require(Algorithm.HMAC256(secret)).build()
                 .verify(token);
         return jwt.getClaim("roles").asList(String.class);
+    }
+
+    public String getLoginIdFromHeader(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7); // "Bearer " 이후부터
+            try {
+                return getLoginId(token);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+        return null;
     }
 }
