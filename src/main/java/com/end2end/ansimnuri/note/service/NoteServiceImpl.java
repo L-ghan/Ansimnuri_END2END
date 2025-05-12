@@ -29,10 +29,12 @@ public class NoteServiceImpl implements NoteService {
 
     @Transactional
     @Override
-    public void insert(NoteDTO noteDTO) {
-        Member member = memberRepository.findById(noteDTO.getId())
+    public void insert(NoteDTO dto, String loginId) {
+        Member member = memberRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 id의 유저가 없습니다."));
-        noteRepository.save(Note.of(noteDTO, member));
+        dto.setUserId(member.getId());
+
+        noteRepository.save(Note.of(dto, member));
     }
 
     @Transactional

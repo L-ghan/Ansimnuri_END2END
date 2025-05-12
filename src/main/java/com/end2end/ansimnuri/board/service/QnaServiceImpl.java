@@ -46,10 +46,12 @@ public class QnaServiceImpl implements QnaService {
 
     @Transactional
     @Override
-    public void insert(QnaDTO qnaDTO) {
-        Member member = memberRepository.findById(qnaDTO.getUserId())
+    public void insert(QnaDTO qnaDTO, String loginId) {
+        Member member = memberRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new IllegalArgumentException(
-                        String.format("%d에 해당하는 ID가 존재하지 않습니다.", qnaDTO.getUserId())));
+                        String.format("%s에 해당하는 ID가 존재하지 않습니다.", loginId)));
+        qnaDTO.setUserId(member.getId());
+
         qnaRepository.save(Qna.of(member, qnaDTO.getTitle(), qnaDTO.getContent()));
     }
 
