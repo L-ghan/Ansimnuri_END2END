@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface NoteService {
     List<NoteDTO> selectAll();
-    void insert(NoteDTO noteDTO);
-    void update(NoteDTO noteDTO);
+    void insert(NoteDTO dto, String loginId);
+    void update(NoteDTO dto);
     void deleteById(long id);
 }

@@ -86,8 +86,6 @@ public class Member extends Timestamp {
     }
 
     public void update(MemberDTO memberDTO) {
-        this.loginId = memberDTO.getLoginId();
-        this.password = memberDTO.getPassword();
         this.nickname = memberDTO.getNickname();
         this.email = memberDTO.getEmail();
         this.postcode = memberDTO.getPostcode();
