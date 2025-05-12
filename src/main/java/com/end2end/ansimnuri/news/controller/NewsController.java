@@ -1,5 +1,6 @@
 package com.end2end.ansimnuri.news.controller;
 
+import com.end2end.ansimnuri.news.domain.entity.News;
 import com.end2end.ansimnuri.news.dto.NewsDTO;
 import com.end2end.ansimnuri.news.service.NewsService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +27,7 @@ public class NewsController {
             @ApiResponse(responseCode = "500", description = "news api 통신 오류")
     })
     @GetMapping
-    public List<NewsDTO> getNews() {
-        return newsService.fetchNews();
+    public List<News> getNews() {
+        return newsService.allNews();
     }
 }
