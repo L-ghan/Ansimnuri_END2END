@@ -51,16 +51,5 @@ public class JWTUtil {
         return jwt.getClaim("roles").asList(String.class);
     }
 
-    public String getLoginIdFromHeader(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7); // "Bearer " 이후부터
-            try {
-                return getLoginId(token);
-            } catch (Exception e) {
-                return null;
-            }
-        }
-        return null;
-    }
+
 }
