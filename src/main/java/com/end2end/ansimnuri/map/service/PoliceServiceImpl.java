@@ -45,6 +45,13 @@ public class PoliceServiceImpl implements PoliceService {
     }
 
     @Override
+    public List<PoliceDTO> selectByType(String type) {
+        return policeRepository.findByType(type).stream()
+                .map(PoliceDTO::of)
+                .toList();
+    }
+
+    @Override
     public PoliceDTO selectById(long id) {
         Police police = policeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 id의 정보는 존재하지 않습니다."));
@@ -104,7 +111,6 @@ public class PoliceServiceImpl implements PoliceService {
                     policeRepository.save(Police.of(dto));
                 } catch (Exception e) {
                     e.printStackTrace();
-                    System.out.println(url);
                 }
             }
         } catch (Exception e) {
