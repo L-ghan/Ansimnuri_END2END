@@ -14,24 +14,24 @@ import java.util.List;
 
 @Tag(name = "차단 API", description = "신고/차단 관련 기능을 모아두는 API")
 @RequiredArgsConstructor
-@RequestMapping("/api/admin")
+@RequestMapping("/api/admin/block")
 @RestController
 public class BlockController {
     private final BlockService blockService;
     private final ComplaintService complaintService;
 
-    @GetMapping("/block")
+    @GetMapping
     public ResponseEntity<List<BlockDTO>> selectAll() {
         return ResponseEntity.ok(blockService.selectAll());
     }
 
-    @PostMapping("/block")
+    @PostMapping
     public ResponseEntity<Void> insert(@RequestBody BlockDTO dto) {
         blockService.insert(dto);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/block/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable long id) {
         blockService.deleteById(id);
         return ResponseEntity.ok().build();
