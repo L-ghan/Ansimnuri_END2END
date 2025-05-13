@@ -15,7 +15,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class BlockServiceImpl implements BlockService {
-    private final BlockDAO blockDAO;
     private final BlockRepository blockRepository;
     private final MemberRepository memberRepository;
 
