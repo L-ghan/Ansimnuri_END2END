@@ -1,6 +1,7 @@
 package com.end2end.ansimnuri.admin.domain.entity;
 
 
+import com.end2end.ansimnuri.admin.dto.BlockDTO;
 import com.end2end.ansimnuri.member.domain.entity.Member;
 import com.end2end.ansimnuri.util.entity.Timestamp;
 import jakarta.persistence.*;
@@ -29,4 +30,12 @@ public class Block extends Timestamp {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID", nullable = false)
     private Member member;
+
+    public static Block of(BlockDTO dto, Member member) {
+        return Block.builder()
+                .reason(dto.getReason())
+                .endDate(dto.getEndDate())
+                .member(member)
+                .build();
+    }
 }

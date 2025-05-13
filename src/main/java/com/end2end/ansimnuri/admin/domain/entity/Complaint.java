@@ -1,5 +1,6 @@
 package com.end2end.ansimnuri.admin.domain.entity;
 
+import com.end2end.ansimnuri.admin.dto.ComplaintDTO;
 import com.end2end.ansimnuri.member.domain.entity.Member;
 import com.end2end.ansimnuri.util.entity.Timestamp;
 import com.end2end.ansimnuri.util.enums.Yn;
@@ -36,5 +37,16 @@ public class Complaint extends Timestamp {
     @JoinColumn(name = "REPORTEE_ID", nullable = false)
     private Member reportee;
 
-    public void update() {}
+    public static Complaint of(ComplaintDTO dto, Member reporter, Member reportee) {
+        return Complaint.builder()
+                .reason(dto.getReason())
+                .reporter(reporter)
+                .reportee(reportee)
+                .build();
+    }
+
+    public void submit(Yn submitYn) {
+        this.submitYn = submitYn;
+        this.submitDate = LocalDateTime.now();
+    }
 }
