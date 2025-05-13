@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 
 @Getter
@@ -29,5 +30,5 @@ public class News {
     @Column(name = "URL", nullable = false)
     private String url;
     @Column (name = "REGDATE", nullable = false)
-    private Timestamp regDate;
+    private LocalDateTime regDate;
 }
