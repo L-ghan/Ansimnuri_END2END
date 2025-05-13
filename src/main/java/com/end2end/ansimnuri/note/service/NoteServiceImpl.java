@@ -46,7 +46,7 @@ public class NoteServiceImpl implements NoteService {
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 id의 쪽지가 없습니다."));
         note.update(noteDTO);
         NoteEndpoint.send(
-                NoteSocketDTO.of(RequestType.UPDATE, note.getMember().getId(), NoteDTO.of(note));
+                NoteSocketDTO.of(RequestType.UPDATE, note.getMember().getId(), NoteDTO.of(note)));
     }
 
     @Transactional
