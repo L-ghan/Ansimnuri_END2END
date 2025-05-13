@@ -27,39 +27,11 @@ public class NewsServiceImpl implements NewsService {
     private String apiKey;
     private final RestTemplate restTemplate = new RestTemplate();
     private final NewsRepository newsRepository;
-    @Override
-    public List<NewsDTO> fetchNews() {
-        List<NewsDTO> result = new ArrayList<>();
-        try {
-            String url = "https://newsapi.org/v2/everything?q=서울+(살인 OR 폭행 OR 범죄 OR 강도)&sortBy=publishedAt&apiKey=" + apiKey;
-            String response = restTemplate.getForObject(url, String.class);
 
-            JsonNode root = new ObjectMapper().readTree(response);
-            JsonNode articles = root.path("articles");
-
-            for (JsonNode article : articles) {
-                NewsDTO newsDTO = NewsDTO.builder()
-                        .title(article.path("title").asText())
-                        .content(article.path("content").asText())
-                        .thumbnailImg(article.path("urlToImage").asText())
-                        .regDate(article.path("publishedAt").asText())
-                        .url(article.path("url").asText())
-                        .build();
-                result.add(newsDTO);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("news api와의 연동이 오류되었습니다.", e);
-        }
-        return result;
-    }
-
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 0 9 * * *")
     @Transactional
     @Override
     public void insert() {
-        List<NewsDTO> result = new ArrayList<>();
         try {
             String url = "https://newsapi.org/v2/everything?q=서울+(살인 OR 폭행 OR 범죄 OR 강도)&sortBy=publishedAt&apiKey=" + apiKey;
 
@@ -76,8 +48,8 @@ public class NewsServiceImpl implements NewsService {
                 }
 
                 String publishedAt = article.path("publishedAt").asText();
-                OffsetDateTime offsetDateTime = OffsetDateTime.parse(publishedAt); // Z는 ISO 형식이라 자동 인식
-                LocalDateTime regDate = offsetDateTime.toLocalDateTime(); // 시간대 제거
+                OffsetDateTime offsetDateTime = OffsetDateTime.parse(publishedAt);
+                LocalDateTime regDate = offsetDateTime.toLocalDateTime();
 
                 System.out.println(article);
                 News news = News.builder()
@@ -99,9 +71,19 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<News> allNews(){
+    public List<NewsDTO> allNews(){
         List<News> newsList = newsRepository.findAll();
-        System.out.println(newsList);
-        return newsList;
+        List<NewsDTO> dtoList = new ArrayList<>();
+        for(News news : newsList){
+          NewsDTO newsDTO= new NewsDTO(
+                  news.getContent(),
+                  news.getThumbnailImg(),
+                  news.getTitle(),
+                  news.getUrl(),
+                  news.getRegDate()
+          );
+          dtoList.add(newsDTO);
+        }
+        return dtoList;
     }
 }
