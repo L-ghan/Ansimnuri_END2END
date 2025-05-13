@@ -12,11 +12,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,14 +22,13 @@ import java.util.List;
 public class NewsServiceImpl implements NewsService {
     @Value("${news.api.key}")
     private String apiKey;
-    private final RestTemplate restTemplate = new RestTemplate();
     private final NewsRepository newsRepository;
 
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 0 9 * * *")
     @Transactional
     @Override
     public void insert() {
-        List<NewsDTO> result = new ArrayList<>();
+        RestTemplate restTemplate = new RestTemplate();
         try {
             String url = "https://newsapi.org/v2/everything?q=서울+(살인 OR 폭행 OR 범죄 OR 강도)&sortBy=publishedAt&apiKey=" + apiKey;
 
@@ -49,8 +45,8 @@ public class NewsServiceImpl implements NewsService {
                 }
 
                 String publishedAt = article.path("publishedAt").asText();
-                OffsetDateTime offsetDateTime = OffsetDateTime.parse(publishedAt); // Z는 ISO 형식이라 자동 인식
-                LocalDateTime regDate = offsetDateTime.toLocalDateTime(); // 시간대 제거
+                OffsetDateTime offsetDateTime = OffsetDateTime.parse(publishedAt);
+                LocalDateTime regDate = offsetDateTime.toLocalDateTime();
 
                 System.out.println(article);
                 News news = News.builder()
@@ -74,6 +70,17 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<NewsDTO> allNews(){
         List<News> newsList = newsRepository.findAll();
-        return new ArrayList<>();
+        List<NewsDTO> dtoList = new ArrayList<>();
+        for(News news : newsList){
+          NewsDTO newsDTO= new NewsDTO(
+                  news.getContent(),
+                  news.getThumbnailImg(),
+                  news.getTitle(),
+                  news.getUrl(),
+                  news.getRegDate()
+          );
+          dtoList.add(newsDTO);
+        }
+        return dtoList;
     }
 }
