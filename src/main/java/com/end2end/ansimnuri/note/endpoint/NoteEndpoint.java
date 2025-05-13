@@ -16,6 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class NoteEndpoint {
     private JWTUtil jwtUtil = SpringProvider.Spring.getBean(JWTUtil.class);
     private MemberService memberService = SpringProvider.Spring.getBean(MemberService.class);
+    private NoteService noteService = SpringProvider.Spring.getBean(NoteService.class);
 
     private static final Map<Session, MemberDTO> clients = new ConcurrentHashMap<>();
 
