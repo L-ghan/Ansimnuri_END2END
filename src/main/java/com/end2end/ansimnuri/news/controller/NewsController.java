@@ -27,7 +27,7 @@ public class NewsController {
             @ApiResponse(responseCode = "500", description = "news api 통신 오류")
     })
     @GetMapping
-    public List<News> getNews() {
+    public List<NewsDTO> getNews() {
         return newsService.allNews();
     }
 }
