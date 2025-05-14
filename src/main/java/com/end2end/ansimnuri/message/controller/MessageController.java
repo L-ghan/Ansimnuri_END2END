@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "메세지 API", description = "메세지 CURD, 메세지 차단 기능을 가진 API")
 @RequiredArgsConstructor
-@RequestMapping("/message")
+@RequestMapping("/api/message")
 @RestController
 public class MessageController {
     private final MessageService messageService;

@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Schema(description = "뉴스 DTO")
 @Data
 @AllArgsConstructor
@@ -18,6 +20,8 @@ public class NewsDTO {
     private String content;
     @Schema(description = "섬네일 이미지", example = "https://...")
     private String thumbnailImg;
+    @Schema(description = "url", example = "https://...")
+    private String url;
     @Schema(description = "등록 일자", example = "2024-04-30 09:00:00", format = "date-time")
-    private String regDate;
+    private LocalDateTime regDate;
 }

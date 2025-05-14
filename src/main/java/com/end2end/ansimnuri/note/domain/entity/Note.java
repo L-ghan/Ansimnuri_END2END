@@ -1,7 +1,7 @@
 package com.end2end.ansimnuri.note.domain.entity;
 
 import com.end2end.ansimnuri.note.dto.NoteDTO;
-import com.end2end.ansimnuri.user.domain.entity.Member;
+import com.end2end.ansimnuri.member.domain.entity.Member;
 import com.end2end.ansimnuri.util.entity.Timestamp;
 import jakarta.persistence.*;
 import lombok.*;
@@ -37,9 +37,18 @@ public class Note extends Timestamp {
     @OneToMany(mappedBy = "note", orphanRemoval = true)
     private List<NoteReply> noteReplyList;
 
-    public static Note of (NoteDTO noteDTO) {
-        return Note.builder().build();
+    public static Note of (NoteDTO noteDTO, Member member) {
+        return Note.builder()
+                .member(member)
+                .content(noteDTO.getContent())
+                .latitude(noteDTO.getLatitude())
+                .longitude(noteDTO.getLongitude())
+                .build();
     }
 
-    public void update(NoteDTO noteDTO) {}
+    public void update(NoteDTO noteDTO) {
+        this.content = noteDTO.getContent();
+        this.latitude = noteDTO.getLatitude();
+        this.longitude = noteDTO.getLongitude();
+    }
 }

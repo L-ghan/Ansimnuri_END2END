@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ import java.util.List;
 
 @Tag(name = "Q&A API", description = "고객 질문과 답변을 수행하는 API")
 @RequiredArgsConstructor
-@RequestMapping("/qna")
+@RequestMapping("/api/qna")
 @RestController
 public class QnaController {
     private final QnaService qnaService;
@@ -70,8 +71,10 @@ public class QnaController {
             @ApiResponse(responseCode = "401", description = "해당 서비스는 로그인이 필요한 서비스입니다.")
     })
     @PostMapping
-    public ResponseEntity<Void> insert(@RequestBody QnaDTO qnaDTO) {
-        qnaService.insert(qnaDTO);
+    public ResponseEntity<Void> insert(@RequestBody QnaDTO qnaDTO, HttpServletRequest request) {
+        String loginId = (String) request.getSession().getAttribute("loginId");
+
+        qnaService.insert(qnaDTO, loginId);
         return ResponseEntity.ok().build();
     }
 
