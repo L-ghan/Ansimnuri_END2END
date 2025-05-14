@@ -10,6 +10,7 @@ import com.end2end.ansimnuri.note.endpoint.NoteEndpoint;
 import com.end2end.ansimnuri.util.enums.RequestType;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -59,5 +60,12 @@ public class NoteServiceImpl implements NoteService {
         noteRepository.delete(note);
         NoteEndpoint.send(
                 NoteSocketDTO.of(RequestType.DELETE, note.getMember().getId(), noteDTO));
+    }
+
+    @Scheduled(cron = "0 0 0 * * 1")
+    @Transactional
+    @Override
+    public void delete() {
+
     }
 }
