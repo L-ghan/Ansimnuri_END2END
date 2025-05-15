@@ -9,4 +9,5 @@ public interface NoteService {
     void insert(NoteDTO dto, String loginId);
     void update(NoteDTO dto);
     void deleteById(long id);
+    void delete();
 }
