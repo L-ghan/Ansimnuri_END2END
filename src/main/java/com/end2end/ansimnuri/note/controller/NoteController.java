@@ -54,8 +54,10 @@ public class NoteController {
             @ApiResponse(responseCode = "403", description = "해당 서비스는 작성자와 관리자만 사용 가능합니다.")
     })
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody NoteDTO noteDTO) {
-        noteService.update(noteDTO);
+    public ResponseEntity<Void> update(@RequestBody NoteDTO noteDTO, HttpServletRequest request) {
+        String loginId = (String) request.getSession().getAttribute("loginId");
+
+        noteService.update(noteDTO, loginId);
         return ResponseEntity.ok().build();
     }
 
@@ -138,7 +140,10 @@ public class NoteController {
             @ApiResponse(responseCode = "403", description = "해당 서비스는 글쓴이, 혹은 관리자만 사용 가능합니다.")
     })
     @PutMapping("/reply")
-    public ResponseEntity<Void> update(@RequestBody NoteReplyDTO dto) {
+    public ResponseEntity<Void> update(
+            @RequestBody NoteReplyDTO dto, HttpServletRequest request) {
+        String loginId = (String) request.getAttribute("loginId");
+
         noteReplyService.update(dto);
         return ResponseEntity.ok().build();
     }
