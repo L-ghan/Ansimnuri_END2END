@@ -1,7 +1,7 @@
 package com.end2end.ansimnuri.chatbot.service;
 
-import com.end2end.ansimnuri.chatbot.dao.ChatDao;
-import com.end2end.ansimnuri.chatbot.dto.PoliceDto;
+import com.end2end.ansimnuri.chatbot.dao.ChatDAO;
+import com.end2end.ansimnuri.chatbot.dto.PoliceDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -16,14 +16,13 @@ import java.util.stream.Collectors;
 @Service
 public class ChatService {
 
-    private final ChatDao chatDao;
+    private final ChatDAO chatDao;
 
     @Value("${openai.api.key}")
     private String apiKey;
 
     public String askOpenAI(List<Map<String, String>> messages) {
         RestTemplate restTemplate = new RestTemplate();
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(apiKey);
@@ -39,13 +38,21 @@ public class ChatService {
                 entity,
                 String.class
         );
-
         return response.getBody();
     }
 
-    public List<PoliceDto> findPoliceByLocation(String keyword) {
+    public List<PoliceDTO> findPoliceByLocation(String keyword) {
         return chatDao.findPoliceByLocation(keyword).stream()
-                .map(dto -> new PoliceDto(dto.getName(), dto.getAddress()))
+                .map(dto -> new PoliceDTO(dto.getName(), dto.getAddress()))
                 .collect(Collectors.toList());
     }
+
+    public String findGuideAnswer(String question) {
+        return chatDao.findGuideAnswer(question);
+    }
+
+    public String findSupportAnswer(String question) {
+        return chatDao.findSupportAnswer(question);
+    }
+
 }
