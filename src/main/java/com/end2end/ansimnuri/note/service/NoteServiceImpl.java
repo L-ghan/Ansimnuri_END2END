@@ -8,11 +8,14 @@ import com.end2end.ansimnuri.note.dto.NoteDTO;
 import com.end2end.ansimnuri.note.dto.NoteSocketDTO;
 import com.end2end.ansimnuri.note.endpoint.NoteEndpoint;
 import com.end2end.ansimnuri.util.enums.RequestType;
+import com.end2end.ansimnuri.util.exception.UnAuthenticationException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @Service
@@ -41,9 +44,16 @@ public class NoteServiceImpl implements NoteService {
 
     @Transactional
     @Override
-    public void update(NoteDTO noteDTO) {
+    public void update(NoteDTO noteDTO, String loginId) {
         Note note = noteRepository.findById(noteDTO.getId())
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 id의 쪽지가 없습니다."));
+
+        Member member = memberRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 로그인 아이디는 존재하지 않습니다."));
+        if(!member.getId().equals(note.getMember().getId())) {
+            throw new UnAuthenticationException();
+        }
+
         note.update(noteDTO);
         NoteEndpoint.send(
                 NoteSocketDTO.of(RequestType.UPDATE, note.getMember().getId(), NoteDTO.of(note)));
@@ -51,10 +61,16 @@ public class NoteServiceImpl implements NoteService {
 
     @Transactional
     @Override
-    public void deleteById(long id) {
+    public void deleteById(long id, String loginId) {
         Note note = noteRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 id의 쪽지가 없습니다."));
         NoteDTO noteDTO = NoteDTO.of(note);
+
+        Member member = memberRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 로그인 아이디는 존재하지 않습니다."));
+        if(!member.getId().equals(note.getMember().getId())) {
+            throw new UnAuthenticationException();
+        }
 
         noteRepository.delete(note);
         NoteEndpoint.send(
