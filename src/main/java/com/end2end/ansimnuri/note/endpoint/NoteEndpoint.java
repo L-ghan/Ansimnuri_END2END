@@ -1,47 +1,36 @@
 package com.end2end.ansimnuri.note.endpoint;
 
-import com.end2end.ansimnuri.member.dto.MemberDTO;
-import com.end2end.ansimnuri.member.service.MemberService;
 import com.end2end.ansimnuri.note.dto.NoteSocketDTO;
-import com.end2end.ansimnuri.util.JWTUtil;
-import com.end2end.ansimnuri.util.provider.SpringProvider;
 import jakarta.websocket.*;
-import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-@ServerEndpoint(value = "/ws/note/{token}")
-public class NoteEndpoint {
-    private final JWTUtil jwtUtil = SpringProvider.Spring.getBean(JWTUtil.class);
-    private final MemberService memberService = SpringProvider.Spring.getBean(MemberService.class);
+public class NoteEndpoint extends TextWebSocketHandler {
+    private static final Set<WebSocketSession> clients = ConcurrentHashMap.newKeySet();
 
-    private static final Map<Session, MemberDTO> clients = new ConcurrentHashMap<>();
-
-    @OnOpen
-    public void onOpen(Session session, @PathParam("token") String token) {
-        if(jwtUtil.validation(token)) {
-            MemberDTO memberDTO = memberService
-                    .selectByLoginId(jwtUtil.getLoginId(token));
-            clients.put(session, memberDTO);
-        } else {
-            throw new RuntimeException("유효하지 않은 토큰입니다.");
-        }
+    @Override
+    public void handleTextMessage(WebSocketSession session, TextMessage message) {
+        // 메시지 처리 로직 구현
     }
 
-    @OnClose
-    public void onClose(Session session) {
+    @Override
+    public void afterConnectionEstablished(WebSocketSession session) {
+        // 웹소켓 연결이 수립되면 호출되는 메서드
+        clients.add(session);
+    }
+
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
+        // 웹소켓 연결이 종료되면 호출되는 메서드
         clients.remove(session);
     }
 
     public static void send(NoteSocketDTO dto) {
-        clients.forEach((session, memberDTO) -> {
-            try {
-                session.getBasicRemote().sendText(dto.toString());
-            } catch (Exception e) {
-                throw new RuntimeException("소켓 통신 중 에러가 발생했습니다.", e);
-            }
-        });
     }
 }
