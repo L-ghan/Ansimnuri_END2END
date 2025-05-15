@@ -8,6 +8,4 @@ import lombok.*;
 public class PoliceDto {
     private String name;
     private String address;
-    private Double latitude;
-    private Double longitude;
 }

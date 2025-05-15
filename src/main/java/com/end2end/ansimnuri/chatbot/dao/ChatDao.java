@@ -13,8 +13,8 @@ public class ChatDao {
     @Autowired
     private SqlSession mybatis;
 
-    public List<PoliceDto> findPoliceByLocation() {
-        return mybatis.selectList("chatbot.selectAllPolice");
+    public List<PoliceDto> findPoliceByLocation(String keyword) {
+        return mybatis.selectList("chatbot.findPoliceByKeyword", "%" + keyword + "%");
     }
-}
 
+}
