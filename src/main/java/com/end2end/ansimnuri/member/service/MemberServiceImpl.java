@@ -4,6 +4,7 @@ import com.end2end.ansimnuri.member.dao.MemberDAO;
 import com.end2end.ansimnuri.member.domain.entity.Member;
 import com.end2end.ansimnuri.member.domain.repository.MemberRepository;
 import com.end2end.ansimnuri.member.dto.LoginDTO;
+import com.end2end.ansimnuri.member.dto.LoginResultDTO;
 import com.end2end.ansimnuri.member.dto.MemberDTO;
 import com.end2end.ansimnuri.member.dto.MemberUpdateDTO;
 import com.end2end.ansimnuri.util.JWTUtil;
@@ -32,7 +33,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     @Override
-    public String login(LoginDTO dto) {
+    public LoginResultDTO login(LoginDTO dto) {
         Member member = memberRepository
                 .findByLoginId(dto.getLoginId())
                 .orElseThrow(() -> new IllegalArgumentException("아이디가 일치하지 않습니다."));
@@ -43,8 +44,10 @@ public class MemberServiceImpl implements MemberService {
         List<String> roles = new ArrayList<>();
         roles.add(member.getRole().getRole());
 
-
-        return jwtUtil.createToken(member.getLoginId(), roles);
+        return LoginResultDTO.builder()
+                .id(member.getId())
+                .token(jwtUtil.createToken(member.getLoginId(), roles))
+                .build();
     }
 
     @Transactional
