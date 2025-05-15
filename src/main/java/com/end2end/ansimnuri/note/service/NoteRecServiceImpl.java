@@ -7,6 +7,7 @@ import com.end2end.ansimnuri.note.domain.entity.NoteRec;
 import com.end2end.ansimnuri.note.domain.repository.NoteRecRepository;
 import com.end2end.ansimnuri.note.domain.repository.NoteRepository;
 import com.end2end.ansimnuri.note.dto.NoteRecDTO;
+import com.end2end.ansimnuri.util.exception.UnAuthenticationException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,9 @@ public class NoteRecServiceImpl implements NoteRecService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 id에 해당하는 쪽지가 없습니다."));
         Member member = memberRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 id를 가진 유저가 없습니다."));
+        if(member.getId().equals(dto.getUserId())) {
+            throw new UnAuthenticationException();
+        }
 
         NoteRec noteRec = noteRecRepository.findByNoteAndMember(note, member)
                 .orElseThrow(() -> new IllegalArgumentException("해당 id를 가진 추천 내역이 없습니다."));

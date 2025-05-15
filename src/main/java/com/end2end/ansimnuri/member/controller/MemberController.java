@@ -1,6 +1,7 @@
 package com.end2end.ansimnuri.member.controller;
 
 import com.end2end.ansimnuri.member.dto.LoginDTO;
+import com.end2end.ansimnuri.member.dto.LoginResultDTO;
 import com.end2end.ansimnuri.member.dto.MemberDTO;
 import com.end2end.ansimnuri.member.dto.MemberUpdateDTO;
 import com.end2end.ansimnuri.member.service.MemberService;
@@ -29,7 +30,7 @@ public class MemberController {
             @ApiResponse(responseCode = "400", description = "아이디 또는, 비밀번호가 일치하지 않습니다.")
     })
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDTO dto) {
+    public ResponseEntity<LoginResultDTO> login(@RequestBody LoginDTO dto) {
         System.out.println("dto: " + dto);
         return ResponseEntity.ok(memberService.login(dto));
     }
