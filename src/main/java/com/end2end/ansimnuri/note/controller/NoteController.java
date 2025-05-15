@@ -55,7 +55,7 @@ public class NoteController {
     })
     @PutMapping
     public ResponseEntity<Void> update(@RequestBody NoteDTO noteDTO, HttpServletRequest request) {
-        String loginId = (String) request.getSession().getAttribute("loginId");
+        String loginId = (String) request.getAttribute("loginId");
 
         noteService.update(noteDTO, loginId);
         return ResponseEntity.ok().build();

@@ -21,9 +21,13 @@ public class NoteEndpoint {
 
     @OnOpen
     public void onOpen(Session session, @PathParam("token") String token) {
-        MemberDTO memberDTO = memberService
-                .selectByLoginId(jwtUtil.getLoginId(token));
-        clients.put(session, memberDTO);
+        if(jwtUtil.validation(token)) {
+            MemberDTO memberDTO = memberService
+                    .selectByLoginId(jwtUtil.getLoginId(token));
+            clients.put(session, memberDTO);
+        } else {
+            throw new RuntimeException("유효하지 않은 토큰입니다.");
+        }
     }
 
     @OnClose
