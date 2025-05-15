@@ -1,18 +1,43 @@
 package com.end2end.ansimnuri.note.endpoint;
 
-import com.end2end.ansimnuri.util.config.WebSocketConfig;
-import jakarta.websocket.OnOpen;
+import com.end2end.ansimnuri.member.dto.MemberDTO;
+import com.end2end.ansimnuri.member.service.MemberService;
+import com.end2end.ansimnuri.note.dto.NoteSocketDTO;
+import com.end2end.ansimnuri.util.JWTUtil;
+import com.end2end.ansimnuri.util.provider.SpringProvider;
+import jakarta.websocket.*;
+import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@ServerEndpoint(value = "/note", configurator = WebSocketConfig.class)
+@ServerEndpoint(value = "/ws/note/{token}")
 public class NoteEndpoint {
-    private static final Map<String, Object> clients = new ConcurrentHashMap<>();
+    private final JWTUtil jwtUtil = SpringProvider.Spring.getBean(JWTUtil.class);
+    private final MemberService memberService = SpringProvider.Spring.getBean(MemberService.class);
+
+    private static final Map<Session, MemberDTO> clients = new ConcurrentHashMap<>();
 
     @OnOpen
-    public void onOpen(String userId) {
-        clients.put(userId, userId);
+    public void onOpen(Session session, @PathParam("token") String token) {
+        MemberDTO memberDTO = memberService
+                .selectByLoginId(jwtUtil.getLoginId(token));
+        clients.put(session, memberDTO);
+    }
+
+    @OnClose
+    public void onClose(Session session) {
+        clients.remove(session);
+    }
+
+    public static void send(NoteSocketDTO dto) {
+        clients.forEach((session, memberDTO) -> {
+            try {
+                session.getBasicRemote().sendText(dto.toString());
+            } catch (Exception e) {
+                throw new RuntimeException("소켓 통신 중 에러가 발생했습니다.", e);
+            }
+        });
     }
 }

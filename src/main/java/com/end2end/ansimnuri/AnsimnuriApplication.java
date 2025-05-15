@@ -3,8 +3,9 @@ package com.end2end.ansimnuri;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
-
+@EnableScheduling
 @EnableJpaAuditing
 @SpringBootApplication
 public class AnsimnuriApplication {
@@ -12,5 +13,4 @@ public class AnsimnuriApplication {
         SpringApplication.run(AnsimnuriApplication.class, args);
         System.out.println("spring start");
     }
-
 }
