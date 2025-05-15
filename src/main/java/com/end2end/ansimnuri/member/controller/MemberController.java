@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import java.util.Map;
 
 @Tag(name = "유저 API", description = "유저 CRUD 기능을 가진 API")
 @RequiredArgsConstructor
@@ -48,23 +50,13 @@ public class MemberController {
     public ResponseEntity<Boolean> checkNickName(
             @Parameter(description = "로그인 아이디")
             @PathVariable String nickName) {
+        System.out.println("nickName: " + nickName);
         return ResponseEntity.ok(memberService.isNickNameExist(nickName));
-    }
-
-    @Operation(summary = "회원 가입 API", description = "신규 회원 가입을 한다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "정상 작동입니다."),
-            @ApiResponse(responseCode = "400", description = "입력값이 잘못되었습니다.")
-    })
-    @PostMapping("/register")
-    public ResponseEntity<Void> insert(@RequestBody MemberDTO memberDTO) {
-        memberService.insert(memberDTO);
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")
     public ResponseEntity<MemberDTO> getMyInfo(Authentication authentication) {
-       System.out.println("authentication: " + authentication);
+        System.out.println("authentication: " + authentication);
         String loginId = authentication.getName();
         MemberDTO memberDTO = memberService.selectByLoginId(loginId);
         return ResponseEntity.ok(memberDTO);
@@ -76,5 +68,34 @@ public class MemberController {
         MemberDTO updatedMember = memberService.updateMyInformation(loginId, dto);
         return ResponseEntity.ok(updatedMember);
     }
+
+    @PostMapping("/checkEmail")
+    public ResponseEntity<Boolean> checkEmail(@RequestBody MemberDTO dto) {
+
+        boolean result = memberService.checkEmail(dto.getEmail());
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/checkPw")
+    public ResponseEntity<Boolean> checkPw(@RequestBody LoginDTO dto,Authentication authentication) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+        String rawPassword = dto.getPassword();
+
+        String loginId =  authentication.getName();
+      String pw = memberService.getPw(loginId);
+
+        boolean matches = passwordEncoder.matches(rawPassword, pw);
+        System.out.println("비밀번호 일치 여부: " + matches);
+        return ResponseEntity.ok(matches);
+    }
+
+    @PostMapping("/changePassword")
+    public ResponseEntity<?> changePassword(@RequestBody Map<String, String> body, Authentication authentication) {
+        String newPassword = body.get("newPassword");
+        memberService.changePassword(authentication.getName(), newPassword);
+        return ResponseEntity.ok("비밀번호 변경 성공");
+    }
+
 
 }
