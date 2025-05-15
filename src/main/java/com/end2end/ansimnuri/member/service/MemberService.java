@@ -16,4 +16,7 @@ public interface MemberService {
     boolean checkEmail(String email);
     void changePassword(String loginId, String pw);
     String getPw(String loginId);
+    void deleteByLoginId(String loginId);
+    void register(MemberDTO dto);
+    void changeLoginIdByemail(String email, String pw);
 }

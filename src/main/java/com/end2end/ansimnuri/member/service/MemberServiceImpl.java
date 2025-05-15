@@ -99,7 +99,6 @@ public class MemberServiceImpl implements MemberService {
             if (exists.isPresent()) {
                 throw new IllegalArgumentException("이미 사용 중인 닉네임입니다.");
             }
-
         }
         member.update(
                 MemberDTO.builder().nickname(dto.getNickname()
@@ -112,14 +111,24 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
         return MemberDTO.of(member);
     }
-
+@Override
+public void register(MemberDTO dto){
+        memberRepository.save(Member.of(dto));
+}
     @Override
     public void changePassword(String loginId, String pw) {
         Member member = memberRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new UsernameNotFoundException("유저 없음"));
 
         String password = passwordEncoder.encode(pw);// 비밀번호 암호화 작업
-        member.changePassword(password);
+        member.change(password);
+        memberRepository.save(member);
+    }
+    @Override
+    public void changeLoginIdByemail(String email, String loginId) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("이메일 없음"));
+
+        member.changeLoginId(loginId);
         memberRepository.save(member);
     }
 
@@ -134,7 +143,13 @@ public class MemberServiceImpl implements MemberService {
 
         Optional<Member> member = memberRepository.findByLoginId(loginId);
         return member.get().getPassword();
-
+    }
+    @Transactional
+    @Override
+    public void deleteByLoginId(String loginId){
+        Member member = memberRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new UsernameNotFoundException("해당 회원이 존재하지 않습니다."));
+        memberRepository.delete(member);
     }
 
 

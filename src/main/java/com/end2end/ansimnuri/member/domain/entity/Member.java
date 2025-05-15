@@ -63,11 +63,11 @@ public class Member extends Timestamp {
     private List<MessageBlock> messageBlockList;
     @OneToMany(mappedBy = "blockMember", orphanRemoval = true)
     private List<MessageBlock> messageBlockedList;
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
     private List<Note> noteList;
     @OneToMany(mappedBy = "member", orphanRemoval = true)
     private List<NoteRec> noteRecList;
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
     private List<NoteReply> noteReplyList;
     @OneToMany(mappedBy = "member", orphanRemoval = true)
     private List<SearchHistory> searchHistoryList;
@@ -94,7 +94,10 @@ public class Member extends Timestamp {
 
     }
 
-    public void changePassword(String newPassword) {
+    public void change(String newPassword) {
         this.password = newPassword;
+    }
+    public void changeLoginId(String newLoginId) {
+        this.loginId = newLoginId;
     }
 }

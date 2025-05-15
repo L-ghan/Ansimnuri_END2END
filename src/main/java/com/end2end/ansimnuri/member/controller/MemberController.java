@@ -34,6 +34,11 @@ public class MemberController {
         System.out.println("dto: " + dto);
         return ResponseEntity.ok(memberService.login(dto));
     }
+    @PostMapping("/register")
+    public ResponseEntity<MemberDTO> register(@RequestBody MemberDTO dto) {
+        memberService.register(dto);
+        return ResponseEntity.ok(dto);
+    }
 
 
     @Operation(summary = "아이디 중복 체크 API", description = "아이디의 중복 여부를 확인해서 boolean값으로 반환한다.")
@@ -97,6 +102,30 @@ String pw = dto.getPassword();
 String loginId = authentication.getName();
         memberService.changePassword(loginId, pw);
         return ResponseEntity.ok("비밀번호 변경 성공");
+    }
+    @PostMapping("/id/changePassword")
+    public ResponseEntity<?> loginIdBychangePassword(@RequestBody LoginDTO dto) {
+        String pw = dto.getPassword();
+        String loginId = dto.getLoginId();
+        memberService.changePassword(loginId, pw);
+        return ResponseEntity.ok("비밀번호 변경 성공");
+    }
+
+    @PostMapping("/email/changeLoginId")
+    public ResponseEntity<?> changeLoginIdByemail(@RequestBody MemberDTO dto) {
+        String loginId = dto.getLoginId() ;
+        String email = dto.getEmail();
+        memberService.changeLoginIdByemail(email, loginId);
+        return ResponseEntity.ok("아이디 변경 성공");
+    }
+    @DeleteMapping("/delete/{loginId}")
+    public ResponseEntity<Void>deleteMember(@PathVariable String loginId, Authentication authentication){
+
+       if(!authentication.getName().equals(loginId)){
+           return ResponseEntity.badRequest().build();
+       }//혹시모를 상황을 대비해서 인증된 회원이랑 요청한 아이디값이 다른경우
+       memberService.deleteByLoginId(loginId);
+        return ResponseEntity.ok().build();
     }
 
 
