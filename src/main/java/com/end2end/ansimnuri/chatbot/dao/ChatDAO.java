@@ -25,5 +25,9 @@ public class ChatDAO {
         return mybatis.selectOne("chatbot.findSupportAnswer", question);
     }
 
+    public String findFAQAnswer(String question) {
+        return mybatis.selectOne("chatbot.findFAQAnswer", question);
+    }
+
 
 }

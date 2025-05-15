@@ -55,4 +55,8 @@ public class ChatService {
         return chatDao.findSupportAnswer(question);
     }
 
+    public String findFAQAnswer(String question) {
+        return chatDao.findFAQAnswer(question);
+    }
+
 }

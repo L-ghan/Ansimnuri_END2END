@@ -58,6 +58,12 @@ public class ChatController {
         return ResponseEntity.ok(answer != null ? answer : "해당 제도에 대한 정보가 없습니다.");
     }
 
+    @GetMapping("/faq")
+    public ResponseEntity<String> getFAQAnswer(@RequestParam String question) {
+        String answer = chatServ.findFAQAnswer(question);
+        return ResponseEntity.ok(answer != null ? answer : "해당 질문에 대한 정보가 없습니다.");
+    }
+
 
 
 }

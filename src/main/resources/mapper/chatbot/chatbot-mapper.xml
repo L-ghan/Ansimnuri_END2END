@@ -23,5 +23,11 @@
         WHERE question = #{question}
     </select>
 
+    <select id="findFAQAnswer" parameterType="String" resultType="String">
+        SELECT answer
+        FROM faq
+        WHERE question = #{question}
+    </select>
+
 
 </mapper>
