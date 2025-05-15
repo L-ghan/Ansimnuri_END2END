@@ -61,20 +61,19 @@ public class NoteServiceImpl implements NoteService {
 
     @Transactional
     @Override
-    public void deleteById(long id) {
+    public void deleteById(long id, String loginId) {
         Note note = noteRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 id의 쪽지가 없습니다."));
         NoteDTO noteDTO = NoteDTO.of(note);
 
+        Member member = memberRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 로그인 아이디는 존재하지 않습니다."));
+        if(!member.getId().equals(note.getMember().getId())) {
+            throw new UnAuthenticationException();
+        }
+
         noteRepository.delete(note);
         NoteEndpoint.send(
                 NoteSocketDTO.of(RequestType.DELETE, note.getMember().getId(), noteDTO));
-    }
-
-    @Scheduled(cron = "0 0 0 * * 1")
-    @Transactional
-    @Override
-    public void delete() {
-
     }
 }

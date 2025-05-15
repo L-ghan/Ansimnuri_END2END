@@ -8,6 +8,5 @@ public interface NoteService {
     List<NoteDTO> selectAll();
     void insert(NoteDTO dto, String loginId);
     void update(NoteDTO dto, String loginId);
-    void deleteById(long id);
-    void delete();
+    void deleteById(long id, String loginId);
 }

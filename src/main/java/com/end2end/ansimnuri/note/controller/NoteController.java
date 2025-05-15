@@ -70,8 +70,10 @@ public class NoteController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNoteById(
             @Parameter(description = "쪽지 id")
-            @PathVariable long id) {
-        noteService.deleteById(id);
+            @PathVariable long id, HttpServletRequest request) {
+        String loginId = (String) request.getSession().getAttribute("loginId");
+
+        noteService.deleteById(id, loginId);
         return ResponseEntity.ok().build();
     }
 
