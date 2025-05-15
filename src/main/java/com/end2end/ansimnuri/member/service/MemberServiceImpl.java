@@ -12,6 +12,7 @@ import com.end2end.ansimnuri.util.PasswordUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final JWTUtil jwtUtil;
     private final PasswordUtil passwordUtil;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Override
@@ -112,12 +114,14 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void changePassword(String loginId, String newPassword) {
+    public void changePassword(String loginId, String pw) {
         Member member = memberRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new UsernameNotFoundException("유저 없음"));
+
+        String password = passwordEncoder.encode(pw);// 비밀번호 암호화 작업
+        member.changePassword(password);
         memberRepository.save(member);
     }
-
 
     @Override
     public boolean checkEmail(String email) {

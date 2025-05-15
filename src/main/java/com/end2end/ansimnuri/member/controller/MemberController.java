@@ -92,9 +92,10 @@ public class MemberController {
     }
 
     @PostMapping("/changePassword")
-    public ResponseEntity<?> changePassword(@RequestBody Map<String, String> body, Authentication authentication) {
-        String newPassword = body.get("newPassword");
-        memberService.changePassword(authentication.getName(), newPassword);
+    public ResponseEntity<?> changePassword(@RequestBody LoginDTO dto, Authentication authentication) {
+String pw = dto.getPassword();
+String loginId = authentication.getName();
+        memberService.changePassword(loginId, pw);
         return ResponseEntity.ok("비밀번호 변경 성공");
     }
 

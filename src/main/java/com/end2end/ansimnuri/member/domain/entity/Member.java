@@ -91,5 +91,10 @@ public class Member extends Timestamp {
         this.postcode = memberDTO.getPostcode();
         this.address = memberDTO.getAddress();
         this.detailAddress = memberDTO.getDetailAddress();
+
+    }
+
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
     }
 }
