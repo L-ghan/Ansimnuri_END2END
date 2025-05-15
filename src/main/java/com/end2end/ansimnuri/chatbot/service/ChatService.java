@@ -1,23 +1,30 @@
 package com.end2end.ansimnuri.chatbot.service;
 
 import com.end2end.ansimnuri.chatbot.dao.ChatDao;
-import com.end2end.ansimnuri.chatbot.dto.PoliceDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.end2end.ansimnuri.map.domain.repository.PoliceRepository;
+import com.end2end.ansimnuri.map.dto.PoliceDTO;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URLEncoder;
+import java.net.URI;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class ChatService {
 
-    @Autowired
-    private ChatDao chatDao;
+    private final ChatDao chatDao;
+    private final PoliceRepository policeRepository;
 
     @Value("${openai.api.key}")
     private String apiKey;
@@ -45,7 +52,7 @@ public class ChatService {
         return response.getBody();
     }
 
-    public PoliceDto findPoliceByLocation(String keyword) {
+    public List<PoliceDTO> findPoliceByLocation(String keyword) {
         System.out.println("🔍 입력 키워드: " + keyword);
 
         double[] coords = getCoordinatesFromKakao(keyword);
@@ -54,35 +61,26 @@ public class ChatService {
             return null;
         }
 
-        double userLat = coords[0];
-        double userLng = coords[1];
+        double userLng = coords[0]; // longitude
+        double userLat = coords[1]; // latitude
         System.out.println("📍 변환된 좌표: " + userLat + ", " + userLng);
 
-        List<PoliceDto> allStations = chatDao.findPoliceByLocation();
-        System.out.println("📌 전체 경찰서 수: " + allStations.size());
+        List<PoliceDTO> allStations = policeRepository.findAll().stream()
+                .map(PoliceDTO::of)
+                .filter(p -> Double.compare(p.getLatitude(), 0.0) != 0 && Double.compare(p.getLongitude(), 0.0) != 0)
+                .collect(Collectors.toList());
 
-        PoliceDto nearest = null;
-        double minDist = Double.MAX_VALUE;
+        System.out.println("📌 전체 유효 경찰서 수: " + allStations.size());
 
-        for (PoliceDto p : allStations) {
-            if (p.getLatitude() == null || p.getLongitude() == null) {
-                System.out.println("⚠️ " + p.getName() + " → 좌표 없음");
-                continue;
-            }
+        List<PoliceDTO> nearest = allStations.stream()
+                .sorted(Comparator.comparingDouble(p -> haversine(userLat, userLng, p.getLatitude(), p.getLongitude())))
+                .limit(3)
+                .collect(Collectors.toList());
+
+        nearest.forEach(p -> {
             double dist = haversine(userLat, userLng, p.getLatitude(), p.getLongitude());
             System.out.println("📏 거리: " + dist + "km → " + p.getName());
-
-            if (dist < minDist) {
-                minDist = dist;
-                nearest = p;
-            }
-        }
-
-        if (nearest == null) {
-            System.out.println("❌ 근접 경찰서 없음");
-        } else {
-            System.out.println("✅ 가장 가까운 경찰서: " + nearest.getName());
-        }
+        });
 
         return nearest;
     }
@@ -90,24 +88,31 @@ public class ChatService {
     private double[] getCoordinatesFromKakao(String query) {
         try {
             RestTemplate restTemplate = new RestTemplate();
+
+            URI uri = UriComponentsBuilder
+                    .fromUriString("https://dapi.kakao.com/v2/local/search/address.json")
+                    .queryParam("query", query)
+                    .encode()
+                    .build()
+                    .toUri();
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", "KakaoAK " + kakaoApiKey);
 
             HttpEntity<String> entity = new HttpEntity<>(headers);
-            String url = "https://dapi.kakao.com/v2/local/search/keyword.json?query=" + URLEncoder.encode(query, "UTF-8");
+            ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
 
-            ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
-            List documents = (List) response.getBody().get("documents");
-            if (documents.isEmpty()) return null;
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonNode = mapper.readTree(response.getBody());
+            JsonNode documents = jsonNode.path("documents");
+            JsonNode target = documents.path(0);
 
-            Map first = (Map) documents.get(0);
-            double lat = Double.parseDouble((String) first.get("y"));
-            double lng = Double.parseDouble((String) first.get("x"));
-            return new double[]{lat, lng};
+            double longitude = target.path("x").asDouble();
+            double latitude = target.path("y").asDouble();
 
+            return new double[]{longitude, latitude};
         } catch (Exception e) {
             System.out.println("❌ Kakao API 오류: " + e.getMessage());
-            return null;
+            throw new RuntimeException("Kakao Api 오류 " + e.getMessage());
         }
     }
 

@@ -1,15 +1,15 @@
 package com.end2end.ansimnuri.chatbot.controller;
 
-
-import com.end2end.ansimnuri.chatbot.dto.PoliceDto;
 import com.end2end.ansimnuri.chatbot.service.ChatService;
-import com.end2end.ansimnuri.map.service.PoliceService;
+import com.end2end.ansimnuri.map.dto.PoliceDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,20 +30,26 @@ public class ChatController {
     }
 
     @GetMapping("/police")
-    public ResponseEntity<Map<String, String>> findPoliceByLocation(@RequestParam String keyword) {
-        PoliceDto dto = chatServ.findPoliceByLocation(keyword);
+    public ResponseEntity<List<Map<String, String>>> findPoliceByLocation(@RequestParam String keyword) {
+        List<PoliceDTO> dto = chatServ.findPoliceByLocation(keyword);
 
+        List<Map<String, String>> result = new ArrayList<>();
         if (dto == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
+            result.add(Map.of(
                     "name", "관할 경찰서를 찾을 수 없습니다",
                     "address", "입력하신 지역 정보를 다시 확인해주세요"
             ));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
         }
 
-        return ResponseEntity.ok(Map.of(
-                "name", dto.getName(),
-                "address", dto.getAddress()
-        ));
+        for (PoliceDTO p : dto) {
+            Map<String, String> map = new HashMap<>();
+            map.put("name", p.getName());
+            map.put("address", p.getAddress());
+            result.add(map);
+        }
+
+        return ResponseEntity.ok(result);
     }
 
 }
