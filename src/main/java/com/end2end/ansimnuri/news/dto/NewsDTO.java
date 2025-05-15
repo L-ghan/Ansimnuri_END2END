@@ -18,8 +18,8 @@ public class NewsDTO {
     private String title;
     @Schema(description = "내용", example = "오늘(xx일)에 xx시 oo동에서...")
     private String content;
-    @Schema(description = "섬네일 이미지", example = "https://...")
-    private String thumbnailImg;
+    @Schema(description = "요약", example = "https://...")
+    private String description;
     @Schema(description = "url", example = "https://...")
     private String url;
     @Schema(description = "등록 일자", example = "2024-04-30 09:00:00", format = "date-time")
