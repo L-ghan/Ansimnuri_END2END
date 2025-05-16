@@ -1,5 +1,5 @@
 package com.end2end.ansimnuri.news.service;
-
+import io.github.bonigarcia.wdm.WebDriverManager;
 import com.end2end.ansimnuri.news.domain.entity.News;
 import com.end2end.ansimnuri.news.domain.repository.NewsRepository;
 import com.end2end.ansimnuri.news.dto.NewsDTO;
@@ -7,54 +7,90 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
 @Service
 public class NewsServiceImpl implements NewsService {
-    @Value("${news.api.key}")
-    private String apiKey;
     private final NewsRepository newsRepository;
 
-    @Scheduled(cron = "0 0 9 * * *")
+    @Value("${naver.news.api.key}")
+    private String naverNewApiKey;
+
+    @Value("${naver.news.id.key}")
+    private String naverNewsIdKey;
+
+    @Scheduled(cron = "40 08 19 * * *")
     @Transactional
     @Override
     public void insert() {
         RestTemplate restTemplate = new RestTemplate();
         try {
-            String url = "https://newsapi.org/v2/everything?q=서울+(살인 OR 폭행 OR 범죄 OR 강도)&sortBy=publishedAt&apiKey=" + apiKey;
+            String apiUrl = "https://openapi.naver.com/v1/search/news.json?query=서울 AND 살인&display=100&sort=date";
 
-            String response = restTemplate.getForObject(url, String.class);
+            // 헤더 설정
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("X-Naver-Client-Id", naverNewsIdKey);
+            headers.set("X-Naver-Client-Secret", naverNewApiKey);
 
-            JsonNode root = new ObjectMapper().readTree(response);
-            JsonNode articles = root.path("articles");
-            System.out.println(articles.size());
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+
+            ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.GET, entity, String.class);
+            JsonNode root = new ObjectMapper().readTree(response.getBody());
+            JsonNode items = root.path("items");
+
+            WebDriverManager.chromedriver().setup();
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("--headless");
+            options.addArguments("--disable-gpu");
+            WebDriver driver = new ChromeDriver(options);
+
             List<News> newsList = new ArrayList<>();
-            for (JsonNode article : articles) {
-                String checkUrl = article.path("url").asText();
+            for (JsonNode item : items) {
+                String checkUrl = item.path("link").asText();
                 if (newsRepository.existsByUrl(checkUrl)) {
                     continue;
                 }
 
-                String publishedAt = article.path("publishedAt").asText();
-                OffsetDateTime offsetDateTime = OffsetDateTime.parse(publishedAt);
-                LocalDateTime regDate = offsetDateTime.toLocalDateTime();
+                String pubDateStr = item.path("pubDate").asText(); // e.g., "Wed, 15 May 2024 09:00:00 +0900"
+                DateTimeFormatter formatter = DateTimeFormatter.RFC_1123_DATE_TIME;
+                ZonedDateTime zdt = ZonedDateTime.parse(pubDateStr, formatter);
+                LocalDateTime regDate = zdt.toLocalDateTime();
 
-                System.out.println(article);
+                String thumbnailUrl = "";
+                try {
+                    driver.get(checkUrl);
+                    WebElement metaOgImage = driver.findElement(By.cssSelector("meta[property='og:image']"));
+                    thumbnailUrl = metaOgImage.getAttribute("content");
+                } catch (Exception e) {
+                    System.out.println("썸네일 추출 실패: " + checkUrl);
+                }
+
                 News news = News.builder()
-                        .title(article.path("title").asText())
-                        .content(article.path("content").asText())
-                        .thumbnailImg(article.path("urlToImage").asText())
+                        .title(item.path("title").asText())
+                        .description(item.path("description").asText())
                         .url(checkUrl)
                         .regDate(regDate)
+                        .img(thumbnailUrl)
                         .build();
                 newsList.add(news);
             }
@@ -73,11 +109,11 @@ public class NewsServiceImpl implements NewsService {
         List<NewsDTO> dtoList = new ArrayList<>();
         for(News news : newsList){
           NewsDTO newsDTO= new NewsDTO(
-                  news.getContent(),
-                  news.getThumbnailImg(),
+                  news.getDescription(),
                   news.getTitle(),
                   news.getUrl(),
-                  news.getRegDate()
+                  news.getRegDate(),
+                  news.getImg()
           );
           dtoList.add(newsDTO);
         }

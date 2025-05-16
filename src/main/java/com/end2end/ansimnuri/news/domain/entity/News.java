@@ -23,12 +23,12 @@ public class News {
     private Long id;
     @Column(name = "TITLE", nullable = false)
     private String title;
-    @Column(name = "CONTENT", nullable = false)
-    private String content;
-    @Column(name = "THUMBNAIL_IMG", nullable = false)
-    private String thumbnailImg;
+    @Column(name = "DESCRIPTION",nullable = false)
+    private String description;
     @Column(name = "URL", nullable = false)
     private String url;
     @Column (name = "REGDATE", nullable = false)
     private LocalDateTime regDate;
+    @Column (name="img")
+    private String img;
 }

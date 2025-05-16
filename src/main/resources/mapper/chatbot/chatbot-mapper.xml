@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="chatbot">
+
+    <select id="findPoliceByKeyword" parameterType="string" resultType="com.end2end.ansimnuri.chatbot.dto.PoliceDTO">
+        SELECT NAME, ADDRESS
+        FROM POLICE
+        WHERE ADDRESS LIKE '%' || #{keyword} || '%'
+        OR ADDRESS LIKE '%' || REPLACE(#{keyword}, '동', '') || '%'
+    </select>
+
+    <select id="findGuideAnswer" parameterType="string" resultType="string">
+        SELECT answer
+        FROM crime_guide
+        WHERE question = #{question}
+    </select>
+
+    <select id="findSupportAnswer" parameterType="string" resultType="string">
+        SELECT answer
+        FROM crime_support
+        WHERE question = #{question}
+    </select>
+
+    <select id="findFAQAnswer" parameterType="String" resultType="String">
+        SELECT answer
+        FROM faq
+        WHERE question = #{question}
+    </select>
+
+
+</mapper>
