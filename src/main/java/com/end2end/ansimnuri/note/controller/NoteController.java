@@ -71,7 +71,7 @@ public class NoteController {
     public ResponseEntity<Void> deleteNoteById(
             @Parameter(description = "쪽지 id")
             @PathVariable long id, HttpServletRequest request) {
-        String loginId = (String) request.getSession().getAttribute("loginId");
+        String loginId = (String) request.getAttribute("loginId");
 
         noteService.deleteById(id, loginId);
         return ResponseEntity.ok().build();
@@ -86,7 +86,7 @@ public class NoteController {
     })
     @PostMapping("/recommend")
     public ResponseEntity<Void> insert(@RequestBody NoteRecDTO dto, HttpServletRequest request) {
-        String loginId = (String) request.getSession().getAttribute("loginId");
+        String loginId = (String) request.getAttribute("loginId");
 
         noteRecService.insert(dto, loginId);
         return ResponseEntity.ok().build();
@@ -101,7 +101,7 @@ public class NoteController {
     })
     @DeleteMapping("/recommend")
     public ResponseEntity<Void> delete(@RequestBody NoteRecDTO dto, HttpServletRequest request) {
-        String loginId = (String) request.getSession().getAttribute("loginId");
+        String loginId = (String) request.getAttribute("loginId");
 
         noteRecService.delete(dto, loginId);
         return ResponseEntity.ok().build();
@@ -128,7 +128,7 @@ public class NoteController {
     @PostMapping("/reply")
     public ResponseEntity<Void> insert(
             @RequestBody NoteReplyDTO dto, HttpServletRequest request) {
-        String loginId = (String) request.getSession().getAttribute("loginId");
+        String loginId = (String) request.getAttribute("loginId");
 
         noteReplyService.insert(dto, loginId);
         return ResponseEntity.ok().build();
@@ -159,7 +159,7 @@ public class NoteController {
     @DeleteMapping("/reply/{id}")
     public ResponseEntity<Void> deleteReplyById(
             @PathVariable long id, HttpServletRequest request) {
-        String loginId = (String) request.getSession().getAttribute("loginId");
+        String loginId = (String) request.getAttribute("loginId");
 
         noteReplyService.deleteById(id, loginId);
         return ResponseEntity.ok().build();

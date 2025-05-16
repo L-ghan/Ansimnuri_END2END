@@ -11,11 +11,9 @@ import com.end2end.ansimnuri.util.enums.RequestType;
 import com.end2end.ansimnuri.util.exception.UnAuthenticationException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @RequiredArgsConstructor
 @Service
