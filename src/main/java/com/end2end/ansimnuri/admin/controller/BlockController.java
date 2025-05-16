@@ -22,6 +22,7 @@ public class BlockController {
 
     @GetMapping
     public ResponseEntity<List<BlockDTO>> selectAll() {
+
         return ResponseEntity.ok(blockService.selectAll());
     }
 

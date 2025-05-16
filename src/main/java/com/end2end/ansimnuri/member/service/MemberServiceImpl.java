@@ -104,4 +104,28 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
         return MemberDTO.of(member);
     }
+    @Transactional
+    @Override
+    public List<MemberDTO> getAllMembers() {
+       List<Member> members = memberRepository.findAll().stream()
+               .filter(member -> member.getBlockList().isEmpty())
+               .toList();
+
+       List<MemberDTO> memberDTOs = new ArrayList<>();
+       for(Member member : members){
+       MemberDTO memberDTO = MemberDTO.builder()
+               .id(member.getId())
+               .nickname(member.getNickname())
+               .loginId(member.getLoginId())
+               .email(member.getEmail())
+               .regDate(member.getRegDt())
+               .nickname(member.getNickname())
+               .address(member.getAddress()).build();
+           memberDTOs.add(memberDTO);
+       }
+        return memberDTOs;
+    }
+
+
+
 }
