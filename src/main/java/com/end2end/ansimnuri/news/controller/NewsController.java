@@ -29,4 +29,9 @@ public class NewsController {
     public List<NewsDTO> getNews() {
         return newsService.allNews();
     }
+
+    @GetMapping("/test")
+    public void test() {
+        newsService.insert();
+    }
 }
