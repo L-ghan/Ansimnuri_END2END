@@ -34,13 +34,13 @@ public class NewsServiceImpl implements NewsService {
     @Value("${naver.news.id.key}")
     private String naverNewsIdKey;
 
-    @Scheduled(cron = "0 22 15 * * *")
+    @Scheduled(cron = "0 47 10 * * *")
     @Transactional
     @Override
     public void insert() {
         RestTemplate restTemplate = new RestTemplate();
         try {
-            String apiUrl = "https://openapi.naver.com/v1/search/news.json?query=서울+범죄&display=100&sort=date";
+            String apiUrl = "https://openapi.naver.com/v1/search/news.json?query=서울 AND (살인 OR 폭력 OR 폭행 OR 강도)&display=100&sort=date";
 
             // 헤더 설정
             HttpHeaders headers = new HttpHeaders();
@@ -52,7 +52,8 @@ public class NewsServiceImpl implements NewsService {
             ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.GET, entity, String.class);
             JsonNode root = new ObjectMapper().readTree(response.getBody());
             JsonNode items = root.path("items"); // 네이버 뉴스 API는 "items" 배열 반환
-
+            System.out.println(items);
+            System.out.println("getbody"+response.getBody());
             List<News> newsList = new ArrayList<>();
             for (JsonNode item : items) {
                 String checkUrl = item.path("link").asText();
