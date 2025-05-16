@@ -1,5 +1,5 @@
 package com.end2end.ansimnuri.news.service;
-
+import io.github.bonigarcia.wdm.WebDriverManager;
 import com.end2end.ansimnuri.news.domain.entity.News;
 import com.end2end.ansimnuri.news.domain.repository.NewsRepository;
 import com.end2end.ansimnuri.news.dto.NewsDTO;
@@ -7,6 +7,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -34,13 +39,13 @@ public class NewsServiceImpl implements NewsService {
     @Value("${naver.news.id.key}")
     private String naverNewsIdKey;
 
-    @Scheduled(cron = "0 47 10 * * *")
+    @Scheduled(cron = "40 08 19 * * *")
     @Transactional
     @Override
     public void insert() {
         RestTemplate restTemplate = new RestTemplate();
         try {
-            String apiUrl = "https://openapi.naver.com/v1/search/news.json?query=서울 AND (살인 OR 폭력 OR 폭행 OR 강도)&display=100&sort=date";
+            String apiUrl = "https://openapi.naver.com/v1/search/news.json?query=서울 AND 살인&display=100&sort=date";
 
             // 헤더 설정
             HttpHeaders headers = new HttpHeaders();
@@ -51,9 +56,14 @@ public class NewsServiceImpl implements NewsService {
 
             ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.GET, entity, String.class);
             JsonNode root = new ObjectMapper().readTree(response.getBody());
-            JsonNode items = root.path("items"); // 네이버 뉴스 API는 "items" 배열 반환
-            System.out.println(items);
-            System.out.println("getbody"+response.getBody());
+            JsonNode items = root.path("items");
+
+            WebDriverManager.chromedriver().setup();
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("--headless");
+            options.addArguments("--disable-gpu");
+            WebDriver driver = new ChromeDriver(options);
+
             List<News> newsList = new ArrayList<>();
             for (JsonNode item : items) {
                 String checkUrl = item.path("link").asText();
@@ -66,12 +76,21 @@ public class NewsServiceImpl implements NewsService {
                 ZonedDateTime zdt = ZonedDateTime.parse(pubDateStr, formatter);
                 LocalDateTime regDate = zdt.toLocalDateTime();
 
+                String thumbnailUrl = "";
+                try {
+                    driver.get(checkUrl);
+                    WebElement metaOgImage = driver.findElement(By.cssSelector("meta[property='og:image']"));
+                    thumbnailUrl = metaOgImage.getAttribute("content");
+                } catch (Exception e) {
+                    System.out.println("썸네일 추출 실패: " + checkUrl);
+                }
+
                 News news = News.builder()
                         .title(item.path("title").asText())
-                        .content(item.path("content").asText())
                         .description(item.path("description").asText())
                         .url(checkUrl)
                         .regDate(regDate)
+                        .img(thumbnailUrl)
                         .build();
                 newsList.add(news);
             }
@@ -90,11 +109,11 @@ public class NewsServiceImpl implements NewsService {
         List<NewsDTO> dtoList = new ArrayList<>();
         for(News news : newsList){
           NewsDTO newsDTO= new NewsDTO(
-                  news.getContent(),
                   news.getDescription(),
                   news.getTitle(),
                   news.getUrl(),
-                  news.getRegDate()
+                  news.getRegDate(),
+                  news.getImg()
           );
           dtoList.add(newsDTO);
         }
