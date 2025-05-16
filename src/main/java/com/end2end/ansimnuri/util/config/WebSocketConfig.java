@@ -1,21 +1,24 @@
-package com.end2end.ansimnuri.util.config;
+    package com.end2end.ansimnuri.util.config;
 
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.websocket.HandshakeResponse;
-import jakarta.websocket.server.HandshakeRequest;
-import jakarta.websocket.server.ServerEndpointConfig;
+    import com.end2end.ansimnuri.note.endpoint.NoteEndpoint;
+    import org.springframework.context.annotation.Bean;
+    import org.springframework.context.annotation.Configuration;
+    import org.springframework.web.socket.WebSocketHandler;
+    import org.springframework.web.socket.config.annotation.EnableWebSocket;
+    import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+    import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
-public class WebSocketConfig extends ServerEndpointConfig.Configurator {
-    @Override
-    public void modifyHandshake(ServerEndpointConfig sec, HandshakeRequest request, HandshakeResponse response) {
-        if (request instanceof ServletRequest) {
-            HttpServletRequest httpRequest = (HttpServletRequest) request;
-            String loginId = (String) httpRequest.getAttribute("loginId");
+    @EnableWebSocket
+    @Configuration
+    public class WebSocketConfig implements WebSocketConfigurer {
+        @Override
+        public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+            registry.addHandler(myHandler(), "/ws/note")
+                    .setAllowedOrigins("*");
+        }
 
-            if(loginId != null) {
-                sec.getUserProperties().put("loginId", loginId);
-            }
+        @Bean
+        public WebSocketHandler myHandler() {
+            return new NoteEndpoint();
         }
     }
-}

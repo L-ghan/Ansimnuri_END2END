@@ -26,8 +26,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class NewsServiceImpl implements NewsService {
-    @Value("${news.api.key}")
-    private String apiKey;
     private final NewsRepository newsRepository;
 
     @Value("${naver.news.api.key}")

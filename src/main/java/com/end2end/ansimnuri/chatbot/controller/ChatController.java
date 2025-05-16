@@ -1,6 +1,6 @@
 package com.end2end.ansimnuri.chatbot.controller;
 
-import com.end2end.ansimnuri.chatbot.dto.PoliceDto;
+import com.end2end.ansimnuri.chatbot.dto.PoliceDTO;
 import com.end2end.ansimnuri.chatbot.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,25 +27,44 @@ public class ChatController {
         return ResponseEntity.ok(result);
     }
 
-
     @GetMapping("/police")
     public ResponseEntity<List<Map<String, String>>> findPoliceByLocation(@RequestParam String keyword) {
-        List<PoliceDto> dtoList = chatServ.findPoliceByLocation(keyword);
+        List<PoliceDTO> dto = chatServ.findPoliceByLocation(keyword);
 
-        if (dtoList == null || dtoList.isEmpty()) {
+        if (dto == null || dto.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(List.of(Map.of("name", "결과 없음", "address", "해당 지역의 경찰서를 찾을 수 없습니다.")));
         }
 
         List<Map<String, String>> result = new ArrayList<>();
-        for (PoliceDto p : dtoList) {
+        for (PoliceDTO p : dto) {
             result.add(Map.of(
                     "name", p.getName(),
                     "address", p.getAddress()
             ));
         }
-
         return ResponseEntity.ok(result);
     }
+
+    @GetMapping("/guide")
+    public ResponseEntity<String> getGuideAnswer(@RequestParam String question) {
+        String answer = chatServ.findGuideAnswer(question);
+        return ResponseEntity.ok(answer != null ? answer : "해당 질문에 대한 대처 요령이 없습니다.");
+    }
+
+    @GetMapping("/support")
+    public ResponseEntity<String> getSupportAnswer(@RequestParam String question) {
+        String answer = chatServ.findSupportAnswer(question);
+        return ResponseEntity.ok(answer != null ? answer : "해당 제도에 대한 정보가 없습니다.");
+    }
+
+    @GetMapping("/faq")
+    public ResponseEntity<String> getFAQAnswer(@RequestParam String question) {
+        String answer = chatServ.findFAQAnswer(question);
+        return ResponseEntity.ok(answer != null ? answer : "해당 질문에 대한 정보가 없습니다.");
+    }
+
+
+
 }
 

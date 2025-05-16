@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class ErrorHandler {
+public class GlobalExceptionHandler {
     @ExceptionHandler(UnAuthenticationException.class)
     public ResponseEntity<String> handleUnAuthenticationException(UnAuthenticationException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
