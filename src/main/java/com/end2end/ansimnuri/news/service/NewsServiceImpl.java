@@ -42,7 +42,7 @@ public class NewsServiceImpl implements NewsService {
     public void insert() {
         RestTemplate restTemplate = new RestTemplate();
         try {
-            String apiUrl = "https://openapi.naver.com/v1/search/news.json?query=서울 (살인 OR 폭행 OR 범죄 OR 강도)&display=20&sort=date";
+            String apiUrl = "https://openapi.naver.com/v1/search/news.json?query=서울+범죄&display=100&sort=date";
 
             // 헤더 설정
             HttpHeaders headers = new HttpHeaders();
@@ -52,7 +52,6 @@ public class NewsServiceImpl implements NewsService {
             HttpEntity<String> entity = new HttpEntity<>(headers);
 
             ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.GET, entity, String.class);
-            System.out.println(response.getBody());
             JsonNode root = new ObjectMapper().readTree(response.getBody());
             JsonNode items = root.path("items"); // 네이버 뉴스 API는 "items" 배열 반환
 
@@ -70,7 +69,7 @@ public class NewsServiceImpl implements NewsService {
 
                 News news = News.builder()
                         .title(item.path("title").asText())
-                        .content(item.path("description").asText())
+                        .content(item.path("content").asText())
                         .description(item.path("description").asText())
                         .url(checkUrl)
                         .regDate(regDate)
