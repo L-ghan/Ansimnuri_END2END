@@ -4,11 +4,11 @@ import com.end2end.ansimnuri.chatbot.dto.PoliceDTO;
 import com.end2end.ansimnuri.chatbot.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -32,8 +32,7 @@ public class ChatController {
         List<PoliceDTO> dto = chatServ.findPoliceByLocation(keyword);
 
         if (dto == null || dto.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(List.of(Map.of("name", "결과 없음", "address", "해당 지역의 경찰서를 찾을 수 없습니다.")));
+            return ResponseEntity.ok(Collections.emptyList());
         }
 
         List<Map<String, String>> result = new ArrayList<>();
@@ -49,21 +48,20 @@ public class ChatController {
     @GetMapping("/guide")
     public ResponseEntity<String> getGuideAnswer(@RequestParam String question) {
         String answer = chatServ.findGuideAnswer(question);
-        return ResponseEntity.ok(answer != null ? answer : "해당 질문에 대한 대처 요령이 없습니다.");
+        return ResponseEntity.ok(answer);
     }
 
     @GetMapping("/support")
     public ResponseEntity<String> getSupportAnswer(@RequestParam String question) {
         String answer = chatServ.findSupportAnswer(question);
-        return ResponseEntity.ok(answer != null ? answer : "해당 제도에 대한 정보가 없습니다.");
+        return ResponseEntity.ok(answer);
     }
 
     @GetMapping("/faq")
     public ResponseEntity<String> getFAQAnswer(@RequestParam String question) {
         String answer = chatServ.findFAQAnswer(question);
-        return ResponseEntity.ok(answer != null ? answer : "해당 질문에 대한 정보가 없습니다.");
+        return ResponseEntity.ok(answer);
     }
-
 
 
 }
