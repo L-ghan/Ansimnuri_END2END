@@ -5,7 +5,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter @Setter
-public class PoliceDto {
+public class PoliceDTO {
     private String name;
     private String address;
 }
