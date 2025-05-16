@@ -13,4 +13,10 @@ public interface MemberService {
     boolean isNickNameExist(String nickName);
     MemberDTO selectByLoginId(String loginId);
     MemberDTO updateMyInformation(String loginId, MemberUpdateDTO dto);
+    boolean checkEmail(String email);
+    void changePassword(String loginId, String pw);
+    String getPw(String loginId);
+    void deleteByLoginId(String loginId);
+    void register(MemberDTO dto);
+    void changeLoginIdByemail(String email, String pw);
 }

@@ -12,7 +12,11 @@ import com.end2end.ansimnuri.util.PasswordUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +26,10 @@ import java.util.Optional;
 @Service
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
-    private final MemberDAO memberDAO;
     private final JWTUtil jwtUtil;
     private final PasswordUtil passwordUtil;
+    private final PasswordEncoder passwordEncoder;
+
 
     @Override
     public boolean isIdExist(String loginId) {
@@ -61,7 +66,7 @@ public class MemberServiceImpl implements MemberService {
     public void insert(MemberDTO memberDTO) {
         String password = passwordUtil.encodePassword(memberDTO.getPassword());
         memberDTO.setPassword(password);
-       //패스워드 암호화 처리
+        //패스워드 암호화 처리
         memberRepository.save(Member.of(memberDTO));
     }
 
@@ -82,6 +87,7 @@ public class MemberServiceImpl implements MemberService {
         return MemberDTO.of(member);
     }
 
+    @Override
     public MemberDTO updateMyInformation(String loginId, MemberUpdateDTO dto) {
         Member member = memberRepository.findByLoginId(loginId)
 
@@ -93,8 +99,6 @@ public class MemberServiceImpl implements MemberService {
             if (exists.isPresent()) {
                 throw new IllegalArgumentException("이미 사용 중인 닉네임입니다.");
             }
-
-
         }
         member.update(
                 MemberDTO.builder().nickname(dto.getNickname()
@@ -107,4 +111,46 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
         return MemberDTO.of(member);
     }
+@Override
+public void register(MemberDTO dto){
+        memberRepository.save(Member.of(dto));
+}
+    @Override
+    public void changePassword(String loginId, String pw) {
+        Member member = memberRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new UsernameNotFoundException("유저 없음"));
+
+        String password = passwordEncoder.encode(pw);// 비밀번호 암호화 작업
+        member.change(password);
+        memberRepository.save(member);
+    }
+    @Override
+    public void changeLoginIdByemail(String email, String loginId) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("이메일 없음"));
+
+        member.changeLoginId(loginId);
+        memberRepository.save(member);
+    }
+
+    @Override
+    public boolean checkEmail(String email) {
+
+        return memberRepository.findByEmail(email).orElse(null) != null;
+    }
+
+    @Override
+    public String getPw(String loginId) {
+
+        Optional<Member> member = memberRepository.findByLoginId(loginId);
+        return member.get().getPassword();
+    }
+    @Transactional
+    @Override
+    public void deleteByLoginId(String loginId){
+        Member member = memberRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new UsernameNotFoundException("해당 회원이 존재하지 않습니다."));
+        memberRepository.delete(member);
+    }
+
+
 }
