@@ -8,7 +8,7 @@ public interface QnaService {
     List<QnaDTO> selectAll(int page);
     List<QnaDTO> selectByUserId(long userId, int page);
     QnaDTO selectById(long id);
-    void insert(QnaDTO qnaDTO);
+    void insert(QnaDTO qnaDTO, String loginId);
     void update(QnaDTO qnaDTO);
     void deleteById(long id);
 }

@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,8 +39,10 @@ public class NoteController {
             @ApiResponse(responseCode = "401", description = "로그인이 필요한 서비스입니다.")
     })
     @PostMapping
-    public ResponseEntity<Void> insert(@RequestBody NoteDTO noteDTO) {
-        noteService.insert(noteDTO);
+    public ResponseEntity<Void> insert(@RequestBody NoteDTO dto, HttpServletRequest request) {
+        String loginId = (String) request.getSession().getAttribute("loginId");
+
+        noteService.insert(dto, loginId);
         return ResponseEntity.ok().build();
     }
 
@@ -51,8 +54,10 @@ public class NoteController {
             @ApiResponse(responseCode = "403", description = "해당 서비스는 작성자와 관리자만 사용 가능합니다.")
     })
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody NoteDTO noteDTO) {
-        noteService.update(noteDTO);
+    public ResponseEntity<Void> update(@RequestBody NoteDTO noteDTO, HttpServletRequest request) {
+        String loginId = (String) request.getAttribute("loginId");
+
+        noteService.update(noteDTO, loginId);
         return ResponseEntity.ok().build();
     }
 
@@ -65,8 +70,10 @@ public class NoteController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNoteById(
             @Parameter(description = "쪽지 id")
-            @PathVariable long id) {
-        noteService.deleteById(id);
+            @PathVariable long id, HttpServletRequest request) {
+        String loginId = (String) request.getAttribute("loginId");
+
+        noteService.deleteById(id, loginId);
         return ResponseEntity.ok().build();
     }
 
@@ -78,8 +85,10 @@ public class NoteController {
             @ApiResponse(responseCode = "401", description = "로그인이 필요한 서비스입니다.")
     })
     @PostMapping("/recommend")
-    public ResponseEntity<Void> insert(@RequestBody NoteRecDTO dto) {
-        noteRecService.insert(dto);
+    public ResponseEntity<Void> insert(@RequestBody NoteRecDTO dto, HttpServletRequest request) {
+        String loginId = (String) request.getAttribute("loginId");
+
+        noteRecService.insert(dto, loginId);
         return ResponseEntity.ok().build();
     }
 
@@ -91,8 +100,10 @@ public class NoteController {
             @ApiResponse(responseCode = "401", description = "로그인이 필요한 서비스입니다.")
     })
     @DeleteMapping("/recommend")
-    public ResponseEntity<Void> delete(@RequestBody NoteRecDTO dto) {
-        noteRecService.delete(dto);
+    public ResponseEntity<Void> delete(@RequestBody NoteRecDTO dto, HttpServletRequest request) {
+        String loginId = (String) request.getAttribute("loginId");
+
+        noteRecService.delete(dto, loginId);
         return ResponseEntity.ok().build();
     }
 
@@ -115,8 +126,11 @@ public class NoteController {
             @ApiResponse(responseCode = "401", description = "로그인이 필요한 서비스입니다.")
     })
     @PostMapping("/reply")
-    public ResponseEntity<Void> insert(@RequestBody NoteReplyDTO noteReplyDTO) {
-        noteReplyService.insert(noteReplyDTO);
+    public ResponseEntity<Void> insert(
+            @RequestBody NoteReplyDTO dto, HttpServletRequest request) {
+        String loginId = (String) request.getAttribute("loginId");
+
+        noteReplyService.insert(dto, loginId);
         return ResponseEntity.ok().build();
     }
 
@@ -128,8 +142,11 @@ public class NoteController {
             @ApiResponse(responseCode = "403", description = "해당 서비스는 글쓴이, 혹은 관리자만 사용 가능합니다.")
     })
     @PutMapping("/reply")
-    public ResponseEntity<Void> update(@RequestBody NoteReplyDTO noteReplyDTO) {
-        noteReplyService.update(noteReplyDTO);
+    public ResponseEntity<Void> update(
+            @RequestBody NoteReplyDTO dto, HttpServletRequest request) {
+        String loginId = (String) request.getAttribute("loginId");
+
+        noteReplyService.update(dto, loginId);
         return ResponseEntity.ok().build();
     }
 
@@ -140,8 +157,11 @@ public class NoteController {
             @ApiResponse(responseCode = "403", description = "해당 서비스는 글쓴이, 혹은 관리자만 사용 가능합니다.")
     })
     @DeleteMapping("/reply/{id}")
-    public ResponseEntity<Void> deleteReplyById(@PathVariable long id) {
-        noteReplyService.deleteById(id);
+    public ResponseEntity<Void> deleteReplyById(
+            @PathVariable long id, HttpServletRequest request) {
+        String loginId = (String) request.getAttribute("loginId");
+
+        noteReplyService.deleteById(id, loginId);
         return ResponseEntity.ok().build();
     }
 }

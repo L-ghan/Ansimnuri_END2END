@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Component
 public class JWTUtil {
