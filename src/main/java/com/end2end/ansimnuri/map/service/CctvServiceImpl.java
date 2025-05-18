@@ -32,7 +32,6 @@ public class CctvServiceImpl implements CctvService {
     public void insert() {
         cctvRepository.deleteAll();
 
-        int i = 0;
         ClassPathResource resource = new ClassPathResource("static/excel/12_04_08_E_CCTV정보.xlsx");
         try(InputStream inputStream = resource.getInputStream();
             Workbook workbook = WorkbookFactory.create(inputStream);
@@ -63,13 +62,11 @@ public class CctvServiceImpl implements CctvService {
                         .installDate(installDate)
                         .build();
                 cctvList.add(Cctv.of(dto));
-                i++;
             }
 
             cctvRepository.saveAll(cctvList);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println(i);
         }
     }
 

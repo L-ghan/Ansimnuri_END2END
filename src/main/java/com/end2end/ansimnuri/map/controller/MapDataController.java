@@ -1,5 +1,6 @@
 package com.end2end.ansimnuri.map.controller;
 
+import com.end2end.ansimnuri.map.dto.CctvDTO;
 import com.end2end.ansimnuri.map.dto.PoliceDTO;
 import com.end2end.ansimnuri.map.dto.SearchHistoryDTO;
 import com.end2end.ansimnuri.map.service.CctvService;
@@ -74,6 +75,11 @@ public class MapDataController {
             @Parameter(description = "경찰서 id")
             @PathVariable long id) {
         return policeService.selectById(id);
+    }
+
+    @GetMapping("/cctv")
+    public ResponseEntity<List<CctvDTO>> selectAllCctv() {
+        return ResponseEntity.ok(cctvService.selectAll());
     }
 
     @GetMapping("/test")
