@@ -25,7 +25,7 @@ public class Cctv {
     private Double latitude;
     @Column(name = "LONGITUDE", nullable = false)
     private Double longitude;
-    @Column(name = "INSTALL_DATE", nullable = false)
+    @Column(name = "INSTALL_DATE")
     private LocalDate installDate;
     @Column(name="CAMERA_COUNT", nullable = false)
     private Integer cameraCount;

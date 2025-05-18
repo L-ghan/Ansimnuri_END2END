@@ -2,6 +2,7 @@ package com.end2end.ansimnuri.map.controller;
 
 import com.end2end.ansimnuri.map.dto.PoliceDTO;
 import com.end2end.ansimnuri.map.dto.SearchHistoryDTO;
+import com.end2end.ansimnuri.map.service.CctvService;
 import com.end2end.ansimnuri.map.service.PoliceService;
 import com.end2end.ansimnuri.map.service.RiskRateService;
 import com.end2end.ansimnuri.map.service.SearchHistoryService;
@@ -24,6 +25,7 @@ public class MapDataController {
     private final RiskRateService riskRateService;
     private final SearchHistoryService searchHistoryService;
     private final PoliceService policeService;
+    private final CctvService cctvService;
 
     @Operation(summary = "유저의 검색기록 조회 api", description = "해당 id를 가진 유저의 검색 결과를 모두 조회한다.")
     @GetMapping("/search/history/{memberId}")
@@ -72,5 +74,10 @@ public class MapDataController {
             @Parameter(description = "경찰서 id")
             @PathVariable long id) {
         return policeService.selectById(id);
+    }
+
+    @GetMapping("/test")
+    public void test() {
+        cctvService.insert();
     }
 }

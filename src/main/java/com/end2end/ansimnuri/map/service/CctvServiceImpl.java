@@ -3,6 +3,7 @@ package com.end2end.ansimnuri.map.service;
 import com.end2end.ansimnuri.map.domain.entity.Cctv;
 import com.end2end.ansimnuri.map.domain.repository.CctvRepository;
 import com.end2end.ansimnuri.map.dto.CctvDTO;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.core.io.ClassPathResource;
@@ -26,35 +27,49 @@ public class CctvServiceImpl implements CctvService {
                 .toList();
     }
 
+    @Transactional
     @Override
     public void insert() {
-        ClassPathResource resource = new ClassPathResource("12_04_08_E_CCTV정보.xlsx");
+        cctvRepository.deleteAll();
+
+        int i = 0;
+        ClassPathResource resource = new ClassPathResource("static/excel/12_04_08_E_CCTV정보.xlsx");
         try(InputStream inputStream = resource.getInputStream();
             Workbook workbook = WorkbookFactory.create(inputStream);
         ) {
             Sheet sheet = workbook.getSheetAt(0);
 
             List<Cctv> cctvList = new ArrayList<>();
-            for (int i = 1; i < sheet.getLastRowNum(); i++) {
-                Row row = sheet.getRow(i);
-                if (row == null) continue;
+            for (Row row : sheet) {
+                if (row.getRowNum() == 0) {
+                    continue; // 헤더 행 건너뛰기
+                }
+                if (row == null) {
+                    continue;
+                }
 
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
-                LocalDate installDate = LocalDate.parse(getStringCell(row.getCell(9)), formatter);
+                String stringDate = getStringCell(row.getCell(9));
+                if (stringDate == null || stringDate.isEmpty()) {
+                    continue;
+                }
+
+                LocalDate installDate = LocalDate.parse(getStringCell(row.getCell(9)) + "-01", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
                 CctvDTO dto = CctvDTO.builder()
                         .latitude(Double.parseDouble(getStringCell(row.getCell(11))))
                         .longitude(Double.parseDouble(getStringCell(row.getCell(12))))
-                        .address(getStringCell(row.getCell(2)))
+                        .address(getStringCell(row.getCell(3)))
                         .cameraCount(getIntCell(row.getCell(5)))
                         .installDate(installDate)
                         .build();
                 cctvList.add(Cctv.of(dto));
+                i++;
             }
 
             cctvRepository.saveAll(cctvList);
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println(i);
         }
     }
 
