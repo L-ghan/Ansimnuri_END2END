@@ -29,7 +29,7 @@ public class Cctv {
     private LocalDate installDate;
     @Column(name="CAMERA_COUNT", nullable = false)
     private Integer cameraCount;
-    @Column(name = "ADDRESS", nullable = false)
+    @Column(name = "ADDRESS")
     private String address;
 
     public static Cctv of(CctvDTO dto) {
