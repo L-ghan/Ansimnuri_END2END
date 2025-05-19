@@ -13,10 +13,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -26,6 +23,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -38,13 +36,16 @@ public class NewsServiceImpl implements NewsService {
     @Value("${naver.news.id.key}")
     private String naverNewsIdKey;
 
-    @Scheduled(cron = "40 08 19 * * *")
+    @Value("${openai.api.key}")
+    private String openaiApiKey;
+
+    @Scheduled(cron = "0 32 15 * * *")
     @Transactional
     @Override
     public void insert() {
         RestTemplate restTemplate = new RestTemplate();
         try {
-            String apiUrl = "https://openapi.naver.com/v1/search/news.json?query=서울 AND 살인&display=100&sort=date";
+            String apiUrl = "https://openapi.naver.com/v1/search/news.json?query=서울 AND 살인&display=10&sort=date";
 
             // 헤더 설정
             HttpHeaders headers = new HttpHeaders();
@@ -84,6 +85,13 @@ public class NewsServiceImpl implements NewsService {
                     System.out.println("썸네일 추출 실패: " + checkUrl);
                 }
 
+                String title = item.path("title").asText();
+                System.out.println(title);
+                if (!isMurderRelated(title)) {
+                    System.out.println(isMurderRelated(title));
+                    continue;
+                }
+
                 News news = News.builder()
                         .title(item.path("title").asText())
                         .description(item.path("description").asText())
@@ -117,5 +125,45 @@ public class NewsServiceImpl implements NewsService {
           dtoList.add(newsDTO);
         }
         return dtoList;
+    }
+    private boolean isMurderRelated(String title) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(openaiApiKey); // OpenAI API 키
+
+        List<Map<String, String>> messages = List.of(
+                Map.of("role", "user", "content", title + " 이 뉴스 제목이 살인 범죄와 실제로 관련이 있다면 true, 아니면 false만 대답해줘."
+                )
+        );
+
+        Map<String, Object> body = Map.of(
+                "model", "gpt-3.5-turbo",
+                "messages", messages
+        );
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
+
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity(
+                    "https://api.openai.com/v1/chat/completions",
+                    entity,
+                    String.class
+            );
+
+            JsonNode root = new ObjectMapper().readTree(response.getBody());
+            String content = root
+                    .path("choices").get(0)
+                    .path("message")
+                    .path("content")
+                    .asText()
+                    .trim()
+                    .toLowerCase();
+
+            return content.contains("true");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
