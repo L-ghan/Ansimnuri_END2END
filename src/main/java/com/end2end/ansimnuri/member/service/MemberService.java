@@ -19,4 +19,5 @@ public interface MemberService {
     void deleteByLoginId(String loginId);
     void register(MemberDTO dto);
     void changeLoginIdByemail(String email, String pw);
+    LoginResultDTO registerOAuthIfNeeded(String kakaoId, String nickname);
 }

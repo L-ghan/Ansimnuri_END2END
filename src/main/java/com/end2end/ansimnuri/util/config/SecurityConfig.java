@@ -33,6 +33,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
+                .oauth2Login(oauth -> oauth
+                        .loginPage("/login") // React에서 만든 로그인 페이지 경로
+                        .defaultSuccessUrl("/api/member/oauth2/success", true) // 로그인 성공 시 이동 경로 (컨트롤러에서 처리)
+                )
+
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> {
                     auth

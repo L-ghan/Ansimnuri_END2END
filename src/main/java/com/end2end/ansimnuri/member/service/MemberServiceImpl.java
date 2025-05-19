@@ -45,7 +45,6 @@ public class MemberServiceImpl implements MemberService {
         if (!passwordUtil.matches(dto.getPassword(), member.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-
         List<String> roles = new ArrayList<>();
         roles.add(member.getRole().getRole());
 
@@ -54,6 +53,24 @@ public class MemberServiceImpl implements MemberService {
                 .token(jwtUtil.createToken(member.getLoginId(), roles))
                 .build();
     }
+    @Override
+    public LoginResultDTO registerOAuthIfNeeded(String kakaoId, String nickname) {
+
+        Member member = memberRepository
+                .findByLoginId(kakaoId)
+                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다. 회원가입 페이지로 이동합니다."));
+
+
+        List<String> roles = new ArrayList<>();
+        roles.add(member.getRole().getRole());
+
+
+        return LoginResultDTO.builder()
+                .id(member.getId())
+                .token(jwtUtil.createToken(member.getLoginId(), roles)) // 토큰 생성
+                .build();
+    }
+
 
     @Transactional
     @Override
@@ -113,7 +130,11 @@ public class MemberServiceImpl implements MemberService {
     }
 @Override
 public void register(MemberDTO dto){
-        memberRepository.save(Member.of(dto));
+
+    String password =passwordEncoder.encode(dto.getPassword());
+dto.setPassword(password);
+System.out.println("암호화 비밀번호"+dto.getPassword());
+    memberRepository.save(Member.of(dto));
 }
     @Override
     public void changePassword(String loginId, String pw) {

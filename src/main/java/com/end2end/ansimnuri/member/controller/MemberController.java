@@ -11,11 +11,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.net.URI;
 import java.util.Map;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+
 
 @Tag(name = "유저 API", description = "유저 CRUD 기능을 가진 API")
 @RequiredArgsConstructor
@@ -29,17 +34,32 @@ public class MemberController {
             @ApiResponse(responseCode = "200", description = "정상 작동입니다."),
             @ApiResponse(responseCode = "400", description = "아이디 또는, 비밀번호가 일치하지 않습니다.")
     })
-    @PostMapping("/login")
+    @PostMapping("/login")//일반로그인
     public ResponseEntity<LoginResultDTO> login(@RequestBody LoginDTO dto) {
         System.out.println("dto: " + dto);
         return ResponseEntity.ok(memberService.login(dto));
     }
+
+    @GetMapping("/login")
+    public ResponseEntity<?> kakaoLoginSuccess(Authentication authentication) {
+        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+
+        String kakaoId = oAuth2User.getAttribute("id").toString();
+        String nickname = (String)((Map<String, Object>) oAuth2User.getAttribute("properties")).get("nickname");
+
+        LoginResultDTO result = memberService.registerOAuthIfNeeded(kakaoId, nickname);
+
+        String token = result.getToken();
+        String redirectUrl = "http://localhost:3000/oauth2/redirect?token=" + token + "&id=" + kakaoId;
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(redirectUrl)).build();
+    }
+
+
     @PostMapping("/register")
     public ResponseEntity<MemberDTO> register(@RequestBody MemberDTO dto) {
         memberService.register(dto);
         return ResponseEntity.ok(dto);
     }
-
 
     @Operation(summary = "아이디 중복 체크 API", description = "아이디의 중복 여부를 확인해서 boolean값으로 반환한다.")
     @ApiResponse(responseCode = "200", description = "정상 작동입니다.")
