@@ -8,4 +8,5 @@ import java.util.List;
 public interface PoliceRepository extends JpaRepository<Police, Long> {
     List<Police> findByAddressContaining(String searchKey);
     List<Police> findByType(String type);
+    List<Police> findByLatitudeBetweenAndLongitudeBetween(double latitude1, double latitude2, double longitude1, double longitude2);
 }

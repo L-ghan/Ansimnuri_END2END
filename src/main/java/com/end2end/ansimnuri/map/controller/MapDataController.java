@@ -84,6 +84,7 @@ public class MapDataController {
 
     @GetMapping("/test")
     public void test() {
-        cctvService.insert();
+        riskRateService.getRiskRate(37.55303770047228, 126.97260161225407);
+        //cctvService.insert();
     }
 }
