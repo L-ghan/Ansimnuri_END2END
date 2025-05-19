@@ -5,6 +5,8 @@ import com.end2end.ansimnuri.member.dto.LoginResultDTO;
 import com.end2end.ansimnuri.member.dto.MemberDTO;
 import com.end2end.ansimnuri.member.dto.MemberUpdateDTO;
 
+import java.util.List;
+
 public interface MemberService {
     boolean isIdExist(String id);
     LoginResultDTO login(LoginDTO dto);
@@ -19,4 +21,5 @@ public interface MemberService {
     void deleteByLoginId(String loginId);
     void register(MemberDTO dto);
     void changeLoginIdByemail(String email, String pw);
+    List<MemberDTO> getAllMembers();
 }
