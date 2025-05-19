@@ -30,7 +30,6 @@ public class BlockServiceImpl implements BlockService {
     public void insert(BlockDTO dto) {
         Member member = memberRepository.findById(dto.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 id는 존재하지 않습니다."));
-
         blockRepository.save(Block.of(dto, member));
     }
 
