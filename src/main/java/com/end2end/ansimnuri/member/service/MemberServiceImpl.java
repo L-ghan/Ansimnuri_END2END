@@ -9,6 +9,7 @@ import com.end2end.ansimnuri.member.dto.MemberDTO;
 import com.end2end.ansimnuri.member.dto.MemberUpdateDTO;
 import com.end2end.ansimnuri.util.JWTUtil;
 import com.end2end.ansimnuri.util.PasswordUtil;
+import com.end2end.ansimnuri.util.enums.Roles;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -54,20 +55,35 @@ public class MemberServiceImpl implements MemberService {
                 .build();
     }
     @Override
+    @Transactional
     public LoginResultDTO registerOAuthIfNeeded(String kakaoId, String nickname) {
+        Optional<Member> optional = memberRepository.findByLoginId(kakaoId);
+        Member member;
 
-        Member member = memberRepository
-                .findByLoginId(kakaoId)
-                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다. 회원가입 페이지로 이동합니다."));
+        if (optional.isEmpty()) {
+            member = Member.builder()
+                    .loginId(kakaoId)
+                    .kakaoId(kakaoId)
+                    .nickname(nickname)
+                    .email(kakaoId + "@kakao.oauth")
+                    .password(passwordUtil.encodePassword("oauth"))
+                    .address("간편가입")
+                    .detailAddress("없음")
+                    .postcode("00000")
+                    .role(Roles.USER)
+                    .build();
 
+            memberRepository.save(member);
+        } else {
+            member = optional.get();
+        }
 
         List<String> roles = new ArrayList<>();
         roles.add(member.getRole().getRole());
 
-
         return LoginResultDTO.builder()
                 .id(member.getId())
-                .token(jwtUtil.createToken(member.getLoginId(), roles)) // 토큰 생성
+                .token(jwtUtil.createToken(member.getLoginId(), roles))
                 .build();
     }
 

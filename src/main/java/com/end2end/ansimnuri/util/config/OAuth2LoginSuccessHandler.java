@@ -25,20 +25,19 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         String kakaoId = oAuth2User.getAttribute("id").toString();
         String nickname = (String) ((Map<String, Object>) oAuth2User.getAttribute("properties")).get("nickname");
-
         try {
             LoginResultDTO result = memberService.registerOAuthIfNeeded(kakaoId, nickname);
             String token = result.getToken();
             String redirectUrl = "http://localhost:3000/login/oauth2/redirect?token=" + token + "&id=" + kakaoId;
+
             response.sendRedirect(redirectUrl);
         } catch (IllegalArgumentException e) {
-            // 회원이 없는 경우, 프론트에서 alert 창 띄우고 로그인 페이지로 이동하도록 설정
             response.setContentType("text/html;charset=UTF-8");
             response.getWriter().write(
-                    "<script>alert('회원이 존재하지 않습니다. 회원가입 페이지로 이동합니다.');" +
-                            "window.location.href='http://localhost:3000/RegisterPage';</script>"
+                    "<script>alert('회원이 존재하지 않습니다. 간편회원가입 화면으로 이동합니다.');" +
+                            "window.location.href='http://localhost:3000/RegisterPage?kakaoId=" + kakaoId +
+                            "&nickname=" + nickname + "';</script>"
             );
         }
     }
 }
-

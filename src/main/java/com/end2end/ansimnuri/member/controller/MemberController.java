@@ -5,6 +5,7 @@ import com.end2end.ansimnuri.member.dto.LoginResultDTO;
 import com.end2end.ansimnuri.member.dto.MemberDTO;
 import com.end2end.ansimnuri.member.dto.MemberUpdateDTO;
 import com.end2end.ansimnuri.member.service.MemberService;
+import com.end2end.ansimnuri.util.PasswordUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -33,7 +34,7 @@ import org.springframework.web.client.RestTemplate;
 @RestController
 public class MemberController {
     private final MemberService memberService;
-
+    private final PasswordUtil passwordUtil;
     @Value("spring.security.oauth2.client.registration.kakao.client-id")
     private String kakaoClientId;
 
@@ -49,77 +50,22 @@ private String kakaoApiKey;
         System.out.println("dto: " + dto);
         return ResponseEntity.ok(memberService.login(dto));
     }
+    @PostMapping("/kakao-simple-signup")
+    public ResponseEntity<?> kakaoSimpleSignup(@RequestBody MemberDTO dto) {
+        if (memberService.isIdExist(dto.getKakaoId())) {
+            return ResponseEntity.badRequest().body("이미 존재하는 아이디입니다.");
+        }
 
-//    @GetMapping("/kakao-login-url")
-//    public ResponseEntity<Map<String, String>> getKakaoLoginUrl() {
-//        String clientId = kakaoApiKey;
-//        String redirectUri = "http://localhost:80/api/member/oauth2/callback/kakao"; // 콜백 URI
-//        String kakaoLoginUrl = "https://kauth.kakao.com/oauth/authorize"
-//                + "?response_type=code"
-//                + "&client_id=" + clientId
-//                + "&redirect_uri=" + redirectUri;
-//
-//        Map<String, String> response = new HashMap<>();
-//        response.put("redirectUrl", kakaoLoginUrl);
-//        return ResponseEntity.ok(response);
-//    }
-//
-//    @GetMapping("/oauth2/callback/kakao")
-//    public ResponseEntity<String> kakaoCallback(@RequestParam String code) {
-//        // 1. 토큰 요청
-//        RestTemplate restTemplate = new RestTemplate();
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-//
-//        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-//        params.add("grant_type", "authorization_code");
-//        params.add("client_id", kakaoClientId);
-//        params.add("redirect_uri", "http://localhost:80/api/member/oauth2/callback/kakao");
-//        params.add("code", code);
-//        HttpEntity<MultiValueMap<String, String>> tokenRequest = new HttpEntity<>(params, headers);
-//
-//        ResponseEntity<Map> response = restTemplate.postForEntity(
-//                "https://kauth.kakao.com/oauth/token",
-//                tokenRequest,
-//                Map.class
-//        );
-//
-//        // 2. 사용자 정보 요청
-//        String accessToken = (String) response.getBody().get("access_token");
-//
-//        HttpHeaders userInfoHeaders = new HttpHeaders();
-//        userInfoHeaders.add("Authorization", "Bearer " + accessToken);
-//
-//        HttpEntity<String> userInfoRequest = new HttpEntity<>(userInfoHeaders);
-//        ResponseEntity<Map> userInfoResponse = restTemplate.exchange(
-//                "https://kapi.kakao.com/v2/user/me",
-//                HttpMethod.GET,
-//                userInfoRequest,
-//                Map.class
-//        );
-//        // 3. 사용자 정보 활용
-//        Map userInfo = userInfoResponse.getBody();
-//        // 여기서 사용자 정보를 이용해 회원 가입 또는 로그인 처리
-//        // ...
-//        return ResponseEntity.ok("로그인 성공");
-//    }
-//
-//    @GetMapping("/oauth2/success")
-//    public ResponseEntity<?> kakaoLoginSuccess(OAuth2AuthenticationToken authentication) {
-//        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-//
-//        String kakaoId = oAuth2User.getAttribute("id").toString();
-//        String nickname = (String)((Map<String, Object>) oAuth2User.getAttribute("properties")).get("nickname");
-//
-//        LoginResultDTO result = memberService.registerOAuthIfNeeded(kakaoId, nickname);
-//
-//        String token = result.getToken();
-//        System.out.println("token: " + token);
-//        String redirectUrl = "http://localhost:80/login/oauth2/redirect?token=" + token + "&id=" + kakaoId;
-//        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(redirectUrl)).build();
-//    }
+        MemberDTO memberDTO = MemberDTO.builder()
+                .loginId(dto.getKakaoId())
+                .nickname(dto.getNickname())
+                .password(passwordUtil.encodePassword("oauth"))
+                .email(dto.getKakaoId() + "@kakao.oauth")
+                .build();
 
+        memberService.insert(memberDTO);
+        return ResponseEntity.ok("가입 완료");
+    }
 
     @PostMapping("/register")
     public ResponseEntity<MemberDTO> register(@RequestBody MemberDTO dto) {
