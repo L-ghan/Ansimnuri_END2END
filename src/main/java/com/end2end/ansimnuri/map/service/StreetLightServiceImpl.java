@@ -1,10 +1,10 @@
 package com.end2end.ansimnuri.map.service;
 
-import com.end2end.ansimnuri.map.domain.entity.Police;
 import com.end2end.ansimnuri.map.domain.entity.SexOffender;
-import com.end2end.ansimnuri.map.domain.repository.SexOffenderRepository;
-import com.end2end.ansimnuri.map.dto.PoliceDTO;
+import com.end2end.ansimnuri.map.domain.entity.StreetLight;
+import com.end2end.ansimnuri.map.domain.repository.StreetLightRepository;
 import com.end2end.ansimnuri.map.dto.SexOffenderDTO;
+import com.end2end.ansimnuri.map.dto.StreetLightDTO;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
@@ -14,7 +14,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -25,53 +24,47 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class SexOffenderServiceImpl implements SexOffenderService {
-    private final SexOffenderRepository sexOffenderRepository;
-
+public class StreetLightServiceImpl implements StreetLightService {
+    private final StreetLightRepository streetLightRepository;
     @Value("${public.data.api.key}")
-    private String sexOffenderKeyApi;
+    private String streetLightKeyApi;
     @Value("${kakao.api.key}")
     private String kakaoApiKey;
 
     @Override
-    public List<SexOffenderDTO> selectAll() {
-        return sexOffenderRepository.findAll().stream()
-                .map(SexOffenderDTO::of)
+    public List<StreetLightDTO> selectAll() {
+        return streetLightRepository.findAll().stream()
+                .map(StreetLightDTO::of)
                 .toList();
     }
 
-    @Scheduled(cron = "0 0 0 * 1 *")
     @Transactional
     @Override
     public void insert() {
-        sexOffenderRepository.deleteAll();
+        streetLightRepository.deleteAll();
 
-        List<SexOffender> sexOffenderList = new ArrayList<>();
+        List<StreetLight> streetLightList = new ArrayList<>();
 
         RestTemplate restTemplate = new RestTemplate();
-        for(int i = 1; i <= 20; i++) {
-            String url = "https://apis.data.go.kr/1383000/sais/SexualAbuseNoticeAddrService/getSexualAbuseNoticeAddrList?pageNo=" + i
-                    + "&numOfRows=1000&type=json&serviceKey=" + sexOffenderKeyApi;
+        for (int i = 1; i <= 90; i++) {
+            String url = "https://api.odcloud.kr/api/15107934/v1/uddi:20b10130-21ed-43f3-8e58-b8692fb8a2ff?page=" + i
+                    + "&perPage=1000&returnType=json&serviceKey=" + streetLightKeyApi;
 
             ResponseEntity<String> response = restTemplate.getForEntity(URI.create(url), String.class);
             try {
                 ObjectMapper mapper = new ObjectMapper();
                 JsonNode root = mapper.readTree(response.getBody());
-                JsonNode dataArray = root.path("response").path("body").path("items").path("item");
+                JsonNode dataArray = root.path("data");
 
                 for (JsonNode data : dataArray) {
-                    String city = data.path("ctpvNm").asText();
-
-                    if (!city.equals("서울특별시")) {
-                        continue;
-                    }
-
-                    String address = String.format("%s %s %s", city, data.path("sggNm").asText(), data.path("roadNm").asText());
-                    int roadNumZip = data.path("roadNmZip").asInt();
+                    double latitude = data.path("위도").asDouble();
+                    double longitude = data.path("경도").asDouble();
+                    String managementNo = data.path("관리번호").asText();
 
                     URI uri = UriComponentsBuilder
-                            .fromUriString("https://dapi.kakao.com/v2/local/search/address.json")
-                            .queryParam("query", address)
+                            .fromUriString("https://dapi.kakao.com/v2/local/geo/coord2address.json")
+                            .queryParam("x", longitude)
+                            .queryParam("y", latitude)
                             .encode()
                             .build()
                             .toUri();
@@ -84,18 +77,20 @@ public class SexOffenderServiceImpl implements SexOffenderService {
                     try {
                         JsonNode jsonNode = mapper.readTree(response.getBody());
                         JsonNode documents = jsonNode.path("documents");
-                        JsonNode target = documents.path(0);
+                        JsonNode target = documents.path(0).path("address");
 
-                        double latitude = target.path("x").asDouble();
-                        double longitude = target.path("y").asDouble();
+                        String city = target.path("region_1depth_name").asText();
+                        if (!city.equals("서울")) {
+                            break;
+                        }
 
-                        SexOffenderDTO dto = SexOffenderDTO.builder()
-                                .address(address)
-                                .roadZip(roadNumZip)
+                        StreetLightDTO dto = StreetLightDTO.builder()
                                 .latitude(latitude)
                                 .longitude(longitude)
+                                .managementNo(managementNo)
+                                .address(target.path("address_name").asText())
                                 .build();
-                        sexOffenderList.add(SexOffender.of(dto));
+                        streetLightList.add(StreetLight.of(dto));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -106,6 +101,6 @@ public class SexOffenderServiceImpl implements SexOffenderService {
             }
         }
 
-        sexOffenderRepository.saveAll(sexOffenderList);
+        streetLightRepository.saveAll(streetLightList);
     }
 }

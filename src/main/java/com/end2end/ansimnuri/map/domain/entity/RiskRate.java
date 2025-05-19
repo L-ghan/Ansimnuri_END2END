@@ -24,6 +24,7 @@ public class RiskRate {
     private Double latitude;
     @Column(name = "LONGITUDE", nullable = false)
     private Double longitude;
+    private Double Illuminance;
 
     public static RiskRate of(RiskRateDTO riskRateDTO) {
         return RiskRate.builder()

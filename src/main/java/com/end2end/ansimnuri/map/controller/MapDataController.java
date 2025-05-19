@@ -26,6 +26,7 @@ public class MapDataController {
     private final PoliceService policeService;
     private final CctvService cctvService;
     private final SexOffenderService sexOffenderService;
+    private final StreetLightService streetLightService;
 
     @Operation(summary = "유저의 검색기록 조회 api", description = "해당 id를 가진 유저의 검색 결과를 모두 조회한다.")
     @GetMapping("/search/history/{memberId}")
@@ -89,7 +90,6 @@ public class MapDataController {
     @GetMapping("/test")
     public void test() {
         //riskRateService.getRiskRate(37.55303770047228, 126.97260161225407);
-        //cctvService.insert();
-        sexOffenderService.insert();
+        streetLightService.insert();
     }
 }
