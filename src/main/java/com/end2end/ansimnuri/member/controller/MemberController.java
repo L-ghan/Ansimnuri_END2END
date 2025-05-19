@@ -1,5 +1,6 @@
 package com.end2end.ansimnuri.member.controller;
 
+import com.end2end.ansimnuri.member.domain.entity.Member;
 import com.end2end.ansimnuri.member.dto.LoginDTO;
 import com.end2end.ansimnuri.member.dto.LoginResultDTO;
 import com.end2end.ansimnuri.member.dto.MemberDTO;
@@ -10,11 +11,15 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Tag(name = "유저 API", description = "유저 CRUD 기능을 가진 API")
@@ -127,6 +132,4 @@ String loginId = authentication.getName();
        memberService.deleteByLoginId(loginId);
         return ResponseEntity.ok().build();
     }
-
-
 }
