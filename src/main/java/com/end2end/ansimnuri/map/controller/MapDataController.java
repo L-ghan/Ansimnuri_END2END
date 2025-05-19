@@ -3,10 +3,8 @@ package com.end2end.ansimnuri.map.controller;
 import com.end2end.ansimnuri.map.dto.CctvDTO;
 import com.end2end.ansimnuri.map.dto.PoliceDTO;
 import com.end2end.ansimnuri.map.dto.SearchHistoryDTO;
-import com.end2end.ansimnuri.map.service.CctvService;
-import com.end2end.ansimnuri.map.service.PoliceService;
-import com.end2end.ansimnuri.map.service.RiskRateService;
-import com.end2end.ansimnuri.map.service.SearchHistoryService;
+import com.end2end.ansimnuri.map.dto.SexOffenderDTO;
+import com.end2end.ansimnuri.map.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -27,6 +25,7 @@ public class MapDataController {
     private final SearchHistoryService searchHistoryService;
     private final PoliceService policeService;
     private final CctvService cctvService;
+    private final SexOffenderService sexOffenderService;
 
     @Operation(summary = "유저의 검색기록 조회 api", description = "해당 id를 가진 유저의 검색 결과를 모두 조회한다.")
     @GetMapping("/search/history/{memberId}")
@@ -82,9 +81,15 @@ public class MapDataController {
         return ResponseEntity.ok(cctvService.selectAll());
     }
 
+    @GetMapping("/sexOffender")
+    public ResponseEntity<List<SexOffenderDTO>> selectAllSexOffender() {
+        return ResponseEntity.ok(sexOffenderService.selectAll());
+    }
+
     @GetMapping("/test")
     public void test() {
-        riskRateService.getRiskRate(37.55303770047228, 126.97260161225407);
+        //riskRateService.getRiskRate(37.55303770047228, 126.97260161225407);
         //cctvService.insert();
+        sexOffenderService.insert();
     }
 }
