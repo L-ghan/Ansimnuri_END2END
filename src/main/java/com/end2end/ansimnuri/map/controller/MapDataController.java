@@ -90,6 +90,7 @@ public class MapDataController {
     @GetMapping("/test")
     public void test() {
         //riskRateService.getRiskRate(37.55303770047228, 126.97260161225407);
-        streetLightService.insert();
+        //streetLightService.insert();
+        riskRateService.insertAll();
     }
 }

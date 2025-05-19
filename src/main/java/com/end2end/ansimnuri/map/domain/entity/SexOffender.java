@@ -27,6 +27,9 @@ public class SexOffender {
     @Column(name = "ROAD_ZIP", nullable = false)
     private Integer roadZip;
 
+    @OneToOne(mappedBy = "sexOffender")
+    private RiskRate riskRate;
+
     public static SexOffender of(SexOffenderDTO dto) {
         return SexOffender.builder()
                 .address(dto.getAddress())

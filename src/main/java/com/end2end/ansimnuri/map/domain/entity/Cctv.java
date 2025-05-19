@@ -32,6 +32,10 @@ public class Cctv {
     @Column(name = "ADDRESS")
     private String address;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "RISK_RATE_ID")
+    private RiskRate riskRate;
+
     public static Cctv of(CctvDTO dto) {
         return Cctv.builder()
                 .latitude(dto.getLatitude())

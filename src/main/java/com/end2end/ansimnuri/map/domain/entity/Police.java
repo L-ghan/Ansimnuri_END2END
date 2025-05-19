@@ -29,6 +29,9 @@ public class Police {
     @Column(name = "TYPE", nullable = false)
     private String type;
 
+    @OneToOne(mappedBy = "police")
+    private RiskRate riskRate;
+
     public static Police of(PoliceDTO dto) {
         return Police.builder()
                 .name(dto.getName())
