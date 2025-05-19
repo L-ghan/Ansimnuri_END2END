@@ -56,4 +56,12 @@ public class RiskRate {
         this.latitude = riskRateDTO.getLatitude();
         this.longitude = riskRateDTO.getLongitude();
     }
+
+    public void setRiskRate(Integer riskRate) {
+        this.riskRate = riskRate;
+    }
+
+    public void setIlluminance(Double illuminance) {
+        this.illuminance = illuminance;
+    }
 }

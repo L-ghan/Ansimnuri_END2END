@@ -17,4 +17,7 @@ public class RiskRateDTO {
     private int riskRate;
     private double latitude;
     private double longitude;
+    private long policeId;
+    private long sexOffenderId;
+    private long streetLightId;
 }

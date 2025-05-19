@@ -45,4 +45,8 @@ public class Cctv {
                 .address(dto.getAddress())
                 .build();
     }
+
+    public void update(RiskRate riskRate) {
+        this.riskRate = riskRate;
+    }
 }
