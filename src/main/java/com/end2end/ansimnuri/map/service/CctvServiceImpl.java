@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.apache.poi.ss.usermodel.Cell;
 
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -49,14 +50,20 @@ public class CctvServiceImpl implements CctvService {
 
                 String stringDate = getStringCell(row.getCell(9));
                 if (stringDate == null || stringDate.isEmpty()) {
+                    CctvDTO dto = CctvDTO.builder()
+                            .latitude(Double.parseDouble(getStringCell(row.getCell(11))))
+                            .longitude(Double.parseDouble(getStringCell(row.getCell(12))))
+                            .address(getStringCell(row.getCell(3)))
+                            .cameraCount(getIntCell(row.getCell(5)))
+                            .build();
+                    cctvList.add(Cctv.of(dto));
                     continue;
                 }
 
-                LocalDate installDate = LocalDate.parse(getStringCell(row.getCell(9)) + "-01", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
+                LocalDate installDate = LocalDate.parse(stringDate + "-01", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 CctvDTO dto = CctvDTO.builder()
-                        .latitude(Double.parseDouble(getStringCell(row.getCell(11))))
-                        .longitude(Double.parseDouble(getStringCell(row.getCell(12))))
+                        .latitude(Double.parseDouble(getStringCell(row.getCell(12))))
+                        .longitude(Double.parseDouble(getStringCell(row.getCell(11))))
                         .address(getStringCell(row.getCell(3)))
                         .cameraCount(getIntCell(row.getCell(5)))
                         .installDate(installDate)

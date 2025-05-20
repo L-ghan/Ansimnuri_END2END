@@ -1,6 +1,6 @@
 package com.end2end.ansimnuri.map.domain.entity;
 
-import com.end2end.ansimnuri.map.dto.PoliceDTO;
+import com.end2end.ansimnuri.map.dto.SexOffenderDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,36 +11,33 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @SequenceGenerator(
-        name = "policeSequenceGenerator",
-        sequenceName = "POLICE_ID_SEQ",
+        sequenceName = "sexSequenceGenerator",
+        name = "SEX_OFFENDER_ID_SEQ",
         allocationSize = 1
 )
-@Table(name = "POLICE")
+@Table(name = "SEX_OFFENDER")
 @Entity
-public class Police {
-    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "policeSequenceGenerator")
+public class SexOffender {
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sexSequenceGenerator")
     private Long id;
-    @Column(name = "NAME", nullable = false)
-    private String name;
     @Column(name = "ADDRESS", nullable = false)
     private String address;
     @Column(name = "LATITUDE", nullable = false)
     private Double latitude;
     @Column(name = "LONGITUDE", nullable = false)
     private Double longitude;
-    @Column(name = "TYPE", nullable = false)
-    private String type;
+    @Column(name = "ROAD_ZIP", nullable = false)
+    private Integer roadZip;
 
-    @OneToMany(mappedBy = "police")
+    @OneToMany(mappedBy = "sexOffender")
     private List<RiskRate> riskRateList;
 
-    public static Police of(PoliceDTO dto) {
-        return Police.builder()
-                .name(dto.getName())
+    public static SexOffender of(SexOffenderDTO dto) {
+        return SexOffender.builder()
                 .address(dto.getAddress())
                 .latitude(dto.getLatitude())
                 .longitude(dto.getLongitude())
-                .type(dto.getType())
+                .roadZip(dto.getRoadZip())
                 .build();
     }
 }

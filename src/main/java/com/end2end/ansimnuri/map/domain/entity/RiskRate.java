@@ -4,6 +4,8 @@ import com.end2end.ansimnuri.map.dto.RiskRateDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
@@ -25,6 +27,19 @@ public class RiskRate {
     @Column(name = "LONGITUDE", nullable = false)
     private Double longitude;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "POLICE_ID", nullable = false)
+    private Police police;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SEX_OFFENDER_ID", nullable = false)
+    private SexOffender sexOffender;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "STREET_LIGHT_ID", nullable = false)
+    private StreetLight streetLight;
+
+    @OneToMany(mappedBy = "riskRate", fetch = FetchType.LAZY)
+    private List<Cctv> cctvList;
+
     public static RiskRate of(RiskRateDTO riskRateDTO) {
         return RiskRate.builder()
                 .id(riskRateDTO.getId())
@@ -38,5 +53,9 @@ public class RiskRate {
         this.riskRate = riskRateDTO.getRiskRate();
         this.latitude = riskRateDTO.getLatitude();
         this.longitude = riskRateDTO.getLongitude();
+    }
+
+    public void setRiskRate(Integer riskRate) {
+        this.riskRate = riskRate;
     }
 }
