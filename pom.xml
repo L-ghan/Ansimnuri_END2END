@@ -147,6 +147,19 @@
             <artifactId>jts2geojson</artifactId>
             <version>0.18.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+
+        <!-- Google Maps Services 의존성도 필요하다면 -->
+        <dependency>
+            <groupId>com.google.maps</groupId>
+            <artifactId>google-maps-services</artifactId>
+            <version>2.2.0</version>
+        </dependency>
     </dependencies>
 
     <build>
