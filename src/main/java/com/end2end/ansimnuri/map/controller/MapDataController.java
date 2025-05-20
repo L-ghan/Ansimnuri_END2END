@@ -23,6 +23,7 @@ public class MapDataController {
     private final CctvService cctvService;
     private final SexOffenderService sexOffenderService;
     private final StreetLightService streetLightService;
+    private final RiskRateService riskRateService;
 
     @Operation(summary = "유저의 검색기록 조회 api", description = "해당 id를 가진 유저의 검색 결과를 모두 조회한다.")
     @GetMapping("/search/history/{memberId}")
@@ -92,5 +93,14 @@ public class MapDataController {
     @GetMapping("/streetLight")
     public ResponseEntity<List<StreetLightDTO>> selectAllStreetLight() {
         return ResponseEntity.ok(streetLightService.selectAll());
+    }
+
+    @GetMapping("/test")
+    public void insert() {
+        //policeService.insert();
+        //streetLightService.insert();
+        cctvService.insert();
+        //sexOffenderService.insert();
+        //riskRateService.insertAll();
     }
 }

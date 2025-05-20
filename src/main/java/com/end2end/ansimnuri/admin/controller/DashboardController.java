@@ -12,7 +12,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/dashboard")
 public class DashboardController {
-
     private final DashboardService dashboardService;
 
     @GetMapping("/top-addresses")
@@ -27,5 +26,4 @@ public class DashboardController {
         List<Map<String, Object>> stats = dashboardService.getKeywordStats();
         return ResponseEntity.ok(stats);
     }
-
 }
