@@ -26,8 +26,6 @@ public class RiskRate {
     private Double latitude;
     @Column(name = "LONGITUDE", nullable = false)
     private Double longitude;
-    @Column(name = "ILLUMINANCE", nullable = false)
-    private Double illuminance;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POLICE_ID", nullable = false)
@@ -59,9 +57,5 @@ public class RiskRate {
 
     public void setRiskRate(Integer riskRate) {
         this.riskRate = riskRate;
-    }
-
-    public void setIlluminance(Double illuminance) {
-        this.illuminance = illuminance;
     }
 }

@@ -42,13 +42,6 @@ public class RiskRateServiceImpl implements RiskRateService {
     private Geometry seoulPoly;
     private final GeometryFactory geometryFactory = new GeometryFactory();
 
-    @Value("${nasa.earthdata.user}")
-    private String earthDataUser;
-    @Value("${nasa.earthdata.pass}")
-    private String earthDataPass;
-    @Value("${nasa.earthdata.token}")
-    private String earthDataToken;
-
     @PostConstruct
     public void loadSeoulBoundary() throws Exception {
         ClassPathResource res = new ClassPathResource("/static/geojson/seoul.geojson");
@@ -113,9 +106,7 @@ public class RiskRateServiceImpl implements RiskRateService {
                         .police(nearPolice)
                         .streetLight(nearStreetLight)
                         .sexOffender(nearSexOffender)
-                        .illuminance(0.0)
                         .build();
-                //riskRate.setIlluminance(getIlluminance(riskRate));
                 batch.add(riskRate);
 
                 GeoUtil.Rectangle cctvPoints =
@@ -141,92 +132,8 @@ public class RiskRateServiceImpl implements RiskRateService {
     }
 
     private int getRiskRate(RiskRate riskRate) {
+
+
         return 0;
-    }
-
-    private double getIlluminance(RiskRate riskRate) {
-        double latitude = riskRate.getLatitude();
-        double longitude = riskRate.getLongitude();
-
-        String earthDataURL = "https://appeears.earthdatacloud.nasa.gov/api/";
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(earthDataToken);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        // 요청 본문 구성
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("task_type", "point");
-        requestBody.put("task_name", "NightLight_" + UUID.randomUUID());
-
-        // 좌표 정보
-        Map<String, Object> coordinates = new HashMap<>();
-        coordinates.put("coordinates", Arrays.asList(longitude, latitude));
-        coordinates.put("type", "Point");
-
-        // 데이터 레이어 정보
-        Map<String, Object> layer = new HashMap<>();
-        layer.put("product", "VNP46A2");
-        layer.put("layer", "DNB_BRDF_Corrected_NTL");
-
-        requestBody.put("geometry", coordinates);
-        requestBody.put("layers", Collections.singletonList(layer));
-        requestBody.put("dates", Collections.singletonList(LocalDate.now().toString()));
-
-        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
-
-        try {
-            // 작업 생성 요청
-            ResponseEntity<Map> taskResponse = restTemplate.exchange(
-                    earthDataURL + "task",
-                    HttpMethod.POST,
-                    entity,
-                    Map.class
-            );
-
-            if (taskResponse.getStatusCode() == HttpStatus.CREATED && taskResponse.getBody() != null) {
-                String taskId = (String) taskResponse.getBody().get("task_id");
-
-                // 작업 완료 대기
-                String taskStatus;
-                do {
-                    ResponseEntity<Map> statusResponse = restTemplate.exchange(
-                            earthDataURL + "task/" + taskId,
-                            HttpMethod.GET,
-                            new HttpEntity<>(headers),
-                            Map.class
-                    );
-
-                    taskStatus = (String) statusResponse.getBody().get("status");
-                    if ("failed".equals(taskStatus)) {
-                        throw new RuntimeException("작업 실패");
-                    }
-
-                    Thread.sleep(5000); // 5초 대기
-                } while ("running".equals(taskStatus) || "pending".equals(taskStatus));
-
-                // 결과 데이터 가져오기
-                ResponseEntity<Map> resultResponse = restTemplate.exchange(
-                        earthDataURL + "task/" + taskId + "/bundle",
-                        HttpMethod.GET,
-                        new HttpEntity<>(headers),
-                        Map.class
-                );
-
-                if (resultResponse.getBody() != null && resultResponse.getBody().containsKey("data")) {
-                    @SuppressWarnings("unchecked")
-                    List<Map<String, Object>> data = (List<Map<String, Object>>) resultResponse.getBody().get("data");
-                    if (!data.isEmpty()) {
-                        return Double.parseDouble(data.get(0).get("value").toString());
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // 기본값 또는 오류 시 반환값
-        return 0.0;
     }
 }
