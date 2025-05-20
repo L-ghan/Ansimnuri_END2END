@@ -148,12 +148,6 @@
             <version>0.18.1</version>
         </dependency>
 
-        <!-- NetCDF‑Java (OPeNDAP 지원) -->
-        <dependency>
-            <groupId>edu.ucar</groupId>
-            <artifactId>netcdfAll</artifactId>
-            <version>5.4.1</version>
-        </dependency>
     </dependencies>
 
     <build>
