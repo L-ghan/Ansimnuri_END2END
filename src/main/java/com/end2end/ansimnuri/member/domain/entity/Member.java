@@ -4,8 +4,6 @@ import com.end2end.ansimnuri.admin.domain.entity.Block;
 import com.end2end.ansimnuri.admin.domain.entity.Complaint;
 import com.end2end.ansimnuri.board.domain.entity.Qna;
 import com.end2end.ansimnuri.map.domain.entity.SearchHistory;
-import com.end2end.ansimnuri.message.domain.entity.Message;
-import com.end2end.ansimnuri.message.domain.entity.MessageBlock;
 import com.end2end.ansimnuri.note.domain.entity.Note;
 import com.end2end.ansimnuri.note.domain.entity.NoteRec;
 import com.end2end.ansimnuri.note.domain.entity.NoteReply;
@@ -57,12 +55,6 @@ public class Member extends Timestamp {
     private List<Complaint> complaintReporterList;
     @OneToMany(mappedBy = "reportee", orphanRemoval = true)
     private List<Complaint> complaintReporteeList;
-    @OneToMany(mappedBy = "member", orphanRemoval = true)
-    private List<Message> messageList;
-    @OneToMany(mappedBy = "member", orphanRemoval = true)
-    private List<MessageBlock> messageBlockList;
-    @OneToMany(mappedBy = "blockMember", orphanRemoval = true)
-    private List<MessageBlock> messageBlockedList;
     @OneToMany(mappedBy = "member", orphanRemoval = true)
     private List<Note> noteList;
     @OneToMany(mappedBy = "member", orphanRemoval = true)

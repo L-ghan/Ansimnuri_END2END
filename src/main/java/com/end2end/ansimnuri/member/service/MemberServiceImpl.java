@@ -143,7 +143,6 @@ public void register(MemberDTO dto){
 
     @Override
     public boolean checkEmail(String email) {
-
         return memberRepository.findByEmail(email).orElse(null) != null;
     }
 
@@ -182,4 +181,10 @@ public void register(MemberDTO dto){
         return memberDTOs;
     }
 
+    @Override
+    public boolean checkPassword(String loginId, String password) {
+        Member member = memberRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 아이디를 가진 유저가 없습니다."));
+        return passwordUtil.matches(password, member.getPassword());
+    }
 }

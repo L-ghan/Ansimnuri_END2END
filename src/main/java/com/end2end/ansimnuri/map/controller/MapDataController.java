@@ -1,9 +1,6 @@
 package com.end2end.ansimnuri.map.controller;
 
-import com.end2end.ansimnuri.map.dto.CctvDTO;
-import com.end2end.ansimnuri.map.dto.PoliceDTO;
-import com.end2end.ansimnuri.map.dto.SearchHistoryDTO;
-import com.end2end.ansimnuri.map.dto.SexOffenderDTO;
+import com.end2end.ansimnuri.map.dto.*;
 import com.end2end.ansimnuri.map.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,7 +18,6 @@ import java.util.List;
 @RequestMapping("/api/map")
 @RestController
 public class MapDataController {
-    private final RiskRateService riskRateService;
     private final SearchHistoryService searchHistoryService;
     private final PoliceService policeService;
     private final CctvService cctvService;
@@ -77,20 +73,24 @@ public class MapDataController {
         return policeService.selectById(id);
     }
 
+    @Operation(summary = "cctv 조회 API", description = "서울시의 모든 cctv를 조회한다.")
+    @ApiResponse(responseCode = "200", description = "정상 작동입니다.")
     @GetMapping("/cctv")
     public ResponseEntity<List<CctvDTO>> selectAllCctv() {
         return ResponseEntity.ok(cctvService.selectAll());
     }
 
+    @Operation(summary = "성범죄자 조회 API", description = "서울시의 모든 조회 가능한 성범죄자 거주지를 조회한다.")
+    @ApiResponse(responseCode = "200", description = "정상 작동입니다.")
     @GetMapping("/sexOffender")
     public ResponseEntity<List<SexOffenderDTO>> selectAllSexOffender() {
         return ResponseEntity.ok(sexOffenderService.selectAll());
     }
 
-    @GetMapping("/test")
-    public void test() {
-        //riskRateService.getRiskRate(37.55303770047228, 126.97260161225407);
-        //streetLightService.insert();
-        riskRateService.insertAll();
+    @Operation(summary = "가로등 조회 API", description = "서울시의 모든 가로등을 조회한다.")
+    @ApiResponse(responseCode = "200", description = "정상 작동입니다.")
+    @GetMapping("/streetLight")
+    public ResponseEntity<List<StreetLightDTO>> selectAllStreetLight() {
+        return ResponseEntity.ok(streetLightService.selectAll());
     }
 }

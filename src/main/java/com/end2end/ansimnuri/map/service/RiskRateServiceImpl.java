@@ -191,15 +191,15 @@ public class RiskRateServiceImpl implements RiskRateService {
         double sexOffenderDistance =
                 GeoUtil.getDistance(sexOffender.getLatitude(), sexOffender.getLongitude(), riskRate.getLatitude(), riskRate.getLongitude());
 
-        double cctvScore = 1.0 - Math.min(cctvCount / 10.0, 1.0);
-        double policeScore = Math.min(policeDistance / 1000.0, 1.0);
-        double lightScore = Math.min(streetLightDistance / 500.0, 1.0);
-        double offenderScore = 1.0 - Math.min(sexOffenderDistance / 500.0, 1.0);
+        double cctvScore = cctvCount >= 10 ? 0.0 : 1.0 - (cctvCount / 10.0);
+        double policeScore = 1.0 - Math.exp(-policeDistance / 5.0);
+        double lightScore = 1.0 / (streetLightDistance + 1);
+        double offenderScore = sexOffenderDistance < 100 ? 1.0 : 1.0 - Math.min((sexOffenderDistance - 100) / 400.0, 1.0);
 
-        double totalScore = cctvScore * 0.25 +
-                policeScore * 0.25 +
-                lightScore * 0.2 +
-                offenderScore * 0.3;
+        double totalScore = cctvScore * 0.2 +
+                (1 - policeScore) * 0.25 +
+                (1 - lightScore) * 0.35 +
+                offenderScore * 0.2;
 
         if (totalScore >= 0.8) return 5;         // 매우 위험
         else if (totalScore >= 0.6) return 4;    // 위험
