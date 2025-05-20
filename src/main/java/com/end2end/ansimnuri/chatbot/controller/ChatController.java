@@ -63,6 +63,16 @@ public class ChatController {
         return ResponseEntity.ok(answer);
     }
 
+    @GetMapping("/news/top3")
+    public List<Map<String, String>> getTop3News() {
+        return chatServ.getTop3News();
+    }
+
+    @PostMapping("/news/summarize")
+    public List<Map<String, String>> summarizeTop3News(@RequestBody List<Map<String, String>> newsList) {
+        return chatServ.summarizeNews(newsList);
+    }
+
 
 }
 

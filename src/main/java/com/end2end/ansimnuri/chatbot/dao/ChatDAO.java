@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ChatDAO {
@@ -29,5 +30,7 @@ public class ChatDAO {
         return mybatis.selectOne("chatbot.findFAQAnswer", question);
     }
 
-
+    public List<Map<String, String>> getTop3News() {
+        return mybatis.selectList("chatbot.getTop3News");
+    }
 }
