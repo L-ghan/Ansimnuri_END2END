@@ -13,7 +13,6 @@ import java.util.List;
 @RequestMapping("/api/admin")
 @RestController
 public class AdminController {
-
     private final MemberService memberService;
 
     @GetMapping
