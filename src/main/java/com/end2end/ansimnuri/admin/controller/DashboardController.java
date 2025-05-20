@@ -1,6 +1,6 @@
-package com.end2end.ansimnuri.member.controller;
+package com.end2end.ansimnuri.admin.controller;
 
-import com.end2end.ansimnuri.member.service.DashboardService;
+import com.end2end.ansimnuri.admin.service.DashboardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,4 +20,12 @@ public class DashboardController {
         List<Map<String, Object>> topAddresses = dashboardService.getTop5Addresses();
         return ResponseEntity.ok(topAddresses);
     }
+
+    @GetMapping("/keywords")
+    public ResponseEntity<List<Map<String, Object>>> getKeywordStats() {
+        System.out.println("키워드 통계 요청 들어옴");
+        List<Map<String, Object>> stats = dashboardService.getKeywordStats();
+        return ResponseEntity.ok(stats);
+    }
+
 }
