@@ -1,6 +1,6 @@
-package com.end2end.ansimnuri.member.controller;
+package com.end2end.ansimnuri.admin.controller;
 
-import com.end2end.ansimnuri.member.service.DashboardService;
+import com.end2end.ansimnuri.admin.service.DashboardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

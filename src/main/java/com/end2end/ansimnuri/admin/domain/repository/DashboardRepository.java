@@ -1,4 +1,4 @@
-package com.end2end.ansimnuri.member.repository;
+package com.end2end.ansimnuri.admin.domain.repository;
 
 import com.end2end.ansimnuri.member.domain.entity.Member;
 import org.springframework.data.domain.Pageable;

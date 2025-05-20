@@ -1,5 +1,6 @@
-package com.end2end.ansimnuri.member.service;
+package com.end2end.ansimnuri.admin.service;
 
+import com.end2end.ansimnuri.admin.domain.repository.DashboardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +12,7 @@ import java.util.*;
 @Service
 public class DashboardService {
 
-    private final com.end2end.ansimnuri.member.repository.DashboardRepository dashboardRepository;
+    private final DashboardRepository dashboardRepository;
 
     public List<Map<String, Object>> getTop5Addresses() {
         Pageable top5 = PageRequest.of(0, 5);
