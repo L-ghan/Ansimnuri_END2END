@@ -4,6 +4,8 @@ import com.end2end.ansimnuri.map.dto.StreetLightDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
@@ -26,6 +28,9 @@ public class StreetLight {
     private Double latitude;
     @Column(name = "LONGITUDE", nullable = false)
     private Double longitude;
+
+    @OneToMany(mappedBy = "streetLight")
+    private List<RiskRate> riskRateList;
 
     public static StreetLight of(StreetLightDTO dto) {
         return StreetLight.builder()

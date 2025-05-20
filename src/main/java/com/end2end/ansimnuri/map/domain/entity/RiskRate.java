@@ -27,13 +27,13 @@ public class RiskRate {
     @Column(name = "LONGITUDE", nullable = false)
     private Double longitude;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POLICE_ID", nullable = false)
     private Police police;
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SEX_OFFENDER_ID", nullable = false)
     private SexOffender sexOffender;
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "STREET_LIGHT_ID", nullable = false)
     private StreetLight streetLight;
 
