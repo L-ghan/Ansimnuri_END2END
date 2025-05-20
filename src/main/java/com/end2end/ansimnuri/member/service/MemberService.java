@@ -22,4 +22,5 @@ public interface MemberService {
     void register(MemberDTO dto);
     void changeLoginIdByemail(String email, String pw);
     List<MemberDTO> getAllMembers();
+    boolean checkPassword(String loginId, String password);
 }
