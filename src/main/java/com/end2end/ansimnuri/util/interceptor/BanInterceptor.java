@@ -18,7 +18,7 @@ public class BanInterceptor implements HandlerInterceptor {
     private final BlockRepository blockRepository;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String loginId = (String) request.getAttribute("loginId");
         if (loginId == null) {
             return true;

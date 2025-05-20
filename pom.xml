@@ -123,13 +123,15 @@
             <artifactId>selenium-java</artifactId>
             <version>4.32.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+        </dependency>
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
             <version>5.7.0</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
@@ -148,23 +150,15 @@
             <artifactId>jts2geojson</artifactId>
             <version>0.18.1</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-oauth2-client</artifactId>
-        </dependency>
-
-
-        <!-- NetCDF‑Java (OPeNDAP 지원) -->
-<!--        <dependency>-->
-<!--            <groupId>edu.ucar</groupId>-->
-<!--            <artifactId>netcdfAll</artifactId>-->
-<!--            <version>5.4.1</version>-->
-<!--        </dependency>-->
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -178,12 +172,6 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-
-                    <plugin>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-maven-plugin</artifactId>
-                    </plugin>
-
         </plugins>
     </build>
 

@@ -18,4 +18,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(e.getMessage());
     }
+
+    @ExceptionHandler(BanUserException.class)
+    public ResponseEntity<String> handleBanUserException(BanUserException e) {
+        String message = String.format("%s님은 현재 차단 중입니다. %n차단 사유: %s    차단 기간: %s",
+                e.getNickname(), e.getReason(), e.getEndDate().toString());
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(message);
+    }
 }

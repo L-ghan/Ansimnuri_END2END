@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface CctvRepository extends JpaRepository<Cctv, Long> {
     List<Cctv> findByLatitudeBetweenAndLongitudeBetween(double latitude1, double latitude2, double longitude1, double longitude2);
+    List<Cctv> findAllByOrderByLatitudeAscLongitudeAsc();
 }

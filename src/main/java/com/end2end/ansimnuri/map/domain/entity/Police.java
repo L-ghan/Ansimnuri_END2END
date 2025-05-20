@@ -4,6 +4,8 @@ import com.end2end.ansimnuri.map.dto.PoliceDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
@@ -29,8 +31,8 @@ public class Police {
     @Column(name = "TYPE", nullable = false)
     private String type;
 
-    @OneToOne(mappedBy = "police")
-    private RiskRate riskRate;
+    @OneToMany(mappedBy = "police")
+    private List<RiskRate> riskRateList;
 
     public static Police of(PoliceDTO dto) {
         return Police.builder()

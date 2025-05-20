@@ -1,5 +1,7 @@
 package com.end2end.ansimnuri.member.service;
 
+import com.end2end.ansimnuri.admin.domain.entity.Block;
+import com.end2end.ansimnuri.admin.domain.repository.BlockRepository;
 import com.end2end.ansimnuri.member.dao.MemberDAO;
 import com.end2end.ansimnuri.member.domain.entity.Member;
 import com.end2end.ansimnuri.member.domain.repository.MemberRepository;
@@ -9,7 +11,7 @@ import com.end2end.ansimnuri.member.dto.MemberDTO;
 import com.end2end.ansimnuri.member.dto.MemberUpdateDTO;
 import com.end2end.ansimnuri.util.JWTUtil;
 import com.end2end.ansimnuri.util.PasswordUtil;
-import com.end2end.ansimnuri.util.enums.Roles;
+import com.end2end.ansimnuri.util.exception.BanUserException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,12 +24,12 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
+    private final BlockRepository blockRepository;
     private final JWTUtil jwtUtil;
     private final PasswordUtil passwordUtil;
     private final PasswordEncoder passwordEncoder;
@@ -47,37 +49,10 @@ public class MemberServiceImpl implements MemberService {
         if (!passwordUtil.matches(dto.getPassword(), member.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-        List<String> roles = new ArrayList<>();
-        roles.add(member.getRole().getRole());
 
-        return LoginResultDTO.builder()
-                .id(member.getId())
-                .token(jwtUtil.createToken(member.getLoginId(), roles))
-                .build();
-    }
-    @Override
-    @Transactional
-    public LoginResultDTO registerOAuthIfNeeded(String kakaoId, String nickname) {
-        Optional<Member> optional = memberRepository.findByLoginId(kakaoId);
-        Member member;
-
-        if (optional.isEmpty()) {
-            member = Member.builder()
-                    .loginId(kakaoId)
-                    .kakaoId(kakaoId)
-                    .nickname(nickname + "_" + UUID.randomUUID().toString().substring(0, 5))
-
-                    .email(kakaoId + "@kakao.oauth")
-                    .password(passwordUtil.encodePassword("oauth"))
-                    .address("간편가입")
-                    .detailAddress("없음")
-                    .postcode("00000")
-                    .role(Roles.USER)
-                    .build();
-
-            memberRepository.save(member);
-        } else {
-            member = optional.get();
+        Block block = blockRepository.findByMember(member);
+        if (block != null) {
+            throw new BanUserException(member.getNickname(), block.getReason(), block.getEndDate());
         }
 
         List<String> roles = new ArrayList<>();
@@ -88,7 +63,6 @@ public class MemberServiceImpl implements MemberService {
                 .token(jwtUtil.createToken(member.getLoginId(), roles))
                 .build();
     }
-
 
     @Transactional
     @Override
@@ -148,11 +122,7 @@ public class MemberServiceImpl implements MemberService {
     }
 @Override
 public void register(MemberDTO dto){
-
-    String password =passwordEncoder.encode(dto.getPassword());
-dto.setPassword(password);
-System.out.println("암호화 비밀번호"+dto.getPassword());
-    memberRepository.save(Member.of(dto));
+        memberRepository.save(Member.of(dto));
 }
     @Override
     public void changePassword(String loginId, String pw) {
@@ -173,13 +143,7 @@ System.out.println("암호화 비밀번호"+dto.getPassword());
 
     @Override
     public boolean checkEmail(String email) {
-
         return memberRepository.findByEmail(email).orElse(null) != null;
-    }
-    @Override
-    public boolean checkByKakaoId(String kakaoId) {
-
-        return memberRepository.findByEmail(kakaoId).orElse(null) != null;
     }
 
     @Override
@@ -217,7 +181,10 @@ System.out.println("암호화 비밀번호"+dto.getPassword());
         return memberDTOs;
     }
 
-
-
-
+    @Override
+    public boolean checkPassword(String loginId, String password) {
+        Member member = memberRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 아이디를 가진 유저가 없습니다."));
+        return passwordUtil.matches(password, member.getPassword());
+    }
 }

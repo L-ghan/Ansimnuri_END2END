@@ -4,6 +4,8 @@ import com.end2end.ansimnuri.map.dto.SexOffenderDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
@@ -27,8 +29,8 @@ public class SexOffender {
     @Column(name = "ROAD_ZIP", nullable = false)
     private Integer roadZip;
 
-    @OneToOne(mappedBy = "sexOffender")
-    private RiskRate riskRate;
+    @OneToMany(mappedBy = "sexOffender")
+    private List<RiskRate> riskRateList;
 
     public static SexOffender of(SexOffenderDTO dto) {
         return SexOffender.builder()

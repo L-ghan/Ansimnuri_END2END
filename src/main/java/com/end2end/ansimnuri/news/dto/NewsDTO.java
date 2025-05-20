@@ -16,11 +16,12 @@ import java.time.LocalDateTime;
 public class NewsDTO {
     @Schema(description = "제목", example = "xx시 oo동 방화 사건 발생")
     private String title;
-    @Schema(description = "요약", example = "https://...")
+    @Schema(description = "요약", example = "오늘 오전 xx시에서...")
     private String description;
     @Schema(description = "url", example = "https://...")
     private String url;
     @Schema(description = "등록 일자", example = "2024-04-30 09:00:00", format = "date-time")
     private LocalDateTime regDate;
+    @Schema(description = "이미지", example = "https://...")
     private String img ;
 }
