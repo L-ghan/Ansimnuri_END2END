@@ -29,5 +29,13 @@
         WHERE question = #{question}
     </select>
 
+    <select id="getTop3News" resultType="map">
+        SELECT * FROM (
+        SELECT TITLE, URL
+        FROM NEWS
+        ORDER BY REGDATE DESC
+        )
+        WHERE ROWNUM &lt;= 3
+    </select>
 
 </mapper>
