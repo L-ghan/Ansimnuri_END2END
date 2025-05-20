@@ -84,17 +84,32 @@ public class ChatController {
         return ResponseEntity.ok(answer);
     }
 
+    @Operation(summary = "자주 묻는 질문 조회 api", description = "요청된 질문에 대한 자주 묻는 질문 답변을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정상 작동입니다."),
+            @ApiResponse(responseCode = "400", description = "잘못된 질문입니다.")
+    })
     @GetMapping("/faq")
-    public ResponseEntity<String> getFAQAnswer(@RequestParam String question) {
+    public ResponseEntity<String> getFAQAnswer(
+            @Parameter(description = "질문")
+            @RequestParam String question) {
         String answer = chatServ.findFAQAnswer(question);
         return ResponseEntity.ok(answer);
     }
 
+    @Operation(summary = "최신 뉴스 3개 조회 api", description = "데이터 베이스 안에 저장된 최근 신문 내용 3개를 조회한다.")
+    @ApiResponse(responseCode = "200", description = "정상 작동입니다.")
     @GetMapping("/news/top3")
     public List<Map<String, String>> getTop3News() {
         return chatServ.getTop3News();
     }
 
+    @Operation(summary = "최신 뉴스 3개 요약 조회 api", description = "데이터 베이스 안에 저장된 최근 신문 3개를 llm으로 요약해 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정상 작동입니다."),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터 입니다."),
+            @ApiResponse(responseCode = "500", description = "api 연결 오류입니다.")
+    })
     @PostMapping("/news/summarize")
     public List<Map<String, String>> summarizeTop3News(@RequestBody List<Map<String, String>> newsList) {
         return chatServ.summarizeNews(newsList);
