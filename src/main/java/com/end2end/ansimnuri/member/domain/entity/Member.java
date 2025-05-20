@@ -29,23 +29,25 @@ import java.util.List;
 public class Member extends Timestamp {
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userSequenceGenerator")
     private Long id;
-    @Column(name = "LOGIN_ID", nullable = false, unique = true)
+    @Column(name = "LOGIN_ID", unique = true)
     private String loginId;
-    @Column(name = "PASSWORD", nullable = false)
+    @Column(name = "PASSWORD")
     private String password;
-    @Column(name = "NICKNAME", nullable = false, unique = true)
+    @Column(name = "NICKNAME", unique = true)
     private String nickname;
-    @Column(name = "EMAIL", nullable = false, unique = true)
+    @Column(name = "EMAIL",  unique = true)
     private String email;
-    @Column(name = "POSTCODE", nullable = false)
+    @Column(name = "POSTCODE")
     private String postcode;
-    @Column(name = "ADDRESS", nullable = false)
+    @Column(name = "ADDRESS")
     private String address;
-    @Column(name = "DETAIL_ADDRESS", nullable = false)
+    @Column(name = "DETAIL_ADDRESS")
     private String detailAddress;
-    @Column(name = "ROLE", nullable = false)
+    @Column(name = "ROLE")
     @Enumerated(EnumType.STRING)
     private Roles role;
+    @Column(name = "KAKAO_ID")
+    private String kakaoId;
 
     @OneToMany(mappedBy = "member")
     private List<Qna> qnaList;
@@ -64,6 +66,24 @@ public class Member extends Timestamp {
     @OneToMany(mappedBy = "member", orphanRemoval = true)
     private List<SearchHistory> searchHistoryList;
 
+
+
+    public static Member ofKakao(String kakaoId, String nickname) {
+        return Member.builder()
+                .loginId(kakaoId)
+                .kakaoId(kakaoId)
+                .nickname(nickname)
+                .email(kakaoId + "@kakao.oauth")
+                .password("TEMP")
+                .address("간편가입")
+                .detailAddress("")
+                .postcode("")
+                .role(Roles.USER)
+                .build();
+    }
+
+
+
     public static Member of (MemberDTO memberDTO) {
         return Member.builder()
                 .loginId(memberDTO.getLoginId())
@@ -74,6 +94,7 @@ public class Member extends Timestamp {
                 .address(memberDTO.getAddress())
                 .detailAddress(memberDTO.getDetailAddress())
                 .role(Roles.USER)
+                .kakaoId(memberDTO.getKakaoId())
                 .build();
     }
 

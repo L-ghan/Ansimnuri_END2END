@@ -22,6 +22,8 @@ public class MemberDTO {
     private String loginId;
     @Schema(description = "비밀번호", example = "<PASSWORD>")
     private String password;
+    @Schema(description = "카카오아이디", example = "kakaoId")
+    private String kakaoId;
     @Schema(description = "닉네임", example = "홍길동")
     private String nickname;
     @Schema(description = "이메일", example = "hgd1234@gmail.com")
@@ -49,6 +51,7 @@ public class MemberDTO {
                 .detailAddress(member.getDetailAddress())
                 .role(member.getRole())
                 .regDate(member.getRegDt())
+                .kakaoId(member.getKakaoId())
                 .build();
     }
 }
