@@ -35,7 +35,7 @@ import org.springframework.web.client.RestTemplate;
 public class MemberController {
     private final MemberService memberService;
     private final PasswordUtil passwordUtil;
-    @Value("spring.security.oauth2.client.registration.kakao.client-id")
+    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String kakaoClientId;
 
     @Value("${kakao.api.key}")
@@ -52,6 +52,9 @@ private String kakaoApiKey;
     }
     @PostMapping("/kakaoSignup")
     public ResponseEntity<?> kakaoSimpleSignup(@RequestBody MemberDTO dto) {
+        if (dto.getKakaoId() == null || dto.getNickname() == null) {
+            return ResponseEntity.badRequest().body("kakaoId 또는 nickname이 null입니다.");
+        }
         if (memberService.isIdExist(dto.getKakaoId())) {
             return ResponseEntity.badRequest().body("이미 존재하는 아이디입니다.");
         }

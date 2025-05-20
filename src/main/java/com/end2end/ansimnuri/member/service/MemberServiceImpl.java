@@ -176,6 +176,11 @@ System.out.println("암호화 비밀번호"+dto.getPassword());
 
         return memberRepository.findByEmail(email).orElse(null) != null;
     }
+    @Override
+    public boolean checkByKakaoId(String kakaoId) {
+
+        return memberRepository.findByEmail(kakaoId).orElse(null) != null;
+    }
 
     @Override
     public String getPw(String loginId) {

@@ -23,4 +23,5 @@ public interface MemberService {
     void changeLoginIdByemail(String email, String pw);
     LoginResultDTO registerOAuthIfNeeded(String kakaoId, String nickname);
     List<MemberDTO> getAllMembers();
+    boolean checkByKakaoId(String kakaoId);
 }

@@ -23,8 +23,9 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         String kakaoId = oAuth2User.getAttribute("id").toString();
         String nickname = (String) ((Map<String, Object>) oAuth2User.getAttribute("properties")).get("nickname");
-        String email = kakaoId + "@kakao.oauth";
-        boolean isExisting = memberService.checkEmail(email);
+
+        boolean isExisting = memberService.checkByKakaoId(kakaoId);
+
 
         if (isExisting) {
             LoginResultDTO result = memberService.registerOAuthIfNeeded(kakaoId, nickname);
@@ -38,7 +39,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             response.setContentType("text/html;charset=UTF-8");
             response.getWriter().write(
                     "<script>alert('회원이 존재하지 않습니다. 간편회원가입 화면으로 이동합니다.');" +
-                            "window.location.href='http://localhost:3000/RegisterPage?kakaoId=" + kakaoId +
+                            "window.location.href='http://localhost:3000/SimpleRegisterPage?kakaoId=" + kakaoId +
                             "&nickname=" + nickname + "';</script>"
             );
         }

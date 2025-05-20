@@ -129,6 +129,7 @@
             <artifactId>webdrivermanager</artifactId>
             <version>5.7.0</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
@@ -177,6 +178,12 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
+
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                    </plugin>
+
         </plugins>
     </build>
 
