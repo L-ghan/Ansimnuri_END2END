@@ -3,4 +3,18 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="block">
+    <select id="selectBlockWithLoginId" resultType="map">
+        SELECT
+        b.id AS block_id,
+        b.member_id AS member_id,
+        b.reason,
+        b.end_date,
+        b.reg_date,
+        m.login_id
+        FROM block b
+        JOIN member m ON b.member_id = m.id
+    </select>
+
+
+
 </mapper>
