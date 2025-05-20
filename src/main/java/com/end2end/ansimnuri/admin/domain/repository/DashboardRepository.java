@@ -17,5 +17,10 @@ public interface DashboardRepository extends JpaRepository<Member, Long> {
             "ORDER BY COUNT(m) DESC")
     List<Object[]> findTopAddresses(Pageable pageable);
 
-
+    @Query(value =
+            "SELECT question, COUNT(*) AS count FROM crimesupport GROUP BY question " +
+                    "UNION ALL " +
+                    "SELECT question, COUNT(*) AS count FROM crimeguide GROUP BY question",
+            nativeQuery = true)
+    List<Object[]> findKeywordStats();
 }

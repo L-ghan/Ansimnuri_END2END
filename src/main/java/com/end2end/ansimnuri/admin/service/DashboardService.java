@@ -27,4 +27,17 @@ public class DashboardService {
         }
         return topAddresses;
     }
+    public List<Map<String, Object>> getKeywordStats() {
+        List<Object[]> results = dashboardRepository.findKeywordStats();
+
+        List<Map<String, Object>> keywordStats = new ArrayList<>();
+        for (Object[] row : results) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("keyword", row[0]);  // question
+            map.put("count", row[1]);    // count
+            keywordStats.add(map);
+        }
+        return keywordStats;
+    }
+
 }

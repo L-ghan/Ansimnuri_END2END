@@ -20,4 +20,12 @@ public class DashboardController {
         List<Map<String, Object>> topAddresses = dashboardService.getTop5Addresses();
         return ResponseEntity.ok(topAddresses);
     }
+
+    @GetMapping("/keywords")
+    public ResponseEntity<List<Map<String, Object>>> getKeywordStats() {
+        System.out.println("키워드 통계 요청 들어옴");
+        List<Map<String, Object>> stats = dashboardService.getKeywordStats();
+        return ResponseEntity.ok(stats);
+    }
+
 }
