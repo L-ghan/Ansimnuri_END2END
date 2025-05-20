@@ -50,7 +50,7 @@ private String kakaoApiKey;
         System.out.println("dto: " + dto);
         return ResponseEntity.ok(memberService.login(dto));
     }
-    @PostMapping("/kakao-simple-signup")
+    @PostMapping("/kakaoSignup")
     public ResponseEntity<?> kakaoSimpleSignup(@RequestBody MemberDTO dto) {
         if (memberService.isIdExist(dto.getKakaoId())) {
             return ResponseEntity.badRequest().body("이미 존재하는 아이디입니다.");
@@ -59,8 +59,11 @@ private String kakaoApiKey;
         MemberDTO memberDTO = MemberDTO.builder()
                 .loginId(dto.getKakaoId())
                 .nickname(dto.getNickname())
-                .password(passwordUtil.encodePassword("oauth"))
+                .password("oauth")
                 .email(dto.getKakaoId() + "@kakao.oauth")
+                .address("카카오 간편가입")
+                .detailAddress("없음")
+                .postcode("00000")
                 .build();
 
         memberService.insert(memberDTO);

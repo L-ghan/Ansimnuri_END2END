@@ -22,6 +22,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -64,7 +65,8 @@ public class MemberServiceImpl implements MemberService {
             member = Member.builder()
                     .loginId(kakaoId)
                     .kakaoId(kakaoId)
-                    .nickname(nickname)
+                    .nickname(nickname + "_" + UUID.randomUUID().toString().substring(0, 5))
+
                     .email(kakaoId + "@kakao.oauth")
                     .password(passwordUtil.encodePassword("oauth"))
                     .address("간편가입")
