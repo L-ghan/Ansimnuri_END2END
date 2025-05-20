@@ -1,5 +1,7 @@
 package com.end2end.ansimnuri.member.service;
 
+import com.end2end.ansimnuri.admin.domain.entity.Block;
+import com.end2end.ansimnuri.admin.domain.repository.BlockRepository;
 import com.end2end.ansimnuri.member.dao.MemberDAO;
 import com.end2end.ansimnuri.member.domain.entity.Member;
 import com.end2end.ansimnuri.member.domain.repository.MemberRepository;
@@ -9,6 +11,7 @@ import com.end2end.ansimnuri.member.dto.MemberDTO;
 import com.end2end.ansimnuri.member.dto.MemberUpdateDTO;
 import com.end2end.ansimnuri.util.JWTUtil;
 import com.end2end.ansimnuri.util.PasswordUtil;
+import com.end2end.ansimnuri.util.exception.BanUserException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,6 +29,7 @@ import java.util.Optional;
 @Service
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
+    private final BlockRepository blockRepository;
     private final JWTUtil jwtUtil;
     private final PasswordUtil passwordUtil;
     private final PasswordEncoder passwordEncoder;
@@ -44,6 +48,11 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(() -> new IllegalArgumentException("아이디가 일치하지 않습니다."));
         if (!passwordUtil.matches(dto.getPassword(), member.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        Block block = blockRepository.findByMember(member);
+        if (block != null) {
+            throw new BanUserException(member.getNickname(), block.getReason(), block.getEndDate());
         }
 
         List<String> roles = new ArrayList<>();
@@ -151,6 +160,26 @@ public void register(MemberDTO dto){
                 .orElseThrow(() -> new UsernameNotFoundException("해당 회원이 존재하지 않습니다."));
         memberRepository.delete(member);
     }
+    @Transactional
+    @Override
+    public List<MemberDTO> getAllMembers() {
+        List<Member> members = memberRepository.findAll().stream()
+                .filter(member -> member.getBlockList().isEmpty())
+                .toList();
 
+        List<MemberDTO> memberDTOs = new ArrayList<>();
+        for(Member member : members){
+            MemberDTO memberDTO = MemberDTO.builder()
+                    .id(member.getId())
+                    .nickname(member.getNickname())
+                    .loginId(member.getLoginId())
+                    .email(member.getEmail())
+                    .regDate(member.getRegDt())
+                    .nickname(member.getNickname())
+                    .address(member.getAddress()).build();
+            memberDTOs.add(memberDTO);
+        }
+        return memberDTOs;
+    }
 
 }

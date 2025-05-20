@@ -67,7 +67,6 @@ public class PoliceServiceImpl implements PoliceService {
 
         RestTemplate restTemplate = new RestTemplate();
 
-        System.out.println("dataApiKey: " + dataApiKey);
         String url = "https://api.odcloud.kr/api/15077036/v1/uddi:9f06486e-514f-45c9-a531-f15d74dba23e"
                 + "?page=1&perPage=243&serviceKey=" + dataApiKey;
         ResponseEntity<String> response = restTemplate.getForEntity(URI.create(url), String.class);
