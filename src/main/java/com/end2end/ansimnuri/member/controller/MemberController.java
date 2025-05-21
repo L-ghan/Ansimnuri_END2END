@@ -39,6 +39,13 @@ public class MemberController {
         return ResponseEntity.ok(dto);
     }
 
+    @PostMapping("/kakaoSignup")
+public ResponseEntity<MemberDTO> kakaoSignup(@RequestBody MemberDTO dto){
+      String nickname =  dto.getNickname();
+        String kakaoID = dto.getKakaoId();
+        memberService.registerOAuthIfNeeded(nickname, kakaoID);
+        return ResponseEntity.ok(dto);
+    }
 
     @Operation(summary = "아이디 중복 체크 API", description = "아이디의 중복 여부를 확인해서 boolean값으로 반환한다.")
     @ApiResponse(responseCode = "200", description = "정상 작동입니다.")
