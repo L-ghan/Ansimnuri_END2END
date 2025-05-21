@@ -99,8 +99,8 @@ public class MapDataController {
     public void insert() {
         //policeService.insert();
         //streetLightService.insert();
-        cctvService.insert();
-        //sexOffenderService.insert();
+        //cctvService.insert();
+        sexOffenderService.insert();
         //riskRateService.insertAll();
     }
 }
