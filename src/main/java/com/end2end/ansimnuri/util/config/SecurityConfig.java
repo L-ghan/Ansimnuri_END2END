@@ -79,7 +79,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource configurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("*");
+        config.addAllowedOrigin("http://localhost:3000, https://ansimnuri.site/");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 
