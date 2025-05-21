@@ -1,9 +1,11 @@
 package com.end2end.ansimnuri.util.config;
 
+import com.end2end.ansimnuri.member.service.MemberService;
 import com.end2end.ansimnuri.util.filter.JWTAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,13 +29,14 @@ public class SecurityConfig {
     private final JWTAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,  OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(configurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
+                .oauth2Login(oauth -> oauth.successHandler(oAuth2LoginSuccessHandler))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> {
                     auth
@@ -56,6 +59,11 @@ public class SecurityConfig {
                 });
 
         return http.build();
+    }
+
+    @Bean
+    public OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler(@Lazy MemberService memberService) {
+        return new OAuth2LoginSuccessHandler(memberService);
     }
 
     @Bean

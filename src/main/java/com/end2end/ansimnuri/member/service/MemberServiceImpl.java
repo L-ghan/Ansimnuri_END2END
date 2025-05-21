@@ -11,6 +11,7 @@ import com.end2end.ansimnuri.member.dto.MemberDTO;
 import com.end2end.ansimnuri.member.dto.MemberUpdateDTO;
 import com.end2end.ansimnuri.util.JWTUtil;
 import com.end2end.ansimnuri.util.PasswordUtil;
+import com.end2end.ansimnuri.util.enums.Roles;
 import com.end2end.ansimnuri.util.exception.BanUserException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -120,10 +122,15 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
         return MemberDTO.of(member);
     }
-@Override
-public void register(MemberDTO dto){
+    @Override
+    public void register(MemberDTO dto){
+
+        String password =passwordEncoder.encode(dto.getPassword());
+        dto.setPassword(password);
+        System.out.println("암호화 비밀번호"+dto.getPassword());
         memberRepository.save(Member.of(dto));
-}
+    }
+
     @Override
     public void changePassword(String loginId, String pw) {
         Member member = memberRepository.findByLoginId(loginId)
@@ -187,4 +194,46 @@ public void register(MemberDTO dto){
                 .orElseThrow(() -> new IllegalArgumentException("해당 아이디를 가진 유저가 없습니다."));
         return passwordUtil.matches(password, member.getPassword());
     }
+
+    @Override
+    @Transactional
+    public LoginResultDTO registerOAuthIfNeeded(String kakaoId, String nickname) {
+        Optional<Member> optional = memberRepository.findByLoginId(kakaoId);
+        Member member;
+
+        if (optional.isEmpty()) {
+            member = Member.builder()
+                    .loginId(kakaoId)
+                    .kakaoId(kakaoId)
+                    .nickname(nickname + "_" + UUID.randomUUID().toString().substring(0, 5))
+
+                    .email(kakaoId + "@kakao.oauth")
+                    .password(passwordUtil.encodePassword("oauth"))
+                    .address("간편가입")
+                    .detailAddress("없음")
+                    .postcode("00000")
+                    .role(Roles.USER)
+                    .build();
+
+            memberRepository.save(member);
+        } else {
+            member = optional.get();
+        }
+
+        List<String> roles = new ArrayList<>();
+        roles.add(member.getRole().getRole());
+
+        return LoginResultDTO.builder()
+                .id(member.getId())
+                .token(jwtUtil.createToken(member.getLoginId(), roles))
+                .build();
+    }
+
+    @Override
+    public boolean checkByKakaoId(String kakaoId) {
+
+        return memberRepository.findByEmail(kakaoId).orElse(null) != null;
+    }
+
+
 }
