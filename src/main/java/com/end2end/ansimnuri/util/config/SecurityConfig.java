@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -39,7 +40,17 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> {
                     auth
-                            .requestMatchers("/api/member/me", "/api/member/update").authenticated()
+                            .requestMatchers(
+                                    "/api/member/me", "/api/member/update", "/api/member/changePassword",
+                                    "/api/member/", "/api/note/recommend"
+                            ).authenticated()
+                            .requestMatchers(HttpMethod.POST, "/api/note").authenticated()
+                            .requestMatchers(HttpMethod.PUT, "/api/note").authenticated()
+                            .requestMatchers(HttpMethod.DELETE, "/api/note").authenticated()
+                            .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                            .requestMatchers(HttpMethod.POST,"/api/notice").hasRole("ADMIN")
+                            .requestMatchers(HttpMethod.PUT,"/api/notice").hasRole("ADMIN")
+                            .requestMatchers(HttpMethod.DELETE,"/api/notice/**").hasRole("ADMIN")
                             .anyRequest().permitAll();
                 })
                 .exceptionHandling(exception -> {
@@ -49,10 +60,12 @@ public class SecurityConfig {
 
         return http.build();
     }
+
     @Bean
     public OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler(@Lazy MemberService memberService) {
         return new OAuth2LoginSuccessHandler(memberService);
     }
+
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
         return (request, response, authException) -> {
@@ -74,7 +87,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource configurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("*");
+        config.addAllowedOrigin("http://localhost:3000, https://ansimnuri.site/");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 

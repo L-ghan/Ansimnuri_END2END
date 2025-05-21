@@ -1,9 +1,6 @@
 package com.end2end.ansimnuri.util;
 
 import lombok.Data;
-import org.springframework.data.geo.Distance;
-import org.springframework.data.geo.Metrics;
-import org.springframework.data.geo.Point;
 
 public class GeoUtil {
     private static final double KM_PER_LATITUDE = 111.32;
